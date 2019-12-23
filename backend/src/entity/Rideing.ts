@@ -11,6 +11,9 @@ export class Rideing {
     @Column()
     date: Date;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
     @OneToMany(type => Station, station => station.rideing)
     station: Station[];
 

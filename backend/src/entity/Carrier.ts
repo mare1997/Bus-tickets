@@ -28,6 +28,10 @@ export class Carrier {
     @Column()
     image: string;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
+
     @ManyToOne(type => Location, location => location.carrier)
     location: Location;
 

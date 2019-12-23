@@ -10,6 +10,9 @@ export class Station {
 
     @Column()
     time: Date;
+    
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
 
     @ManyToOne(type => BasStation, basStation => basStation.station)
     basStation: BasStation;

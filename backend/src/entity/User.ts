@@ -23,6 +23,10 @@ export class User {
     @Column()
     age: number;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
+
     @ManyToOne(type => Location, location => location.user)
     location: Location;
 

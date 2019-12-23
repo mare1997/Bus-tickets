@@ -10,6 +10,9 @@ export class Passenger {
     @Column()
     name: string;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
     @ManyToOne(type => User, user => user.passenger)
     user: User;
 

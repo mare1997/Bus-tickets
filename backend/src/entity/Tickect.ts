@@ -13,6 +13,9 @@ export class Ticket {
     @Column()
     price: number;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
     @OneToOne(type => Seats, seats => seats.ticket) 
     seats: Seats;
 

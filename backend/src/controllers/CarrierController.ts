@@ -13,10 +13,16 @@ class CarrierContoller implements IControllerBase {
         this.initRoutes()
     }
     public initRoutes() {
-        this.router.get('/',async (req,res) => 
+        this.router.get('/carrier',async (req,res) => 
         {   try{
                 const carrierRepository = getRepository(Carrier);
-                const carriers = await carrierRepository.find();
+                const carriersFromDB = await carrierRepository.find();
+                var carriers = [];
+                carriersFromDB.forEach(element => {
+                    if(!element.deleted){
+                        carriers.push(element);
+                    }
+                });
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(carriers);
             }catch(e){
@@ -41,10 +47,7 @@ class CarrierContoller implements IControllerBase {
          {   try{
                 const carrierRepository = getRepository(Carrier);
                 let carrier = req.body;
-                // let findUser = await carrierRepository.findOne();
-                // if(findUser){
-                //     throw new Error('');
-                // }
+                
                 await carrierRepository.save(carrier);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(carrier,201);
@@ -54,6 +57,37 @@ class CarrierContoller implements IControllerBase {
                 res.send("Error " + e);
              };
         });
+        this.router.put('/carrier',async (req,res) =>
+         {   try{
+                const carrierRepository = getRepository(Carrier);
+                let carrier = req.body;
+                
+                await carrierRepository.save(carrier);
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send(carrier,200);
+
+             }catch (e){
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send("Error " + e);
+             };
+        });
+
+        this.router.delete('/carrier/:carrierId',async (req,res) =>
+         {   try{
+                const carrierRepository = getRepository(Carrier);
+                var carrierId = req.params.carrierId;
+                const carrier = await carrierRepository.findOne(carrierId);
+                carrier.deleted = true;
+                await carrierRepository.save(carrier);
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send(200);
+
+             }catch (e){
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send("Error " + e);
+             };
+        });
+
     }
 }
 export default CarrierContoller

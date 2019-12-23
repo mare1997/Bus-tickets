@@ -28,6 +28,9 @@ export class BasStation{
     @Column()
     longitude: number;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
     @ManyToOne(type => Location, location => location.basstation)
     location: Location;
 

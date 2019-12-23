@@ -10,6 +10,9 @@ export class Seats {
     @Column()
     number: number;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
     @ManyToOne(type => Vehicle, vehicle => vehicle.seats)
     vehicle: Vehicle;
 

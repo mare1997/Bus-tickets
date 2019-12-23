@@ -15,6 +15,9 @@ export class Vehicle {
     @Column()
     driver: string;
 
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
+
     @ManyToOne(type => Carrier, carrier => carrier.vehicle)
     carrier: Carrier;
 

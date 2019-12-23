@@ -14,6 +14,9 @@ export class Location {
 
     @Column()
     zip_code: string;
+    
+    @Column({type: "boolean", default: false})
+    deleted: boolean;
 
     @OneToMany(type => Carrier, carrier => carrier.location)
     carrier: Carrier[];
