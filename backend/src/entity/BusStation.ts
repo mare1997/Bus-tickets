@@ -3,7 +3,7 @@ import { Location } from "./Location";
 import { Station } from "./Station";
 
 @Entity()
-export class BasStation{
+export class BusStation{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -31,9 +31,9 @@ export class BasStation{
     @Column({type: "boolean", default: false})
     deleted: boolean;
 
-    @ManyToOne(type => Location, location => location.basstation)
+    @ManyToOne(type => Location, location => location.busstation)
     location: Location;
 
-    @OneToMany(type => Station, station => station.basStation)
+    @OneToMany(type => Station, station => station.busStation)
     station: Station[];
 }

@@ -1,5 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn} from "typeorm";
-import { BasStation } from "./BasStation";
+import { BusStation } from "./BusStation";
 import { Ticket } from "./Tickect";
 import { Rideing } from "./Rideing";
 
@@ -14,8 +14,8 @@ export class Station {
     @Column({type: "boolean", default: false})
     deleted: boolean;
 
-    @ManyToOne(type => BasStation, basStation => basStation.station)
-    basStation: BasStation;
+    @ManyToOne(type => BusStation, busStation => busStation.station)
+    busStation: BusStation;
 
     @ManyToOne(type => Rideing, rideing => rideing.station)
     rideing: Rideing;

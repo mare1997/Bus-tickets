@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import { Carrier } from "./Carrier";
 import { User } from "./User";
-import { BasStation } from "./BasStation";
+import { BusStation } from "./BusStation";
 
 @Entity()
 export class Location {
@@ -24,8 +24,8 @@ export class Location {
     @OneToMany(type => User, user => user.location)
     user: User[];
 
-    @OneToMany(type => BasStation, basstation => basstation.location)
-    basstation: BasStation[];
+    @OneToMany(type => BusStation, busstation => busstation.location)
+    busstation: BusStation[];
 
     
 }

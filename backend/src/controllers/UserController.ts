@@ -11,10 +11,16 @@ class UserContoller implements IControllerBase {
         this.initRoutes()
     }
     public initRoutes() {
-        this.router.get('/users',async (req,res) =>
+        this.router.get('/user',async (req,res) =>
          {   try{
                 const userRepository=Database.getUserCustomRepository();
-                let users = await userRepository.find();
+                let usersFromDB = await userRepository.find();
+                let users = [];
+                usersFromDB.forEach(element => {
+                    if(!element.deleted){
+                        users.push(element);
+                    }
+                });
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(users);
             }catch (e){
@@ -50,6 +56,34 @@ class UserContoller implements IControllerBase {
                 await userRepository.save(user);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(user,201);
+
+             }catch (e){
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send("Error " + e);
+             };
+        });
+        this.router.put('/user',async (req,res) =>
+         {   try{
+                const userRepository=Database.getUserCustomRepository();
+                let user = req.body;
+                await userRepository.save(user);
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send(user,200);
+
+             }catch (e){
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send("Error " + e);
+             };
+        });
+        this.router.delete('/user/:userId',async (req,res) =>
+         {   try{
+                const userRepository = Database.getUserCustomRepository();
+                var userId = req.params.userId;
+                const user = await userRepository.findOne(userId);
+                user.deleted = true;
+                await userRepository.save(user);
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send(200);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
