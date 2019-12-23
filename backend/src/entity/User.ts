@@ -20,7 +20,7 @@ export class User {
     @Column()
     lastName: string;
 
-    @Column("integer")
+    @Column()
     age: number;
 
     @ManyToOne(type => Location, location => location.user)

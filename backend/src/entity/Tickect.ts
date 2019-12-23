@@ -4,7 +4,7 @@ import { Passenger } from "./Passenger";
 import { Station } from "./Station";
 import { Rideing } from "./Rideing";
 
-Entity()
+@Entity()
 export class Ticket {
 
     @PrimaryGeneratedColumn()

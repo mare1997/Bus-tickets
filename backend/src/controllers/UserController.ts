@@ -1,7 +1,4 @@
 import * as express from 'express'
-import { UserCustomRepository } from '../repositories/UserCustomRepository';
-import {getCustomRepository} from "typeorm";
-import {User} from "../entity/User";
 import IControllerBase from '../interfaces/IControllerBase.interface'
 import Database from "../services/Database";
 

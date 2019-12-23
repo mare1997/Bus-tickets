@@ -3,7 +3,7 @@ import { Carrier } from "./Carrier";
 import { User } from "./User";
 import { BasStation } from "./BasStation";
 
-Entity()
+@Entity()
 export class Location {
 
     @PrimaryGeneratedColumn()

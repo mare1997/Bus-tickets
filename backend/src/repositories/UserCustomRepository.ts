@@ -5,7 +5,8 @@ import {
     DeleteResult,
     InsertResult
 } from "typeorm";
-import {User} from "../entity/User";
+import { User } from "../entity/User";
+
 
 @EntityRepository(User)
 export class UserCustomRepository extends Repository<User> {

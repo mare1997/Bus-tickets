@@ -3,7 +3,7 @@ import { Carrier } from "./Carrier";
 import { Seats } from "./Seats";
 import { Rideing } from "./Rideing";
 
-Entity()
+@Entity()
 export class Vehicle {
 
     @PrimaryGeneratedColumn()

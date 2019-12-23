@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn,
 import { User } from "./User";
 import { Ticket } from "./Tickect";
 
-Entity()
+@Entity()
 export class Passenger {
     @PrimaryGeneratedColumn()
     id: number;

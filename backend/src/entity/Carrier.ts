@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "type
 import { Location } from "./Location";
 import { Vehicle } from "./Vehicle";
 
-Entity()
+@Entity()
 export class Carrier {
     @PrimaryGeneratedColumn()
     id: number;

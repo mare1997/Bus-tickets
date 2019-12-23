@@ -3,7 +3,7 @@ import { BasStation } from "./BasStation";
 import { Ticket } from "./Tickect";
 import { Rideing } from "./Rideing";
 
-Entity()
+@Entity()
 export class Station {
     @PrimaryGeneratedColumn()
     id: number;

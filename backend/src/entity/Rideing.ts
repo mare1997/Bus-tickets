@@ -3,15 +3,13 @@ import { Station } from "./Station";
 import { Ticket } from "./Tickect";
 import { Vehicle } from "./Vehicle";
 
-Entity()
+@Entity()
 export class Rideing {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
     date: Date;
-
-    
 
     @OneToMany(type => Station, station => station.rideing)
     station: Station[];
