@@ -1,4 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "typeorm";
+import { Location } from "./Location";
+import { Passenger } from "./Passenger";
 
 @Entity()
 export class User {
@@ -20,5 +22,11 @@ export class User {
 
     @Column("integer")
     age: number;
+
+    @ManyToOne(type => Location, location => location.user)
+    location: Location;
+
+    @OneToMany(type => Passenger, passenger => passenger.user)
+    passenger: Passenger[];
 
 }
