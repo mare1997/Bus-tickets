@@ -4,14 +4,14 @@ import Database from "../services/Database";
 
 
 class UserContoller implements IControllerBase {
-    public path = '/'
+    public path = '/user'
     public router = express.Router()
 
     constructor() {
         this.initRoutes()
     }
     public initRoutes() {
-        this.router.get('/user',async (req,res) =>
+        this.router.get(this.path,async (req,res) =>
          {   try{
                 const userRepository=Database.getUserCustomRepository();
                 let usersFromDB = await userRepository.find();
@@ -23,6 +23,23 @@ class UserContoller implements IControllerBase {
                 });
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(users);
+            }catch (e){
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send("Error " + e);
+             };
+         });
+         this.router.get(this.path + "/:userId",async (req,res) =>
+         {   try{
+                const userRepository=Database.getUserCustomRepository();
+                var userId = req.params.userId;
+                let user = await userRepository.findOne(userId);
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                if(!user.deleted){
+                    res.send(user);
+                }else{
+                    res.send("User not found",404);  
+                }
+                
             }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send("Error " + e);
@@ -62,7 +79,7 @@ class UserContoller implements IControllerBase {
                 res.send("Error " + e);
              };
         });
-        this.router.put('/user',async (req,res) =>
+        this.router.put(this.path,async (req,res) =>
          {   try{
                 const userRepository=Database.getUserCustomRepository();
                 let user = req.body;
@@ -75,7 +92,7 @@ class UserContoller implements IControllerBase {
                 res.send("Error " + e);
              };
         });
-        this.router.delete('/user/:userId',async (req,res) =>
+        this.router.delete(this.path + '/:userId',async (req,res) =>
          {   try{
                 const userRepository = Database.getUserCustomRepository();
                 var userId = req.params.userId;

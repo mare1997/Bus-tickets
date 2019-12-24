@@ -35,7 +35,12 @@ class BusStationContoller implements IControllerBase {
                 var busstationId = req.params.busstationId;
                 const busstation = await busstationRepository.findOne(busstationId);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(busstation);
+                if(!busstation.deleted){
+                    res.send(busstation);
+                }else{
+                    res.send("Bus station not found",404);
+                }
+               
             }catch(e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send("Error " + e);

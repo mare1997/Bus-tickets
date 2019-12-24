@@ -4,6 +4,7 @@ import UserController from './controllers/UserController'
 import CarrierController from './controllers/CarrierController'
 import loggerMiddleware from './middleware/logger'
 import BusStationContoller from './controllers/BusStationController'
+import LocationController from './controllers/LocationController'
 
 
 const app = new App({
@@ -11,7 +12,8 @@ const app = new App({
     controllers: [
         new UserController(),
         new CarrierController(),
-        new BusStationContoller()
+        new BusStationContoller(),
+        new LocationController()
     ],
     middleWares: [
         bodyParser.json(),

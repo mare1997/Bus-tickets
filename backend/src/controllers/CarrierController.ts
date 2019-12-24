@@ -36,7 +36,12 @@ class CarrierContoller implements IControllerBase {
                 var carrierId = req.params.carrierId;
                 const carrier = await carrierRepository.findOne(carrierId);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(carrier);
+                if(!carrier.deleted){
+                    res.send(carrier);
+                }else{
+                    res.send("Carrier not found",404);
+                }
+                
             }catch(e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send("Error " + e);
@@ -47,7 +52,6 @@ class CarrierContoller implements IControllerBase {
          {   try{
                 const carrierRepository = getRepository(Carrier);
                 let carrier = req.body;
-                
                 await carrierRepository.save(carrier);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(carrier,201);
