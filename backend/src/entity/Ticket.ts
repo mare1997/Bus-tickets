@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne, 
 import { Seats } from "./Seats";
 import { Passenger } from "./Passenger";
 import { Station } from "./Station";
-import { Rideing } from "./Rideing";
+import { Traveling } from "./Traveling";
 
 @Entity()
 export class Ticket {
@@ -17,13 +17,13 @@ export class Ticket {
     deleted: boolean;
 
     @OneToOne(type => Seats, seats => seats.ticket)
-    @JoinColumn() 
+    @JoinColumn()
     seats: Seats;
 
     @OneToOne(type => Passenger, passenger => passenger.ticket)
     passenger: Passenger;
 
-    @ManyToOne(type => Rideing, rideing => rideing.ticket)
-    rideing: Rideing;
+    @ManyToOne(type => Traveling, traveling => traveling.ticket)
+    traveling: Traveling;
 
 }

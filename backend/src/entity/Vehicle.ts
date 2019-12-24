@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne} from "typeorm";
 import { Carrier } from "./Carrier";
 import { Seats } from "./Seats";
-import { Rideing } from "./Rideing";
+import { Traveling } from "./Traveling";
 
 @Entity()
 export class Vehicle {
@@ -24,6 +24,6 @@ export class Vehicle {
     @OneToMany(type => Seats, seats => seats.vehicle)
     seats: Seats[];
 
-    @OneToMany(type => Rideing, rideing => rideing.vehicle)
-    rideing: Rideing[];
+    @OneToMany(type => Traveling, traveling => traveling.vehicle)
+    traveling: Traveling[];
 }

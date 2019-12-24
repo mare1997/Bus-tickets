@@ -14,7 +14,7 @@ export class Location {
 
     @Column()
     zip_code: string;
-    
+
     @Column({type: "boolean", default: false})
     deleted: boolean;
 
@@ -27,5 +27,4 @@ export class Location {
     @OneToMany(type => BusStation, busstation => busstation.location)
     busstation: BusStation[];
 
-    
 }

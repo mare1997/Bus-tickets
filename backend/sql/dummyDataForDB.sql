@@ -6,7 +6,7 @@ INSERT INTO location  VALUE (4,"Krucevac","37000",0);
 
 INSERT INTO bus_station VALUE (1,"BAS- BEOGRAD","Zeleznicka 4","+381264622 245","","24/7",1234,-413,0,1);
 INSERT INTO bus_station VALUE (2,"AS- Smederevo","Omladinska 4","+381 11 2636 299","bas.rs","24/7",12354,-4313,0,2);
-INSERT INTO bus_station VALUE (3,"AS - KRAGUJEVAC","Sumadijska 8","+381 34 354 659 +381 34 354 660","","24/7",12334,-41dfa3,0,3);
+INSERT INTO bus_station VALUE (3,"AS - KRAGUJEVAC","Sumadijska 8","+381 34 354 659 +381 34 354 660","","24/7",12334,-413,0,3);
 
 INSERT INTO carrier VALUE (1,"Lasta","1315151","Autoput Beograd - Nis 4","0800 334 334 +381 11 334 8555","office@lasta.rs","www.lasta.rs","/",0,1);
 INSERT INTO carrier VALUE (2,"Strela","68489654","Belopoljska 6","+381 (0)62 277 244","","","/",0,1);
@@ -28,11 +28,11 @@ INSERT INTO seats VALUE (8,8,0,1);
 INSERT INTO seats VALUE (9,9,0,1);
 INSERT INTO seats VALUE (10,10,0,1);
 
-INSERT INTO rideing VALUE (1,"24.12.2019.",0,1);
+INSERT INTO traveling VALUE (1,"24.12.2019.",0,1);
 
-INSERT INTO station VALUE (1,0,1,1,"20:00");
-INSERT INTO station VALUE (2,0,2,1,"21:00");
-INSERT INTO station VALUE (3,0,3,1,"22:00");
+INSERT INTO station VALUE (1,"20:00",0,1,1);
+INSERT INTO station VALUE (2,"21:00",0,2,1);
+INSERT INTO station VALUE (3,"22:00",0,3,1);
 
 INSERT INTO ticket VALUE (1,1300,0,1,1);
 INSERT INTO ticket VALUE (2,1150,0,2,1);

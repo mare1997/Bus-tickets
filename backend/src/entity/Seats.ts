@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn} from "typeorm";
 import { Vehicle } from "./Vehicle";
-import { Ticket } from "./Tickect";
+import { Ticket } from "./Ticket";
 
 @Entity()
 export class Seats {
@@ -16,6 +16,6 @@ export class Seats {
     @ManyToOne(type => Vehicle, vehicle => vehicle.seats)
     vehicle: Vehicle;
 
-    @OneToOne(type => Ticket, ticket => ticket.seats) 
+    @OneToOne(type => Ticket, ticket => ticket.seats)
     ticket: Ticket;
 }

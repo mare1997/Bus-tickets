@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn,} from "typeorm";
 import { User } from "./User";
-import { Ticket } from "./Tickect";
+import { Ticket } from "./Ticket";
 
 @Entity()
 export class Passenger {

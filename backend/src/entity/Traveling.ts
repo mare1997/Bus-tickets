@@ -1,10 +1,10 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, OneToMany} from "typeorm";
 import { Station } from "./Station";
-import { Ticket } from "./Tickect";
+import { Ticket } from "./Ticket";
 import { Vehicle } from "./Vehicle";
 
 @Entity()
-export class Rideing {
+export class Traveling {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -14,15 +14,15 @@ export class Rideing {
     @Column({type: "boolean", default: false})
     deleted: boolean;
 
-    @OneToMany(type => Station, station => station.rideing)
+    @OneToMany(type => Station, station => station.traveling)
     station: Station[];
 
-    @ManyToOne(type => Vehicle, vehicle => vehicle.rideing)
+    @ManyToOne(type => Vehicle, vehicle => vehicle.traveling)
     vehicle: Vehicle;
-    
-    @OneToMany(type => Ticket, ticket => ticket.rideing) 
+
+    @OneToMany(type => Ticket, ticket => ticket.traveling) 
     ticket: Ticket[];
 
-    
+
 
 }
