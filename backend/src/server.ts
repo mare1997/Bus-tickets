@@ -3,8 +3,9 @@ import * as bodyParser from 'body-parser'
 import UserController from './controllers/UserController'
 import CarrierController from './controllers/CarrierController'
 import loggerMiddleware from './middleware/logger'
-import BusStationContoller from './controllers/BusStationController'
+import BusStationController from './controllers/BusStationController'
 import LocationController from './controllers/LocationController'
+import VehicleController from './controllers/VehicleController'
 
 
 const app = new App({
@@ -12,8 +13,9 @@ const app = new App({
     controllers: [
         new UserController(),
         new CarrierController(),
-        new BusStationContoller(),
-        new LocationController()
+        new BusStationController(),
+        new LocationController(),
+        new VehicleController()
     ],
     middleWares: [
         bodyParser.json(),

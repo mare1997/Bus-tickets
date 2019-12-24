@@ -3,16 +3,16 @@ import IControllerBase from "../interfaces/IControllerBase.interface";
 import { getRepository } from 'typeorm';
 import { BusStation } from '../entity/BusStation';
 
-class BusStationContoller implements IControllerBase {
+class BusStationController implements IControllerBase {
 
-    public path = '/'
+    public path = '/busstation'
     public router = express.Router()
 
     constructor() {
         this.initRoutes()
     }
     public initRoutes() {
-        this.router.get('/busstation',async (req,res) => 
+        this.router.get(this.path,async (req,res) =>
         {   try{
                 const busstationRepository = getRepository(BusStation);
                 const bstationsFromDB = await busstationRepository.find();
@@ -29,7 +29,7 @@ class BusStationContoller implements IControllerBase {
                 res.send("Error " + e);
             }
         });
-        this.router.get('/busstation/:busstationId',async (req,res) => 
+        this.router.get(this.path + '/:busstationId',async (req,res) =>
         {   try{
                 const busstationRepository = getRepository(BusStation);
                 var busstationId = req.params.busstationId;
@@ -40,17 +40,16 @@ class BusStationContoller implements IControllerBase {
                 }else{
                     res.send("Bus station not found",404);
                 }
-               
+
             }catch(e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send("Error " + e);
             }
         });
-        this.router.post('/busstation',async (req,res) =>
+        this.router.post(this.path,async (req,res) =>
          {   try{
                 const busstationRepository = getRepository(BusStation);
                 let busstation = req.body;
-                
                 await busstationRepository.save(busstation);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(busstation,201);
@@ -60,11 +59,10 @@ class BusStationContoller implements IControllerBase {
                 res.send("Error " + e);
              };
         });
-        this.router.put('/busstation',async (req,res) =>
+        this.router.put(this.path,async (req,res) =>
          {   try{
                 const busstationRepository = getRepository(BusStation);
                 let busstation = req.body;
-                
                 await busstationRepository.save(busstation);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(busstation,200);
@@ -74,7 +72,7 @@ class BusStationContoller implements IControllerBase {
                 res.send("Error " + e);
              };
         });
-        this.router.delete('/busstation/:busstationId',async (req,res) =>
+        this.router.delete(this.path + '/:busstationId',async (req,res) =>
          {   try{
                 const busstationRepository = getRepository(BusStation);
                 var busstationId = req.params.busstationId;
@@ -91,4 +89,4 @@ class BusStationContoller implements IControllerBase {
         });
     }
 }
-export default BusStationContoller
+export default BusStationController
