@@ -41,7 +41,7 @@ class CarrierContoller implements IControllerBase {
                 }else{
                     res.send("Carrier not found",404);
                 }
-                
+
             }catch(e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send("Error " + e);
