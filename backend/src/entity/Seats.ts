@@ -17,6 +17,5 @@ export class Seats {
     vehicle: Vehicle;
 
     @OneToOne(type => Ticket, ticket => ticket.seats) 
-    @JoinColumn()
     ticket: Ticket;
 }

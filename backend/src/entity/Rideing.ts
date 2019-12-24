@@ -17,12 +17,11 @@ export class Rideing {
     @OneToMany(type => Station, station => station.rideing)
     station: Station[];
 
-    @OneToMany(type => Vehicle, vehicle => vehicle.rideing)
-    vehicle: Vehicle[];
+    @ManyToOne(type => Vehicle, vehicle => vehicle.rideing)
+    vehicle: Vehicle;
     
-    @OneToOne(type => Ticket, ticket => ticket.rideing) 
-    @JoinColumn()
-    ticket: Ticket;
+    @OneToMany(type => Ticket, ticket => ticket.rideing) 
+    ticket: Ticket[];
 
     
 

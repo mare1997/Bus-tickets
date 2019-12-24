@@ -24,6 +24,6 @@ export class Vehicle {
     @OneToMany(type => Seats, seats => seats.vehicle)
     seats: Seats[];
 
-    @ManyToOne(type => Rideing, rideing => rideing.vehicle)
-    rideing: Rideing;
+    @OneToMany(type => Rideing, rideing => rideing.vehicle)
+    rideing: Rideing[];
 }

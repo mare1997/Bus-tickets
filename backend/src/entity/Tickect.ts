@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne, JoinColumn} from "typeorm";
 import { Seats } from "./Seats";
 import { Passenger } from "./Passenger";
 import { Station } from "./Station";
@@ -16,13 +16,14 @@ export class Ticket {
     @Column({type: "boolean", default: false})
     deleted: boolean;
 
-    @OneToOne(type => Seats, seats => seats.ticket) 
+    @OneToOne(type => Seats, seats => seats.ticket)
+    @JoinColumn() 
     seats: Seats;
 
-    @OneToOne(type => Passenger, passenger => passenger.ticket) 
+    @OneToOne(type => Passenger, passenger => passenger.ticket)
     passenger: Passenger;
 
-    @OneToOne(type => Rideing, rideing => rideing.ticket) 
+    @ManyToOne(type => Rideing, rideing => rideing.ticket)
     rideing: Rideing;
 
 }

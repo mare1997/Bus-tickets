@@ -9,7 +9,7 @@ export class Station {
     id: number;
 
     @Column()
-    time: Date;
+    time: string;
     
     @Column({type: "boolean", default: false})
     deleted: boolean;
