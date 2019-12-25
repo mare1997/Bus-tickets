@@ -1,19 +1,19 @@
 import * as express from 'express'
 import IControllerBase from "../interfaces/IControllerBase.interface";
 import { Carrier } from '../entity/Carrier';
-import { getRepository } from 'typeorm';
+import { getRepository, Like } from 'typeorm';
 
 
-class CarrierContoller implements IControllerBase {
+class CarrierController implements IControllerBase {
 
-    public path = '/'
+    public path = '/carrier'
     public router = express.Router()
 
     constructor() {
         this.initRoutes()
     }
     public initRoutes() {
-        this.router.get('/carrier',async (req,res) => 
+        this.router.get(this.path,async (req,res) => 
         {   try{
                 const carrierRepository = getRepository(Carrier);
                 const carriersFromDB = await carrierRepository.find();
@@ -30,7 +30,7 @@ class CarrierContoller implements IControllerBase {
                 res.send("Error " + e);
             }
         });
-        this.router.get('/carrier/:carrierId',async (req,res) => 
+        this.router.get(this.path + '/:carrierId',async (req,res) => 
         {   try{
                 const carrierRepository = getRepository(Carrier);
                 var carrierId = req.params.carrierId;
@@ -47,8 +47,26 @@ class CarrierContoller implements IControllerBase {
                 res.send("Error " + e);
             }
         });
+        this.router.get(this.path + '/filter',async (req,res) =>
+        {
+            try{
+                const carrierRepository = getRepository(Carrier);
+                let filterOptions = req.body;
+                const carriers = await carrierRepository.find({name: Like('%'+filterOptions.name+'%')});
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                if(carriers){
+                    res.send(carriers);
+                }else{
+                    res.send("Carriers not found",404);
+                }
+            }catch(e){
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+                res.send("Error " + e);
+            }
 
-        this.router.post('/carrier',async (req,res) =>
+        });
+
+        this.router.post(this.path,async (req,res) =>
          {   try{
                 const carrierRepository = getRepository(Carrier);
                 let carrier = req.body;
@@ -61,11 +79,10 @@ class CarrierContoller implements IControllerBase {
                 res.send("Error " + e);
              };
         });
-        this.router.put('/carrier',async (req,res) =>
+        this.router.put(this.path,async (req,res) =>
          {   try{
                 const carrierRepository = getRepository(Carrier);
                 let carrier = req.body;
-                
                 await carrierRepository.save(carrier);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
                 res.send(carrier,200);
@@ -76,7 +93,7 @@ class CarrierContoller implements IControllerBase {
              };
         });
 
-        this.router.delete('/carrier/:carrierId',async (req,res) =>
+        this.router.delete(this.path + '/:carrierId',async (req,res) =>
          {   try{
                 const carrierRepository = getRepository(Carrier);
                 var carrierId = req.params.carrierId;
@@ -94,4 +111,4 @@ class CarrierContoller implements IControllerBase {
 
     }
 }
-export default CarrierContoller
+export default CarrierController

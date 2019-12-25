@@ -51,6 +51,20 @@ class TravelingController implements IControllerBase {
                 res.send("Error " + e);
             }
         });
+        this.router.get(this.path + '/filter/traveling',async (req,res) =>{
+            const travelingRepository = getRepository(Traveling);
+            let filterOptions = req.body;
+            let travels = await travelingRepository.find({relations: ["vehicle","station"] });
+            let filteredTravels = [];
+            travels.forEach(element => {
+                if(!element.deleted && element.date == filterOptions.date && element.station[0] == filterOptions.start
+                     && element.station[element.station.length-1] == filterOptions.finish){
+                        filterOptions.push(element);
+                }
+            });
+            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+            res.send(filteredTravels,200);
+        });
         /*
         *req.body are travel object with vehicle id and array with stations
          */
