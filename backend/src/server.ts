@@ -6,6 +6,7 @@ import loggerMiddleware from './middleware/logger'
 import BusStationController from './controllers/BusStationController'
 import LocationController from './controllers/LocationController'
 import VehicleController from './controllers/VehicleController'
+import TravelingController from './controllers/TravelingController'
 
 
 const app = new App({
@@ -15,7 +16,8 @@ const app = new App({
         new CarrierController(),
         new BusStationController(),
         new LocationController(),
-        new VehicleController()
+        new VehicleController(),
+        new TravelingController()
     ],
     middleWares: [
         bodyParser.json(),
