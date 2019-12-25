@@ -7,6 +7,7 @@ import BusStationController from './controllers/BusStationController'
 import LocationController from './controllers/LocationController'
 import VehicleController from './controllers/VehicleController'
 import TravelingController from './controllers/TravelingController'
+import TicketController from './controllers/TicketController'
 
 
 const app = new App({
@@ -17,7 +18,8 @@ const app = new App({
         new BusStationController(),
         new LocationController(),
         new VehicleController(),
-        new TravelingController()
+        new TravelingController(),
+        new TicketController()
     ],
     middleWares: [
         bodyParser.json(),

@@ -42,7 +42,7 @@ class VehicleController implements IControllerBase {
                 if(!vehicle.deleted){
                     res.send(vehicle);
                 }else{
-                    res.send("Bus station not found",404);
+                    res.send("Vehicle not found",404);
                 }
 
             }catch(e){

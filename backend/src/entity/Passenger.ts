@@ -7,7 +7,7 @@ export class Passenger {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({default: ""})
     name: string;
 
     @Column({type: "boolean", default: false})
