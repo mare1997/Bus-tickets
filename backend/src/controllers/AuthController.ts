@@ -15,10 +15,10 @@ class AuthController implements IControllerBase {
         this.initRoutes()
     }
     public initRoutes() {
-        this.router.get(this.path + "/login",async (req: Request, res: Response) => {
+        this.router.post(this.path + "/login",async (req: Request, res: Response) => {
             //Check if username and password are set
-            let { username, password } = req.body;
-            if (!(username && password)) {
+            let { userName, password } = req.body;
+            if (!(userName && password)) {
               res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
               res.status(400).send();
             }
@@ -27,13 +27,29 @@ class AuthController implements IControllerBase {
             const userRepository = getRepository(User);
             let user: User;
             try {
-              user = await userRepository.findOneOrFail({ where: { username } });
+              user = await userRepository.findOneOrFail({ where: { userName } });
             } catch (error) {
               res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
               res.status(401).send();
             }
+            //Check if encrypted password match
+            if (!user.checkIfUnencryptedPasswordIsValid(password)) {
+              res.status(401).send();
+              return;
+            }
+
+            //Sing JWT, valid for 1 hour
+            const token = jwt.sign(
+              { userId: user.id, username: user.userName },
+              config.jwtSecret,
+              { expiresIn: "10h" }
+            );
+
+            //Send the jwt in the response
+            res.status(200)
+            res.send(token);
         });
-        this.router.put(this.path + '/change-password',async (req: Request, res: Response) => {
+        this.router.post(this.path + '/change-password',async (req: Request, res: Response) => {
             //Get ID from JWT
             const id = res.locals.jwtPayload.userId;
             //Get parameters from the body

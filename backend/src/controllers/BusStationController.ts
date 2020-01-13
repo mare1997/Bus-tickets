@@ -38,7 +38,8 @@ class BusStationController implements IControllerBase {
                 if(!busstation.deleted){
                     res.send(busstation);
                 }else{
-                    res.send("Bus station not found",404);
+                    res.status(404);
+                    res.send("Bus station not found");
                 }
 
             }catch(e){
@@ -52,7 +53,8 @@ class BusStationController implements IControllerBase {
                 let busstation = req.body;
                 await busstationRepository.save(busstation);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(busstation,201);
+                res.status(201);
+                res.send(busstation);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -65,7 +67,8 @@ class BusStationController implements IControllerBase {
                 let busstation = req.body;
                 await busstationRepository.save(busstation);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(busstation,200);
+                res.status(200);
+                res.send(busstation);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');

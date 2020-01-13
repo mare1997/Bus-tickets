@@ -25,7 +25,8 @@ class TicketController implements IControllerBase{
                 if(!ticket.deleted){
                     res.send(ticket);
                 }else{
-                    res.send("Ticket not found",404);
+                    res.status(404);
+                    res.send("Ticket not found");
                 }
 
             }catch(e){
@@ -40,7 +41,7 @@ class TicketController implements IControllerBase{
                 const tickets = await ticketRepository.find({ relations: ["seats","traveling","passenger"] });
                 let ticketsOfTavel = [];
                 tickets.forEach(element => {
-                    if(element.traveling.id == travelingId){
+                    if(element.traveling.id == +travelingId){
                         if(!element.deleted){
                             ticketsOfTavel.push(element);
                         }
@@ -77,7 +78,8 @@ class TicketController implements IControllerBase{
                 ticket.traveling = traveling;
                 await ticketRepository.save(ticket);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(ticket,201);
+                res.status(201);
+                res.send(ticket);
 
             }catch(e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');

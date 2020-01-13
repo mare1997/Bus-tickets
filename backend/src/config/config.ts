@@ -1,4 +1,4 @@
 
 export default {
-    jwtSecret: "@QEGTUI"
+    jwtSecret: "Project"
   };

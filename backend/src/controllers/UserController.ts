@@ -4,6 +4,9 @@ import Database from "../services/Database";
 import { validate } from "class-validator";
 import { checkJwt } from "../middleware/checkJwt";
 import { checkRole } from "../middleware/checkRole";
+import { User } from '../entity/User';
+import { Location } from '../entity/Location';
+import { getRepository } from 'typeorm';
 
 
 class UserContoller implements IControllerBase {
@@ -50,7 +53,15 @@ class UserContoller implements IControllerBase {
          this.router.post('/register',async (req,res) =>
          {   try{
                 const userRepository=Database.getUserCustomRepository();
-                let user = req.body;
+                const locationRepository = getRepository(Location);
+                let user = new User();
+                user.userName = req.body.userName;
+                user.password = req.body.password;
+                user.firstName = req.body.firstName;
+                user.lastName = req.body.lastName;
+                user.age = req.body.age;
+                user.location =await locationRepository.findOne(req.body.locationId);
+                user.role = req.body.role;
                 let findUser = await userRepository.getUserByUsername(user.userName);
                 if(findUser){
                     throw new Error('User with that username exist');
@@ -64,7 +75,8 @@ class UserContoller implements IControllerBase {
                 user.hashPassword();
                 await userRepository.save(user);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(user,201);
+                res.status(201);
+                res.send(user);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');

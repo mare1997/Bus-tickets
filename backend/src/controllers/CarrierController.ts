@@ -39,7 +39,8 @@ class CarrierController implements IControllerBase {
                 if(!carrier.deleted){
                     res.send(carrier);
                 }else{
-                    res.send("Carrier not found",404);
+                    res.status(404);
+                    res.send("Carrier not found");
                 }
 
             }catch(e){
@@ -57,7 +58,8 @@ class CarrierController implements IControllerBase {
                 if(carriers){
                     res.send(carriers);
                 }else{
-                    res.send("Carriers not found",404);
+                    res.status(404);
+                    res.send("Carriers not found");
                 }
             }catch(e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -72,7 +74,8 @@ class CarrierController implements IControllerBase {
                 let carrier = req.body;
                 await carrierRepository.save(carrier);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(carrier,201);
+                res.status(201);
+                res.send(carrier);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -85,7 +88,8 @@ class CarrierController implements IControllerBase {
                 let carrier = req.body;
                 await carrierRepository.save(carrier);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(carrier,200);
+                res.status(200);
+                res.send(carrier);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
