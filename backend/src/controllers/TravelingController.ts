@@ -43,7 +43,8 @@ class TravelingController implements IControllerBase {
                 if(!traveling.deleted){
                     res.send(traveling);
                 }else{
-                    res.send("Bus station not found",404);
+                    res.status(404);
+                    res.send("Bus station not found");
                 }
 
             }catch(e){
@@ -63,7 +64,8 @@ class TravelingController implements IControllerBase {
                 }
             });
             res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-            res.send(filteredTravels,200);
+            res.status(200);
+            res.send(filteredTravels);
         });
         /*
         *req.body are travel object with vehicle id and array with stations
@@ -86,7 +88,8 @@ class TravelingController implements IControllerBase {
                 traveling.date = new Date();
                 await travelingRepository.save(traveling);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(traveling,201);
+                res.status(201);
+                res.send(traveling);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -112,7 +115,8 @@ class TravelingController implements IControllerBase {
             traveling.date = new Date();
             await travelingRepository.save(traveling);
             res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-            res.send(traveling,200);
+            res.status(200);
+            res.send(traveling);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');

@@ -8,7 +8,9 @@ import LocationController from './controllers/LocationController'
 import VehicleController from './controllers/VehicleController'
 import TravelingController from './controllers/TravelingController'
 import TicketController from './controllers/TicketController'
-
+import * as helmet from "helmet";
+import * as cors from "cors";
+import AuthController from './controllers/AuthController'
 
 const app = new App({
     port: 3001,
@@ -19,12 +21,15 @@ const app = new App({
         new LocationController(),
         new VehicleController(),
         new TravelingController(),
-        new TicketController()
+        new TicketController(),
+        new AuthController()
     ],
     middleWares: [
         bodyParser.json(),
         bodyParser.urlencoded({ extended: true }),
-        loggerMiddleware
+        loggerMiddleware,
+        cors(),
+        helmet()
     ]
 })
 

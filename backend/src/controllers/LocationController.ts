@@ -38,7 +38,8 @@ class LocationController implements IControllerBase {
                 if(!location.deleted){
                     res.send(location);
                 }else{
-                    res.send("Location not found.",404);
+                    res.status(404);
+                    res.send("Location not found.");
                 }
                 
             }catch(e){
@@ -53,7 +54,8 @@ class LocationController implements IControllerBase {
                 
                 await locationRepository.save(location);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(location,201);
+                res.status(201);
+                res.send(location);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -67,7 +69,8 @@ class LocationController implements IControllerBase {
                 
                 await locationRepository.save(location);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(location,200);
+                res.status(404);
+                res.send(location);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');

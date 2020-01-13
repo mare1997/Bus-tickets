@@ -42,7 +42,8 @@ class VehicleController implements IControllerBase {
                 if(!vehicle.deleted){
                     res.send(vehicle);
                 }else{
-                    res.send("Vehicle not found",404);
+                    res.status(404);
+                    res.send("Vehicle not found");
                 }
 
             }catch(e){
@@ -73,7 +74,8 @@ class VehicleController implements IControllerBase {
                 if(!vehicle.deleted){
                     res.send(s);
                 }else{
-                    res.send("Bus station not found",404);
+                    res.status(404);
+                    res.send("Bus station not found");
                 }
 
             }catch(e){
@@ -100,7 +102,8 @@ class VehicleController implements IControllerBase {
                 vehicle.seats = seats;
                 await vehicleRepository.save(vehicle);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(vehicle,201);
+                res.status(201);
+                res.send(vehicle);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -118,7 +121,8 @@ class VehicleController implements IControllerBase {
                 }
                 await vehicleRepository.save(vehicle);
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-                res.send(vehicle,200);
+                res.status(200);
+                res.send(vehicle);
 
              }catch (e){
                 res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
