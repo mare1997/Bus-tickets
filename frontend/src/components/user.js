@@ -8,27 +8,27 @@ class User extends React.Component {
         };
     }
 
-    componentDidMount() {
-        fetch('http://localhost:3001/users')
-        .then(results =>{
-            return results.json();
-        }).then(data =>{
-            console.log(data);
-            let user=data.map((u) => {
-                return (
-                    <div key={u.id}>
-                        <h1>User {u.id}</h1>
-                        <p>Firstname: {u.firstName}</p>
-                        <p>Lastname: {u.lastName}</p>
-                        <p>Age: {u.age}</p>
+    // componentDidMount() {
+    //     fetch('http://localhost:3001/users')
+    //     .then(results =>{
+    //         return results.json();
+    //     }).then(data =>{
+    //         console.log(data);
+    //         let user=data.map((u) => {
+    //             return (
+    //                 <div key={u.id}>
+    //                     <h1>User {u.id}</h1>
+    //                     <p>Firstname: {u.firstName}</p>
+    //                     <p>Lastname: {u.lastName}</p>
+    //                     <p>Age: {u.age}</p>
 
-                    </div>
-                )
-            })
-            this.setState({users: user})
+    //                 </div>
+    //             )
+    //         })
+    //         this.setState({users: user})
 
-        })
-    }
+    //     })
+    // }
     render() {
         return (
             <div className="container">
