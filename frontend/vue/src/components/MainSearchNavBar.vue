@@ -72,7 +72,7 @@ export default {
 <style scoped>
 .bg-img {
   /* The image used */
-  background-image: url('~@/assets//city.jpg');
+  background-image: url('~@/assets/city.jpg');
 
   min-height: 580px;
 

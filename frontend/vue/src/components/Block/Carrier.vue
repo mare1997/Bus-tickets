@@ -61,7 +61,8 @@ p
 }
 
 .center
-{
+{ 
+  width: 20%;
   height:320px;
   display: flex;
   justify-content: center;
@@ -73,7 +74,7 @@ p
 .property-card
 {
   height:18em;
-  width:14em;
+  width:16em;
   display:-webkit-box;
   display:-ms-flexbox;
   display:flex;
@@ -97,7 +98,7 @@ p
 .property-image
 {
   height:6em;
-  width:14em;
+  width:100%;
   padding:1em 2em;
   position:Absolute;
   top:0px;

@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import CarrierPage from '@/components/CarrierPage'
+import CarriersPage from '@/components/CarriersPage'
 import BusStationsPage from '@/components/BusStationsPage'
+import Sign from '@/components/Sign'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -15,13 +17,25 @@ export default new Router({
     },
     {
       path: '/prevoznici',
-      name: 'CarrierPage',
-      component: CarrierPage
+      name: 'CarriersPage',
+      component: CarriersPage
     },
     {
       path: '/stanice',
       name: 'BusStationsPage',
       component: BusStationsPage
+    },
+    {
+      path: '/login',
+      name: 'Sign',
+      component: Sign,
+      props: (route) => ({ path: route.path })
+    },
+    {
+      path: '/register',
+      name: 'Sign',
+      component: Sign,
+      props: (route) => ({ path: route.path })
     }
   ]
 })

@@ -18,12 +18,12 @@
       <router-link :to="{ name: 'Home' }"><h1 class="brand brand-name navbar-left bus-tickets-text">Bus Tickets</h1></router-link>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <router-link :to="{ name: 'CarrierPage' }"><b-nav-item>Prevoznici</b-nav-item></router-link>
-          <router-link :to="{ name: 'BusStationsPage' }"><b-nav-item>Autobuske Statnice</b-nav-item></router-link>
+          <b-nav-item><router-link :to="{ name: 'CarriersPage' }">Prevoznici</router-link></b-nav-item>
+          <b-nav-item><router-link :to="{ name: 'BusStationsPage' }">Autobuske Statnice</router-link></b-nav-item>
           <b-nav-item-dropdown right v-if="isLoggedIn">
             <!-- Using 'button-content' slot -->
             <template v-slot:button-content>
-              <em>User</em>
+              <em>Moj nalog</em>
             </template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
             <b-dropdown-item href="#">Sign Out</b-dropdown-item>
@@ -31,10 +31,10 @@
           <b-nav-item-dropdown right v-else>
             <!-- Using 'button-content' slot -->
             <template v-slot:button-content>
-              <em>User</em>
+              <em>Moj nalog</em>
             </template>
-            <b-dropdown-item href="#">Sign In</b-dropdown-item>
-            <b-dropdown-item href="#">Register</b-dropdown-item>
+            <b-dropdown-item><router-link :to="{ path: 'login' }">Sign In</router-link></b-dropdown-item>
+            <b-dropdown-item><router-link :to="{ path: 'register' }">Register</router-link></b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>

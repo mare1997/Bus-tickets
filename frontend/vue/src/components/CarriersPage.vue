@@ -1,9 +1,9 @@
 <template>
    <div>
-      <MainSearchNavBar :activeNav="'activeAS'" />
-      <div class="m-4 h2"><h2>Autobuske stanice</h2></div>
-      <div class="stations">
-        <Station v-for="station in stations" :key="station * Math.random()" />
+      <MainSearchNavBar :activeNav="'activeP'" />
+      <div class="m-4 h2"><h2>Prevoznici</h2></div>
+      <div class="carrier">
+        <Carrier v-for="carrier in carriers" :key="carrier * Math.random()" />
       </div>
       
     </div> 
@@ -11,22 +11,22 @@
 
 <script>
 import MainSearchNavBar from '@/components/MainSearchNavBar.vue'
-import Station from '../components/Block/Station.vue'
+import Carrier from '../components/Block/Carrier.vue'
 export default {
-  name: 'BusStationsPage',
+  name: 'CarriersPage',
   components: {
     MainSearchNavBar,
-    Station
+    Carrier
   },
   data () {
     return {
-      stations: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      carriers: [1, 2, 3, 4, 5, 6, 7]
     }
   }
 }
 </script>
 <style scoped>
-.stations {
+.carrier {
   margin: 50px 100px 50px  100px;
   display: flex;
   flex-wrap: wrap;

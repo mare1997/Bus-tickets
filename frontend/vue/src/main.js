@@ -6,8 +6,11 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import './assets/styles/index.css'
+// import '@/assets/styles/tailwind.css'
+import Vuex from 'vuex'
+import { store } from './store'
 
+Vue.use(Vuex)
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false
 
@@ -16,5 +19,5 @@ new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: { App, store }
 })

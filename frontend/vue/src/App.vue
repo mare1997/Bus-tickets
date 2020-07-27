@@ -11,6 +11,7 @@
 <script>
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
+import '@/assets/styles/tailwind.css'
 
 export default {
   name: 'app',
