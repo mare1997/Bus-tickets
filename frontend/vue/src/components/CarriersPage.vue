@@ -34,4 +34,6 @@ export default {
 .h2 {
   text-align: center;
 }
+
+ 
 </style>

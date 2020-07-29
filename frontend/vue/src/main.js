@@ -6,10 +6,15 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-// import '@/assets/styles/tailwind.css'
+import '@/assets/styles/tailwind.css'
 import Vuex from 'vuex'
 import { store } from './store'
+import { VueStars } from 'vue-stars'
+import VueLayers from 'vuelayers'
+import 'vuelayers/lib/style.css' // needs css-loader
 
+Vue.use(VueLayers)
+Vue.component('vue-stars', VueStars)
 Vue.use(Vuex)
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false
