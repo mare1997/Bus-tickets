@@ -1,20 +1,24 @@
 <template>
-   <div class="center">
-    <div class="property-card">
-      <a href="#">
-        <div class="property-image">
-          <div class="property-image-title">
-            <h5> Card Title </h5>
-          </div>
-        </div></a>
-      <div class="property-description">
-        <p>Prevoznik: 818181818</p>
-        <p>Telefon: 818181818</p>
-        <p>Email: gadga@gdaga.rs</p>
-        <p>Web: www.some.vs</p>
+  <router-link style="width: 20%" :to="{ name: 'CarrierPage', params: { carrier: carrier, id: carrier.id }}">
+    <div class="center">
+      <div class="property-card">
+        <a href="#">
+          <div class="property-image">
+            <div class="property-image-title">
+              <h5> {{carrier.name}} </h5>
+            </div>
+          </div></a>
+        <div class="property-description">
+          <p v-if="carrier.name">Prevoznik: {{carrier.name}}</p>
+          <p v-if="carrier.phone">Telefon: {{carrier.phone}}</p>
+          <p v-if="carrier.email">Email: {{carrier.email}}</p>
+          <p v-if="carrier.site">Web: {{carrier.site}}</p>
+          <p v-if="carrier.street">Ulica: {{carrier.street}}</p>
+        </div>
       </div>
     </div>
-  </div>
+  </router-link>
+   
 </template>
 
 <script>
@@ -24,11 +28,6 @@ export default {
     carrier: {
       type: Object,
       default: {}
-    }
-  },
-  date () {
-    return {
-      name: ''
     }
   }
 }
@@ -62,7 +61,6 @@ p
 
 .center
 { 
-  width: 20%;
   height:320px;
   display: flex;
   justify-content: center;
@@ -123,7 +121,7 @@ p
   -o-transition:all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition:all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
   padding: 0.5em 1em;
-  text-align:center;
+  text-align:left;
 }
 
 /* Social Icons */

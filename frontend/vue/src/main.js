@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@/assets/styles/tailwind.css'
 import Vuex from 'vuex'
-import { store } from './store'
+import { store } from './store/index.js'
 import { VueStars } from 'vue-stars'
 import VueLayers from 'vuelayers'
 import 'vuelayers/lib/style.css' // needs css-loader
@@ -23,6 +23,10 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
+  beforeCreate () {
+    this.$store.commit('initialiseStore')
+  },
   template: '<App/>',
-  components: { App, store }
+  components: { App }
 })

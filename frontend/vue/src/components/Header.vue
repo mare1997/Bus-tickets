@@ -26,7 +26,7 @@
               <em>Moj nalog</em>
             </template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+            <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item-dropdown right v-else>
             <!-- Using 'button-content' slot -->
@@ -44,6 +44,7 @@
 
 <script>
 import { BNavbar, BNavbarNav, BNavItemDropdown, BDropdownItem, BCollapse } from 'bootstrap-vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Header',
@@ -54,9 +55,18 @@ export default {
     'b-dropdown-item': BDropdownItem,
     'b-collapse': BCollapse
   },
-  data () {
-    return {
-      isLoggedIn: false
+  computed: {
+    ...mapGetters({
+      isLoggedIn: 'user/isLoggedIn',
+      getToken: 'user/getToken',
+      getUser: 'user/getUser',
+      getCarriers: 'carrier/getCarriers',
+      getBusStations: 'busstation/getBusStations'
+    })
+  },
+  methods: {
+    logout () {
+      this.$store.dispatch('user/logout')
     }
   }
 }

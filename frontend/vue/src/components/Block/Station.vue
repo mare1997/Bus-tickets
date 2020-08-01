@@ -1,20 +1,23 @@
 <template>
-   <div class="center">
-    <div class="property-card">
-      <a href="#">
-        <div class="property-image">
-          <div class="property-image-title">
-            <h5> Card Title </h5>
-          </div>
-        </div></a>
-      <div class="property-description">
-        <p>Station: 818181818</p>
-        <p>Telefon: 818181818</p>
-        <p>Email: gadga@gdaga.rs</p>
-        <p>Web: www.some.vs</p>
+  <router-link style="width: 20%" :to="{ name: 'BusStation', params: { station: station, id: station.id }}">
+    <div class="center">
+      <div class="property-card">
+        <a href="#">
+          <div class="property-image">
+            <div class="property-image-title">
+              <h5> {{station.name}} </h5>
+            </div>
+          </div></a>
+        <div class="property-description">
+          <p v-if="station.name">Autobuska Stanica: {{station.name}}</p>
+          <p v-if="station.phone">Telefon: {{station.phone}}</p>
+          <p v-if="station.email">Email: {{station.email}}</p>
+          <p v-if="station.street">Ulica: {{station.street}}</p>
+          <p v-if="station.worktime">Radno vreme: {{station.worktime}}</p>
+        </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -24,11 +27,6 @@ export default {
     station: {
       type: Object,
       default: {}
-    }
-  },
-  date () {
-    return {
-      name: ''
     }
   }
 }
@@ -62,7 +60,6 @@ p
 
 .center
 {
-  width: 20%;
   height:320px;
   display: flex;
   justify-content: center;
@@ -74,7 +71,7 @@ p
 .property-card
 {
   height:18em;
-  width:18em;
+  width:16em;
   display:-webkit-box;
   display:-ms-flexbox;
   display:flex;

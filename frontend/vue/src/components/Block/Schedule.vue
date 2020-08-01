@@ -2,69 +2,37 @@
   <div class="container">
     <div class="ride" @click="clicked = !clicked">
       <div class="quarter">
-        <p style='width: 15%;'>2:30 AM</p>
+        <p style='width: 15%;'>{{schedule.station[0].time}}</p>
         <i class="fa fa-bus" aria-hidden="true"></i>
-        <p>Smederevo</p>
-        <p class="price">$500.00</p>
+        <p>{{schedule.station[0].bus_station.name}}</p>
+        <p class="price">{{schedule.price}} RSD</p>
       </div>
       <div class="half">
         <div class="line"></div>
-        <p class="duration">Duration: 1 hour</p>
-        <img class="driveCompanyLogo" src="~@/assets/lasta.jpg" />
+        <p class="duration">Trajanje voznje: 2 sata</p>
+        <img class="driveCompanyLogo" v-if="schedule.carrier.image" src="~@/assets/lasta.jpg" />
       </div>
       <div class="quarter">
-        <p style='width: 15%;'>3:30 AM</p>
+        <p style='width: 15%;'>{{schedule.station[schedule.station.length - 1].time}}</p>
         <i class="fa fa-map-marker" aria-hidden="true"></i>
-        <p>Beograd</p>
+        <p>{{schedule.station[schedule.station.length - 1].bus_station.name}}</p>
         <button class="checkoutButton">Buy ticket</button>
       </div>
     </div>
     <div class="stationList" v-if="clicked">
       <div class="stationHeader">
         <div class="stationIconHeader"></div>
-        <p class="stationItem">Stations</p>
-        <p class="stationItem">Departure</p>
-        <p class="stationItem">Arrival</p>
+        <p class="stationItem">Stanice</p>
+        <p class="stationItem">Dolazak</p>
+        <p class="stationItem">Odlazak</p>
       </div>
-      <div class="station">
+      <div class="station" v-for="station in schedule.station" :key="station.id + Math.random()">
         <div class="stationIcon">
           <div class="dot"></div>
         </div>
-        <p class="stationItem">Smederevo</p>
-        <p class="stationItem">1:50 PM</p>
-        <p class="stationItem">2:00 PM</p>
-      </div>
-      <div class="station">
-        <div class="stationIcon">
-          <div class="dot"></div>
-        </div>
-        <p class="stationItem">Smederevo</p>
-        <p class="stationItem">1:50 PM</p>
-        <p class="stationItem">2:00 PM</p>
-      </div>
-      <div class="station">
-        <div class="stationIcon">
-          <div class="dot"></div>
-        </div>
-        <p class="stationItem">Smederevo</p>
-        <p class="stationItem">1:50 PM</p>
-        <p class="stationItem">2:00 PM</p>
-      </div>
-      <div class="station">
-        <div class="stationIcon">
-          <div class="dot"></div>
-        </div>
-        <p class="stationItem">Smederevo</p>
-        <p class="stationItem">1:50 PM</p>
-        <p class="stationItem">2:00 PM</p>
-      </div>
-      <div class="station">
-        <div class="stationIcon">
-          <div class="dot"></div>
-        </div>
-        <p class="stationItem">Smederevo</p>
-        <p class="stationItem">1:50 PM</p>
-        <p class="stationItem">2:00 PM</p>
+        <p class="stationItem">{{station.bus_station.name}}</p>
+        <p class="stationItem">{{station.time}}</p>
+        <p class="stationItem">{{station.time}}</p>
       </div>
     </div>
   </div>
@@ -73,6 +41,12 @@
 <script>
 export default {
   name: 'Schedule',
+  props: {
+    schedule: {
+      type: Object,
+      default: {}
+    }
+  },
   data () {
     return {
       clicked: false

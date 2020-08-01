@@ -2,14 +2,15 @@
   <div>
     <MainSearchNavBar :activeNav="'activeP'" />
     <div  class="parent">
-      <div class="h2"><h2>Ime Prevoznika</h2></div>
+      <div class="h2"><h2>{{carrier.name}}</h2></div>
       <section id="info">
         <div class="row">
           <div class="card">
-            <h2>Prevoznik: 818181818</h2>
-            <p>Telefon: 818181818</p>
-            <p>Email: gadga@gdaga.rs</p>
-            <p>Web: www.some.vs</p>
+            <h2 v-if="carrier.name">Prevoznik: {{carrier.name}}</h2>
+            <p v-if="carrier.phone">Telefon: {{carrier.phone}}</p>
+            <p v-if="carrier.email">Email: {{carrier.email}}</p>
+            <p v-if="carrier.site">Web: {{carrier.site}}</p>
+            <p v-if="carrier.street">Ulica: {{carrier.street}}</p>
           </div>
         </div>
       </section>
@@ -60,6 +61,19 @@ export default {
   components: {
     MainSearchNavBar,
     Raiting
+  },
+  data () {
+    return {
+      carrier: {}
+    }
+  },
+  mounted () {
+    this.$route.params.carrier ? this.carrier = this.$route.params.carrier : this.getCarrierData()
+  },
+  methods: {
+    async getCarrierData () {
+      this.carrier = await this.$store.dispatch('carrier/carrier', { id: this.$route.params.id }, { root: true })
+    }
   }
 }
 </script>

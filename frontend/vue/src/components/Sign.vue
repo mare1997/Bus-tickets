@@ -4,21 +4,21 @@
       <div class="form-container sign-up-container">
         <form action="#">
           <h1>Create Account</h1>
-          <input type="text" placeholder="Firstname" />
-          <input type="text" placeholder="Lastname" />
-          <input type="number" placeholder="Age" />
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
-          <button>Sign Up</button>
+          <input v-model="firstname" type="text" placeholder="Firstname" />
+          <input v-model="lastname" type="text" placeholder="Lastname" />
+          <input v-model="age" type="number" placeholder="Age" />
+          <input v-model="email" type="email" placeholder="Email" />
+          <input v-model="password" type="password" placeholder="Password" />
+          <button @click="register">Sign Up</button>
         </form>
       </div>
       <div class="form-container sign-in-container">
         <form action="#">
           <h1>Sign in</h1>
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
+          <input v-model="email" type="email" placeholder="Email" />
+          <input v-model="password" type="password" placeholder="Password" />
           <a href="#">Forgot your password?</a>
-          <button>Sign In</button>
+          <button @click="login">Sign In</button>
         </form>
       </div>
       <div class="overlay-container">
@@ -42,6 +42,15 @@
 <script>
 export default {
   name: 'Sign',
+  data () {
+    return {
+      firstname: '',
+      lastname: '',
+      age: '',
+      email: '',
+      password: ''
+    }
+  },
   mounted () {
     const path = this.$route.path
     if (path === '/register') {
@@ -56,6 +65,19 @@ export default {
     moveToRegister () {
       const container = document.getElementById('container')
       container.classList.add('right-panel-active')
+    },
+    login () {
+      this.$store.dispatch('user/login', {userName: this.email, password: this.password})
+    },
+    register () {
+      this.$store.dispatch('user/register',
+        {
+          userName: this.email,
+          password: this.password,
+          firstname: this.firstname,
+          lastname: this.lastname,
+          age: this.age
+        })
     }
   }
 }

@@ -1,20 +1,14 @@
 <template>
-  <div>
+  <div class="parent">
     <b-input-group>
-      <b-input-group-prepend class="bg-white">Grad</b-input-group-prepend>
-      <b-form-input list="list-city" v-model="city"></b-form-input>
-      <b-input-group-prepend class="bg-white">Stanica</b-input-group-prepend>
-      <b-form-input list="list-station" v-model="station"></b-form-input>
+      <b-form-input placeholder="Stanica" list="list-station" v-model="station" style="margin-right: 15px"></b-form-input>
       <b-input-group-append>
-        <b-button variant="success">Pretrazi</b-button>
+        <b-button variant="success" @click="search">Pretrazi</b-button>
       </b-input-group-append>
     </b-input-group>
 
-    <datalist id="list-city">
-      <option v-for="city in cities" :key="city.length * Math.random()">{{ city }}</option>
-    </datalist>
     <datalist id="list-station">
-      <option v-for="station in stations" :key="station.length * Math.random()">{{ station }}</option>
+      <option v-for="station in cities" :key="station.length * Math.random()">{{ station }}</option>
     </datalist>
   </div> 
 </template>
@@ -33,10 +27,18 @@ export default {
   data () {
     return {
       cities: ['Beograd', 'Smederevo', 'Novi Sad'],
-      stations: ['BUS', 'SAS', 'MAS'],
-      station: null,
-      city: null
+      station: null
+    }
+  },
+  methods: {
+    search () {
+      this.$router.push({ name: 'BusStationsPage', query: { q: this.station } }).catch(() => {})
     }
   }
 }
 </script>
+<style scoped>
+.parent {
+  margin: 14% 10% 10% 10%;
+}
+</style>

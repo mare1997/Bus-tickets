@@ -22,12 +22,18 @@ export default new Router({
     {
       path: '/prevoznici',
       name: 'CarriersPage',
-      component: CarriersPage
+      component: CarriersPage,
+      props: (route) => ({
+        ...route.params
+      })
     },
     {
-      path: '/prevoznik',
+      path: '/prevoznik/:id',
       name: 'CarrierPage',
-      component: CarrierPage
+      component: CarrierPage,
+      props: (route) => ({
+        ...route.params
+      })
     },
     {
       path: '/stanice',
@@ -35,9 +41,12 @@ export default new Router({
       component: BusStationsPage
     },
     {
-      path: '/stanica',
-      name: 'BusStations',
-      component: BusStation
+      path: '/stanica/:id',
+      name: 'BusStation',
+      component: BusStation,
+      props: (route) => ({
+        ...route.params
+      })
     },
     {
       path: '/placanje',
@@ -52,14 +61,12 @@ export default new Router({
     {
       path: '/login',
       name: 'Sign',
-      component: Sign,
-      props: (route) => ({ path: route.path })
+      component: Sign
     },
     {
       path: '/register',
       name: 'Sign',
-      component: Sign,
-      props: (route) => ({ path: route.path })
+      component: Sign
     }
   ]
 })

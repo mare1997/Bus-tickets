@@ -2,8 +2,11 @@
    <div>
       <MainSearchNavBar :activeNav="'activeAS'" />
       <div class="m-4 h2"><h2>Autobuske stanice</h2></div>
-      <div class="stations">
-        <Station v-for="station in stations" :key="station * Math.random()" />
+      <div class="stations" v-if="stations.length !== 0">
+        <Station v-for="station in stations" :key="station.id * Math.random()" :station="station" />
+      </div>
+      <div class="h2" v-else>
+        <h4>Ne postoji stanica za ponudjenu vrednost: {{this.$route.query.q}}</h4>
       </div>
       
     </div> 
@@ -12,6 +15,8 @@
 <script>
 import MainSearchNavBar from '@/components/MainSearchNavBar.vue'
 import Station from '../components/Block/Station.vue'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'BusStationsPage',
   components: {
@@ -20,7 +25,28 @@ export default {
   },
   data () {
     return {
-      stations: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      stations: []
+    }
+  },
+  computed: {
+    ...mapGetters({
+      getBusStations: 'busstation/getBusStations'
+    }),
+    getQ () {
+      return this.$route.query.q
+    }
+  },
+  mounted () {
+    this.getQ ? this.search(this.getQ) : this.stations = this.getBusStations
+  },
+  watch: {
+    getQ: function (value) {
+      this.search(value)
+    }
+  },
+  methods: {
+    async search (value) {
+      this.stations = await this.$store.dispatch('busstation/search', { value }, { root: true })
     }
   }
 }

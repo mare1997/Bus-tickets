@@ -1,14 +1,11 @@
 <template>
-  <div>
-    <b-input-group class="my-8">
-      <b-input-group-prepend class="bg-white">Polazak</b-input-group-prepend>
-      <b-form-input list="list-station" v-model="start"></b-form-input>
-      <b-input-group-prepend class="bg-white">Odrediste</b-input-group-prepend>
-      <b-form-input list="list-station" v-model="stop"></b-form-input>
-      <b-input-group-prepend class="bg-white">Datum i vreme</b-input-group-prepend>
-      <date-picker v-model="datetime" type="datetime" placeholder="Select datetime" format="DD-MM-YYYY"></date-picker>
+  <div class="parent">
+    <b-input-group class="search">
+      <b-form-input placeholder="Polazak" list="list-station" v-model="start" style="margin-right: 15px"></b-form-input>
+      <b-form-input placeholder="Odrediste" list="list-station" v-model="finish" style="margin-right: 15px"></b-form-input>
+      <date-picker v-model="datetime" type="datetime" placeholder="Datum i vreme" format="DD-MM-YYYY" style="margin-right: 15px"></date-picker>
       <b-input-group-append>
-        <b-button variant="success">Pretrazi</b-button>
+        <b-button variant="success" @click="search">Pretrazi</b-button>
       </b-input-group-append>
     </b-input-group>
 
@@ -34,11 +31,22 @@ export default {
   },
   data () {
     return {
-      sizes: ['Beograd', 'Smederevo', 'Novi Sad'],
+      sizes: ['Beograd', 'Smederevo', 'Novi Sad', 'Kragujevac'],
       datetime: null,
       start: '',
-      stop: ''
+      finish: ''
+    }
+  },
+  methods: {
+    search () {
+      this.$router.push({ name: 'SchedulePage', query: { date: this.datetime.toString(), start: this.start, finish: this.finish } })
     }
   }
 }
 </script>
+<style scoped>
+.parent {
+  margin: 14% 10% 10% 10%;
+}
+
+</style>

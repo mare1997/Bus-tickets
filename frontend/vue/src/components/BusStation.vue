@@ -1,15 +1,16 @@
 <template>
   <div>
-    <MainSearchNavBar :activeNav="'activeP'" />
+    <MainSearchNavBar :activeNav="'activeAS'" />
     <div  class="parent">
-      <div class="h2"><h2>Autobska Stanica Ime</h2></div>
+      <div class="h2"><h2>{{station.name}}</h2></div>
       <section id="info">
         <div class="row">
           <div class="card">
-            <h2>Station: 818181818</h2>
-            <p>Telefon: 818181818</p>
-            <p>Email: gadga@gdaga.rs</p>
-            <p>Web: www.some.vs</p>
+            <h2 v-if="station.name">Autobuska Stanica: {{station.name}}</h2>
+            <p v-if="station.phone">Telefon: {{station.phone}}</p>
+            <p v-if="station.email">Email: {{station.email}}</p>
+            <p v-if="station.street">Ulica: {{station.street}}</p>
+            <p v-if="station.worktime">Radno vreme: {{station.worktime}}</p>
           </div>
         </div>
       </section>
@@ -23,15 +24,10 @@
           </tr>
         </thead>
         <tbody class="tbody">
-          <tr>
-            <td>Lasta</td>
-            <td>Smedervo</td>
-            <td>16:10</td>
-          </tr>
-          <tr>
-            <td>Jugoprevoz</td>
-            <td>Nis</td>
-            <td>15:30</td>
+          <tr v-for="schedule in schedules" :key="schedule + Math.random()" :schedule="schedule">
+            <td>{{schedule.carrier.name}}</td>
+            <td>{{schedule.station[0].bus_station.name}}</td>
+            <td>{{schedule.station[0].time}}</td>
           </tr>
         </tbody>
       </table>
@@ -63,9 +59,32 @@ export default {
     return {
       center: [20.92898276982583, 44.6666816016907],
       zoom: 17,
-      rotation: 0
+      rotation: 0,
+      station: {},
+      schedules: []
+    }
+  },
+  async mounted () {
+    if (this.$route.params.station) {
+      this.station = this.$route.params.station
+      this.center[0] = this.station.latitude
+      this.center[1] = this.station.longitude
+    } else {
+      this.getStationData()
+    }
+    await this.search()
+  },
+  methods: {
+    async getStationData () {
+      this.station = await this.$store.dispatch('busstation/station', { id: this.$route.params.id }, { root: true })
+      this.center[0] = this.station.latitude
+      this.center[1] = this.station.longitude
+    },
+    async search () {
+      this.schedules = await this.$store.dispatch('schedule/search', { date: new Date(), start: this.station.location.name, finish: '' }, { root: true })
     }
   }
+
 }
 </script>
 

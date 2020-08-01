@@ -1,21 +1,21 @@
 <template>
-  <div>
+  <div class="parent">
     <b-input-group>
-      <b-input-group-prepend class="bg-white">Prevoznici</b-input-group-prepend>
-      <b-form-input list="list-carrier" v-model="carrier"></b-form-input>
+      <b-form-input placeholder="Prevznici" list="list-carrier" v-model="carrier" style="margin-right: 15px"></b-form-input>
       <b-input-group-append>
-        <b-button variant="success">Pretrazi</b-button>
+        <b-button variant="success" @click="search">Pretrazi</b-button>
       </b-input-group-append>
     </b-input-group>
 
     <datalist id="list-carrier">
-      <option v-for="carrier in carriers" :key="carrier.length * Math.random()">{{ carrier }}</option>
+      <option v-for="carrier in getCarriers" :key="carrier.id * Math.random()">{{ carrier.name }}</option>
     </datalist>
   </div>  
 </template>
 
 <script>
 import { BInputGroup, BInputGroupPrepend, BFormInput, BInputGroupAppend } from 'bootstrap-vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CarrierSearch',
@@ -27,9 +27,24 @@ export default {
   },
   data () {
     return {
-      carriers: ['Lasta', 'BecejPrevoz', 'JugopRevoz'],
       carrier: null
+    }
+  },
+  computed: {
+    ...mapGetters({
+      getCarriers: 'carrier/getCarriers'
+    })
+  },
+  methods: {
+    search () {
+      this.$router.push({ name: 'CarriersPage', query: { q: this.carrier } }).catch(() => {})
     }
   }
 }
 </script>
+
+<style scoped>
+.parent {
+  margin: 14% 10% 10% 10%;
+}
+</style>
