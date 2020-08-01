@@ -13,7 +13,6 @@ class App {
     constructor(appInit: { port: number; middleWares: any; controllers: any;}) {
         this.app = express()
         this.port = appInit.port
-        console.log(cors)
         this.app.use(cors())
         this.middlewares(appInit.middleWares)
         this.routes(appInit.controllers)

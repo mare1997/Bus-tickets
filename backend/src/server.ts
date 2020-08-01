@@ -8,6 +8,8 @@ import LocationController from './controllers/LocationController'
 import VehicleController from './controllers/VehicleController'
 import TravelingController from './controllers/TravelingController'
 import TicketController from './controllers/TicketController'
+import CommentController from './controllers/CommentController'
+import ReviewController from './controllers/ReviewController'
 import * as helmet from "helmet";
 import * as cors from "cors";
 import AuthController from './controllers/AuthController'
@@ -22,7 +24,9 @@ const app = new App({
         new VehicleController(),
         new TravelingController(),
         new TicketController(),
-        new AuthController()
+        new AuthController(),
+        new CommentController(),
+        new ReviewController()
     ],
     middleWares: [
         bodyParser.json(),

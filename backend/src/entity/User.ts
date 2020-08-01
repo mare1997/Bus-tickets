@@ -1,49 +1,53 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany,Unique} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, Unique } from "typeorm";
 import { Length, IsNotEmpty } from "class-validator";
 import { Location } from "./Location";
 import { Passenger } from "./Passenger";
 import * as bcrypt from "bcryptjs";
+import { Comment } from "./Comment";
 
 @Entity()
 @Unique(["userName"])
 export class User {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    userName: string;
+  @Column()
+  userName: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @Column()
-    firstName: string;
+  @Column()
+  firstName: string;
 
-    @Column()
-    lastName: string;
+  @Column()
+  lastName: string;
 
-    @Column()
-    age: number;
+  @Column()
+  age: number;
 
-    @Column({type: "boolean", default: false})
-    deleted: boolean;
+  @Column({ type: "boolean", default: false })
+  deleted: boolean;
 
-    @Column()
-    @IsNotEmpty()
-    role: string;
+  @Column()
+  @IsNotEmpty()
+  role: string;
 
-    @ManyToOne(type => Location, location => location.user)
-    location: Location;
+  @ManyToOne(type => Location, location => location.user)
+  location: Location;
 
-    @OneToMany(type => Passenger, passenger => passenger.user)
-    passenger: Passenger[];
+  @OneToMany(type => Passenger, passenger => passenger.user)
+  passenger: Passenger[];
 
-    hashPassword() {
-        this.password = bcrypt.hashSync(this.password, 8);
-    }
+  @OneToMany(type => Comment, comment => comment.carrier)
+  comment: Comment[];
 
-    checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
-        return bcrypt.compareSync(unencryptedPassword, this.password);
-    }
+  hashPassword() {
+    this.password = bcrypt.hashSync(this.password, 8);
+  }
+
+  checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
+    return bcrypt.compareSync(unencryptedPassword, this.password);
+  }
 }
