@@ -2,7 +2,8 @@ import "reflect-metadata";
 import * as express from 'express'
 import { Application } from 'express'
 import Database from './services/Database';
-
+//import cors from 'cors'
+var cors = require('cors')
 
 class App {
 
@@ -12,10 +13,13 @@ class App {
     constructor(appInit: { port: number; middleWares: any; controllers: any;}) {
         this.app = express()
         this.port = appInit.port
-
+        console.log(cors)
+        this.app.use(cors())
         this.middlewares(appInit.middleWares)
         this.routes(appInit.controllers)
         this.database()
+        
+        
         //this.assets()
         //this.template()
     }
@@ -39,6 +43,7 @@ class App {
         
         this.app.listen(this.port, () => {
             console.log(`App listening on the http://localhost:${this.port}`)
+            
         })
     }
 }

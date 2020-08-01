@@ -40,11 +40,11 @@ INSERT INTO ticket VALUE (3,1300,0,3,1);
 INSERT INTO ticket VALUE (4,1300,0,4,1);
 
 --Secret for all users are a
-INSERT INTO user VALUE (1,'misko',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Milos","Misic",24,0,4,'ADMIN');
-INSERT INTO user VALUE (2,'pera',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Pera","Peric",22,0,4,'EMPLOYER');
-INSERT INTO user VALUE (3,'dane',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Dane","Koprivica",45,0,4,'USER');
-INSERT INTO user VALUE (4,'dzoni',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Nikola","Petric",34,0,4,'ADMIN');
-INSERT INTO user VALUE (5,'a',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","a","a",24,0,4,'ADMIN');
+INSERT INTO user (id, userName , password , firstName , lastName , age , deleted , locationId, `role` ) VALUE (1,'misko',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Milos","Misic",24,0,4,'ADMIN');
+INSERT INTO user (id, userName , password , firstName , lastName , age , deleted , locationId, `role` ) VALUE (2,'pera',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Pera","Peric",22,0,4,'EMPLOYER');
+INSERT INTO user (id, userName , password , firstName , lastName , age , deleted , locationId, `role` )VALUE (3,'dane',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Dane","Koprivica",45,0,4,'USER');
+INSERT INTO user (id, userName , password , firstName , lastName , age , deleted , locationId, `role` )  VALUE (4,'dzoni',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","Nikola","Petric",34,0,4,'ADMIN');
+INSERT INTO user (id, userName , password , firstName , lastName , age , deleted , locationId, `role` ) VALUE (5,'a',"$2a$08$/RrpLvrBfjLTT18fi7EMI.cql4kjTHzhBGR8wBRxsJNr5b6Qi77C.","a","a",24,0,4,'ADMIN');
 
 
 
