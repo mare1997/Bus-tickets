@@ -37,7 +37,11 @@ export default {
     }
   },
   mounted () {
-    this.getQ ? this.search(this.getQ) : this.stations = this.getBusStations
+    if (this.getQ) {
+      this.search(this.getQ)
+    } else {
+      this.stations = this.getBusStations.length !== 0 ? this.getBusStations : this.getBS()
+    }
   },
   watch: {
     getQ: function (value) {
@@ -47,6 +51,9 @@ export default {
   methods: {
     async search (value) {
       this.stations = await this.$store.dispatch('busstation/search', { value }, { root: true })
+    },
+    async getBS () {
+      this.stations = await this.$store.dispatch('busstation/stations', {}, { root: true })
     }
   }
 }

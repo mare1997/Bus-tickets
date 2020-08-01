@@ -5,12 +5,14 @@
         <p style='width: 15%;'>{{schedule.station[0].time}}</p>
         <i class="fa fa-bus" aria-hidden="true"></i>
         <p>{{schedule.station[0].bus_station.name}}</p>
+        <p style="margin-left: 10%">{{getDate}}</p>
         <p class="price">{{schedule.price}} RSD</p>
       </div>
       <div class="half">
         <div class="line"></div>
         <p class="duration">Trajanje voznje: 2 sata</p>
-        <img class="driveCompanyLogo" v-if="schedule.carrier.image" src="~@/assets/lasta.jpg" />
+        <img class="driveCompanyLogo" v-if="schedule.carrier.image" :src="'~@/assets/' + schedule.carrier.image" />
+        <p class="price" v-else>{{schedule.carrier.name}}</p>
       </div>
       <div class="quarter">
         <p style='width: 15%;'>{{schedule.station[schedule.station.length - 1].time}}</p>
@@ -50,6 +52,12 @@ export default {
   data () {
     return {
       clicked: false
+    }
+  },
+  computed: {
+    getDate () {
+      let date = new Date(this.schedule.date)
+      return date.toLocaleDateString('en-US')
     }
   }
 }

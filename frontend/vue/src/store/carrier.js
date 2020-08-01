@@ -18,9 +18,10 @@ export default {
   },
   actions: {
     carriers ({ commit }) {
-      axios.get('http://localhost:3001/carrier')
+      return axios.get('http://localhost:3001/carrier')
         .then((response) => {
           commit('setCarriers', response.data)
+          return response.data
         })
         .catch((error) => {
           console.error(error)

@@ -10,7 +10,7 @@
     </b-input-group>
 
     <datalist id="list-station">
-      <option v-for="size in sizes" :key="size.length * Math.random()">{{ size }}</option>
+      <option v-for="size in cities" :key="size.id * Math.random()">{{ size.name }}</option>
     </datalist>
   </div>  
 </template>
@@ -19,6 +19,7 @@
 import { BInputGroup, BInputGroupPrepend, BFormInput, BInputGroupAppend } from 'bootstrap-vue'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ScheduleSearch',
@@ -31,7 +32,7 @@ export default {
   },
   data () {
     return {
-      sizes: ['Beograd', 'Smederevo', 'Novi Sad', 'Kragujevac'],
+      cities: [],
       datetime: null,
       start: '',
       finish: ''
@@ -40,7 +41,18 @@ export default {
   methods: {
     search () {
       this.$router.push({ name: 'SchedulePage', query: { date: this.datetime.toString(), start: this.start, finish: this.finish } })
+    },
+    async getL () {
+      this.cities = await this.$store.dispatch('location/locations', {}, {root: true})
     }
+  },
+  computed: {
+    ...mapGetters({
+      getLocations: 'location/getLocations'
+    })
+  },
+  mounted () {
+    this.getLocations.length !== 0 ? this.cities = this.getLocations : this.getL()
   }
 }
 </script>

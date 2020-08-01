@@ -4,6 +4,10 @@ import user from './user.js'
 import carrier from './carrier.js'
 import busstation from './busstation.js'
 import schedule from './schedule.js'
+import location from './location.js'
+import vehicle from './vehicle.js'
+import comment from './comment.js'
+import review from './review.js'
 
 Vue.use(Vuex)
 
@@ -29,12 +33,19 @@ export const store = new Vuex.Store({
       if (localStorage.getItem('resultSearch')) {
         state.schedule.resultSearch = JSON.parse(localStorage.getItem('resultSearch'))
       }
+      if (localStorage.getItem('locations')) {
+        state.location.locations = JSON.parse(localStorage.getItem('locations'))
+      }
     }
   },
   modules: {
     user,
     carrier,
     busstation,
-    schedule
+    schedule,
+    location,
+    vehicle,
+    comment,
+    review
   }
 })

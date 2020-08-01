@@ -18,9 +18,10 @@ export default {
   },
   actions: {
     stations ({ commit }) {
-      axios.get('http://localhost:3001/busstation')
+      return axios.get('http://localhost:3001/busstation')
         .then((response) => {
           commit('setBusStations', response.data)
+          return response.data
         })
         .catch((error) => {
           console.error(error)

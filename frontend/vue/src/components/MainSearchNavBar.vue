@@ -1,6 +1,6 @@
 <template>
   <div class="bg-img">
-    <b-nav tabs align="center" class="navbar-border">
+    <b-nav tabs fill align="center" class="navbar-border">
       <b-nav-item :active="activeRV" @click="changeNav('activeRV')">Red Voznje</b-nav-item>
       <b-nav-item :active="activeP" @click="changeNav('activeP')">Prevoznici</b-nav-item>
       <b-nav-item :active="activeAS" @click="changeNav('activeAS')">Autobuske stanice</b-nav-item>
@@ -83,6 +83,14 @@ export default {
 
   /* Needed to position the navbar */
   position: relative;
+}
+.navbar-border {
+  background-color: lightblue;
+  width: 60%;
+  margin: 0 20% 0 20%;
+  color: black;
+  border-radius: 10px;
+  border: 2px solid rgb(20, 19, 19);
 }
 
 </style>

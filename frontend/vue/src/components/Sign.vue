@@ -2,7 +2,7 @@
   <div>
     <div class="container" id="container">
       <div class="form-container sign-up-container">
-        <form action="#">
+        <div class="form">
           <h1>Create Account</h1>
           <input v-model="firstname" type="text" placeholder="Firstname" />
           <input v-model="lastname" type="text" placeholder="Lastname" />
@@ -10,16 +10,16 @@
           <input v-model="email" type="email" placeholder="Email" />
           <input v-model="password" type="password" placeholder="Password" />
           <button @click="register">Sign Up</button>
-        </form>
+        </div>
       </div>
       <div class="form-container sign-in-container">
-        <form action="#">
+        <div class="form">
           <h1>Sign in</h1>
           <input v-model="email" type="email" placeholder="Email" />
           <input v-model="password" type="password" placeholder="Password" />
           <a href="#">Forgot your password?</a>
           <button @click="login">Sign In</button>
-        </form>
+        </div>
       </div>
       <div class="overlay-container">
         <div class="overlay">
@@ -155,7 +155,7 @@ button.ghost {
 	border-color: #FFFFFF;
 }
 
-form {
+.form {
 	background-color: #FFFFFF;
 	display: flex;
 	align-items: center;

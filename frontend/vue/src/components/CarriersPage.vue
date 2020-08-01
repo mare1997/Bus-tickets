@@ -5,8 +5,8 @@
       <div class="carrier" v-if="carriers.length !== 0">
         <Carrier v-for="carrier in carriers" :key="carrier.id * Math.random()" :carrier="carrier" />
       </div>
-      <div class="carrier" v-else>
-        <h2>Ne postoji prevoznik za ponudjenu vrednost: {{this.$route.query.q}}</h2>
+      <div class="h2" v-else>
+        <h4>Ne postoji prevoznik za ponudjenu vrednost: {{this.$route.query.q}}</h4>
       </div>
       
     </div> 
@@ -29,7 +29,11 @@ export default {
     }
   },
   mounted () {
-    this.getQ ? this.search(this.getQ) : this.carriers = this.getCarriers
+    if (this.getQ) {
+      this.search(this.getQ)
+    } else {
+      this.carriers = this.getCarriers.length !== 0 ? this.getCarriers : this.getC()
+    }
   },
   computed: {
     ...mapGetters({
@@ -47,6 +51,9 @@ export default {
   methods: {
     async search (value) {
       this.carriers = await this.$store.dispatch('carrier/search', { value }, { root: true })
+    },
+    async getC (value) {
+      this.carriers = await this.$store.dispatch('carrier/carriers', { value }, { root: true })
     }
   }
 }

@@ -8,13 +8,14 @@
     </b-input-group>
 
     <datalist id="list-station">
-      <option v-for="station in cities" :key="station.length * Math.random()">{{ station }}</option>
+      <option v-for="station in cities" :key="station.length * Math.random()">{{ station.name }}</option>
     </datalist>
   </div> 
 </template>
 
 <script>
 import { BInputGroup, BInputGroupPrepend, BFormInput, BInputGroupAppend } from 'bootstrap-vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'BusStationSearch',
@@ -26,14 +27,25 @@ export default {
   },
   data () {
     return {
-      cities: ['Beograd', 'Smederevo', 'Novi Sad'],
+      cities: [],
       station: null
     }
   },
   methods: {
     search () {
       this.$router.push({ name: 'BusStationsPage', query: { q: this.station } }).catch(() => {})
+    },
+    async getL () {
+      this.cities = await this.$store.dispatch('location/locations', {}, {root: true})
     }
+  },
+  computed: {
+    ...mapGetters({
+      getLocations: 'location/getLocations'
+    })
+  },
+  mounted () {
+    this.getLocations.length !== 0 ? this.cities = this.getLocations : this.getL()
   }
 }
 </script>

@@ -14,211 +14,87 @@
           </div>
         </div>
       </section>
-      <Raiting />
-      <div class="comment-section">
-        <!-- comments container -->
-        <div class="comment_block">
-          <div class="create_new_comment">
-          <div class="user_avatar">
-            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/BillSKenney/73.jpg">
-          </div><!-- the input field --><div class="input_comment">
-            <input type="text" placeholder="Ime..">
-            <input type="text" placeholder="Vas komentar..">
-          </div>
-
-          </div>
-          <div class="new_comment">
-            <!-- build comment -->
-            <ul class="user_comment">
-              <!-- current #{user} avatar -->
-              <div class="user_avatar">
-                <img src="https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/73.jpg">
-              </div><!-- the comment body --><div class="comment_body">
-                <p>Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore. Organic chillwave vinyl Neutra. Bushwick Helvetica cred freegan, crucifix Godard craft beer deep v mixtape cornhole Truffaut master cleanse pour-over Odd Future beard. Portland polaroid iPhone.</p>
-              </div>
-              <div class="comment_toolbar">
-                <div class="comment_details">
-                  <ul>
-                    <li><i class="fa fa-clock-o"></i> 13:94</li>
-                    <li><i class="fa fa-calendar"></i> 04/01/2015</li>
-                    <li><i class="fa fa-pencil"></i> <span class="user">John Smith</span></li>
-                  </ul>
-                  </div>
-              </div>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <div class="h2"><h2>Vozila</h2></div>
+      <table style="width:100%">
+        <thead class="thead">
+          <tr>
+            <th>Registracijski broj</th>
+            <th>Vozac</th>
+          </tr>
+        </thead>
+        <tbody class="tbody">
+          <tr v-for="vehicle in vehicles" :key="vehicle.id + Math.random()">
+            <td>{{vehicle.registration_number}}</td>
+            <td>{{vehicle.driver}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <Review />
+      <Comment />
     </div>
   </div>
 </template>
 
 <script>
 import MainSearchNavBar from '@/components/MainSearchNavBar.vue'
-import Raiting from '@/components/Raiting.vue'
+import Review from '@/components/Review.vue'
+import Comment from '@/components/Block/Comment.vue'
 export default {
   name: 'CarrierPage',
   components: {
     MainSearchNavBar,
-    Raiting
+    Review,
+    Comment
   },
   data () {
     return {
-      carrier: {}
+      carrier: {},
+      vehicles: []
     }
   },
   mounted () {
     this.$route.params.carrier ? this.carrier = this.$route.params.carrier : this.getCarrierData()
+    this.getVehicles()
   },
   methods: {
     async getCarrierData () {
       this.carrier = await this.$store.dispatch('carrier/carrier', { id: this.$route.params.id }, { root: true })
+    },
+    async getVehicles () {
+      this.vehicles = await this.$store.dispatch('vehicle/vehicle', { id: this.$route.params.id }, { root: true })
     }
+
   }
 }
 </script>
 
 <style scoped>
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
 .parent {
   display: block;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 10%;
 }
 .h2 {
   margin-top: 2%;
   text-align: center;
 }
-@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
-@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
-*, *:before, *:after {
-  margin: 0;
-  padding: 0;
-  -webkit-box-sizing: border-box;
-  transition: all 0.2s ease;
+.thead {
+  padding: 2px;
+  border: 1px solid rgb(51, 51, 51);
+  background-color: teal;
 }
-body, html {
-  height: 100%;
-  width: 100%;
+.tbody {
+  padding: 2px;
+  border: 1px solid rgb(51, 51, 51);
+  background-color: beige;
 }
-body {
-  font-family: 'Lato', sans-serif;
-  font-size: 1rem;
-  color: #333;
-  background-color: #f4f4f4;
+table {
+  margin: 15 px 0 25px 15px;
 }
-.user_avatar {
-  width: 65px;
-  height: 65px;
-  display: inline-block;
-  vertical-align: middle;
-}
-.user_avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-}
-.comment_block {
-  width: 90%;
-  height: 100%;
-  margin: 0 auto;
-  padding: 10px;
-}
-.comment_block .create_new_comment {
-  width: 100%;
-  padding: 20px 0;
-}
-.comment_block .create_new_comment .input_comment {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: 10px;
-  width: calc(100% - 75px);
-}
-.comment_block .create_new_comment .input_comment input[type="text"] {
-  width: 100%;
-  font-family: 'Lato', sans-serif;
-  font-weight: 300;
-  font-size: 1.3rem;
-  padding: 10px;
-  border: none;
-  border-bottom: 2px solid #f2f2f2;
-}
-.comment_block .create_new_comment .input_comment input[type="text"]:focus {
-  outline: none;
-  border-bottom: 2px solid #e6e6e6;
-}
-.comment_block .new_comment {
-  width: 100%;
-  height: auto;
-  padding: 20px 0;
-  border-top: 1px solid #e6e6e6;
-}
-.comment_block .new_comment .user_comment {
-  list-style-type: none;
-}
-.comment_block .new_comment .comment_body {
-  display: inline-block;
-  vertical-align: middle;
-  width: calc(100% - 75px);
-  min-height: 65px;
-  margin-left: 10px;
-  padding: 5px 10px;
-  font-size: 0.9rem;
-  color: #555;
-  background-color: #fff;
-  border-bottom: 2px solid #f2f2f2;
-}
-.comment_block .new_comment .comment_body .replied_to {
-  margin: 5px 0px;
-  background-color: #fafafa;
-  border-bottom: 2px solid #f2f2f2;
-  border-radius: 5px;
-}
-.comment_block .new_comment .comment_body .replied_to p {
-  padding: 5px;
-}
-.comment_block .new_comment .comment_body .replied_to span {
-  color: #6495ed;
-  margin-right: 2px;
-}
-.comment_block .new_comment .comment_toolbar {
-  width: 100%;
-}
-.comment_block .new_comment .comment_toolbar ul {
-  list-style-type: none;
-  padding-left: 75px;
-  font-size: 0;
-}
-.comment_block .new_comment .comment_toolbar ul li {
-  display: inline-block;
-  padding: 5px;
-  font-size: 0.7rem;
-  color: #d9d9d9;
-}
-.comment_block .new_comment .comment_toolbar ul li:hover {
-  cursor: pointer;
-}
-.comment_block .new_comment .comment_toolbar .comment_details {
-  display: inline-block;
-  vertical-align: middle;
-  width: 70%;
-  text-align: left;
-}
-.comment_block .new_comment .comment_toolbar .comment_tools {
-  display: inline-block;
-  vertical-align: middle;
-  width: 30%;
-  text-align: right;
-}
-.comment_block .new_comment .comment_toolbar .comment_tools li:hover {
-  color: #ccc;
-}
-.comment_block .new_comment .user:hover {
-  color: #6495ed;
-  text-decoration: underline;
-}
-.comment_block .new_comment .love:hover {
-  color: #ff6347;
-}
+
 @import url("https://fonts.googleapis.com/css?family=Marvel:400,700");
 
 * {
@@ -239,7 +115,6 @@ body {
 	width: 100%;
 	max-width: 45rem;
 	margin: 0 auto;
-	padding: 1.5rem;
 }
 
 .card {
@@ -281,9 +156,6 @@ body {
 	filter: drop-shadow(7px -7px 5px rgba(0, 0, 0, 0.5));
 }
 
-.card:nth-of-type(1) {
-	margin-right: 9%;
-}
 
 .card h2 {
 	color: snow;

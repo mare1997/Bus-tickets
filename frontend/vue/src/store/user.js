@@ -47,7 +47,8 @@ export default {
           commit('isLoggedIn', true)
           dispatch('carrier/carriers', {}, { root: true })
           dispatch('busstation/stations', {}, { root: true })
-          router.push({name: 'Home'})
+          dispatch('location/locations', {}, { root: true })
+          router.push({name: 'Home'}).catch(() => {})
         })
         .catch((error) => {
           console.error(error)
@@ -76,6 +77,8 @@ export default {
       commit('setUser', {})
       commit('carrier/setCarriers', [], {root: true})
       commit('busstation/setBusStation', [], {root: true})
+      commit('location/addLocations', [], { root: true })
+      commit('schedule/setResultSearch', [], { root: true })
       router.push({ name: 'Home' })
     }
   }

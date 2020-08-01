@@ -129,7 +129,6 @@ body {
 	width: 100%;
 	max-width: 45rem;
 	margin: 0 auto;
-	padding: 1.5rem;
 }
 
 .card {
@@ -169,10 +168,6 @@ body {
 	left: 0px;
 	position: absolute;
 	filter: drop-shadow(7px -7px 5px rgba(0, 0, 0, 0.5));
-}
-
-.card:nth-of-type(1) {
-	margin-right: 9%;
 }
 
 .card h2 {

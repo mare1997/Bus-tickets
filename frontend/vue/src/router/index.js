@@ -62,11 +62,11 @@ export default new Router({
       path: '/login',
       name: 'Sign',
       component: Sign
-    },
-    {
-      path: '/register',
-      name: 'Sign',
-      component: Sign
+    // },
+    // {
+    //   path: '/register',
+    //   name: 'Sign',
+    //   component: Sign
     }
   ]
 })
