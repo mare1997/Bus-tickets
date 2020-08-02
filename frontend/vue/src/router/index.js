@@ -8,6 +8,7 @@ import BusStation from '@/components/BusStation'
 import Sign from '@/components/Sign'
 import Checkout from '@/components/Checkout'
 import SchedulePage from '@/components/SchedulePage'
+import AdminPage from '@/components/AdminPage'
 
 Vue.use(Router)
 
@@ -62,11 +63,16 @@ export default new Router({
       path: '/login',
       name: 'Sign',
       component: Sign
-    // },
-    // {
-    //   path: '/register',
-    //   name: 'Sign',
-    //   component: Sign
+    },
+    {
+      path: '/register',
+      name: 'Sign',
+      component: Sign
+    },
+    {
+      path: '/admin-page',
+      name: 'AdminPage',
+      component: AdminPage
     }
   ]
 })
