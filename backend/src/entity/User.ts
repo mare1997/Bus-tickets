@@ -4,6 +4,7 @@ import { Location } from "./Location";
 import { Passenger } from "./Passenger";
 import * as bcrypt from "bcryptjs";
 import { Comment } from "./Comment";
+import { Review } from "./Review";
 
 @Entity()
 @Unique(["userName"])
@@ -42,6 +43,9 @@ export class User {
 
   @OneToMany(type => Comment, comment => comment.carrier)
   comment: Comment[];
+
+  @OneToMany(type => Review, review => review.carrier)
+  review: Review[];
 
   hashPassword() {
     this.password = bcrypt.hashSync(this.password, 8);

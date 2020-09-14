@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "ty
 import { Location } from "./Location";
 import { Vehicle } from "./Vehicle";
 import { Comment } from "./Comment";
+import { Review } from "./Review";
 
 @Entity()
 export class Carrier {
@@ -41,4 +42,7 @@ export class Carrier {
 
   @OneToMany(type => Comment, comment => comment.carrier)
   comment: Comment[];
+
+  @OneToMany(type => Review, review => review.carrier)
+  review: Review[];
 }
