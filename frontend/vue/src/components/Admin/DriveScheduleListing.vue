@@ -2,7 +2,7 @@
   <div>
     <table>
       <tr>
-        <th>Vehicle</th>
+        <th>Schedule</th>
         <th>Lastname</th>
         <th>Savings</th>
       </tr>
@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'VehicleListing',
+  name: 'DriveScheduleListing',
   components: {
   },
   data () {
@@ -45,5 +45,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+
+table, td, th {  
+  border-right: 1px solid teal;
+  border-top: 1px solid teal;
+  border-bottom: 1px solid teal;
+  text-align: left;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 15px;
+}
 </style>

@@ -46,6 +46,52 @@ export default {
         .catch((error) => {
           console.error(error)
         })
+    },
+    create ({ commit }, payload) {
+      return axios.post('http://localhost:3001/busstation', {
+        name: payload.name,
+        worktime: payload.worktime,
+        street: payload.street,
+        phone: payload.phone,
+        email: payload.email,
+        latitude: payload.latitude,
+        longitude: payload.longitude,
+        locationId: payload.locationId
+      })
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    update ({ commit }, payload) {
+      return axios.put('http://localhost:3001/busstation', {
+        id: payload.id,
+        name: payload.name,
+        worktime: payload.worktime,
+        street: payload.street,
+        phone: payload.phone,
+        email: payload.email,
+        latitude: payload.latitude,
+        longitude: payload.longitude,
+        locationId: payload.locationId
+      })
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    delete ({ commit }, payload) {
+      return axios.delete('http://localhost:3001/busstation/' + payload.id)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }
   }
 }

@@ -6,6 +6,7 @@ export default {
   namespaced: true,
   state: () => ({
     user: null,
+    users: [],
     isLoggedIn: false,
     token: null
 
@@ -22,11 +23,18 @@ export default {
     setUser (state, user) {
       state.user = user
       localStorage.setItem('user', JSON.stringify(user))
+    },
+    setUsers (state, users) {
+      state.users = users
+      localStorage.setItem('users', JSON.stringify(users))
     }
   },
   getters: {
     getUser (state) {
       return state.user
+    },
+    getUsers (state) {
+      return state.users
     },
     isLoggedIn (state) {
       return state.isLoggedIn
@@ -80,6 +88,54 @@ export default {
       commit('location/addLocations', [], { root: true })
       commit('schedule/setResultSearch', [], { root: true })
       router.push({ name: 'Home' })
+    },
+    users ({ commit, state }, payload) {
+      return axios.get('http://localhost:3001/user', {
+        headers: {
+          auth: state.token.slice(1, -1)
+        }
+      })
+        .then((response) => {
+          commit('setUsers', response.data)
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    update ({ commit, state }, payload) {
+      return axios.put('http://localhost:3001/user', {
+        id: payload.id,
+        userName: payload.userName,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        age: payload.age,
+        role: payload.role,
+        locationId: payload.locationId
+      }, {
+        headers: {
+          auth: state.token.slice(1, -1)
+        }
+      })
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    delete ({ commit, state }, payload) {
+      return axios.delete('http://localhost:3001/user/' + payload.id, {
+        headers: {
+          auth: state.token.slice(1, -1)
+        }
+      })
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }
   }
 }

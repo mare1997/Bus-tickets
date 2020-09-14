@@ -42,7 +42,52 @@ export default {
       })
         .then((response) => {
           return response.data
-          // router.push({ name: 'CarriersPage', params: { carriers: response.data } }).catch(() => {})
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    create ({ commit }, payload) {
+      return axios.post('http://localhost:3001/carrier', {
+        name: payload.name,
+        pib: payload.pib,
+        street: payload.street,
+        phone: payload.phone,
+        email: payload.email,
+        site: payload.site,
+        image: payload.image,
+        locationId: payload.locationId
+      })
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    update ({ commit }, payload) {
+      return axios.put('http://localhost:3001/carrier', {
+        id: payload.id,
+        name: payload.name,
+        pib: payload.pib,
+        street: payload.street,
+        phone: payload.phone,
+        email: payload.email,
+        site: payload.site,
+        image: payload.image,
+        locationId: payload.locationId
+      })
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    delete ({ commit }, payload) {
+      return axios.delete('http://localhost:3001/carrier/' + payload.id)
+        .then((response) => {
+          return response.data
         })
         .catch((error) => {
           console.error(error)

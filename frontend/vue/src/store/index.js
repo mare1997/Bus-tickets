@@ -36,6 +36,9 @@ export const store = new Vuex.Store({
       if (localStorage.getItem('locations')) {
         state.location.locations = JSON.parse(localStorage.getItem('locations'))
       }
+      if (localStorage.getItem('vehicles')) {
+        state.vehicle.vehicles = JSON.parse(localStorage.getItem('vehicles'))
+      }
     }
   },
   modules: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" :key="key">
     <div class="dropdowns">
         <div class="dropdownCategory" @click="setCategory('stanice')">
             <p class="categoryName">
@@ -11,7 +11,7 @@
             <div class="dropdownCategoryItem">
                 Dodaj
             </div>
-            <div class="dropdownCategoryItem" @click="listing = 'stanice'">
+            <div class="dropdownCategoryItem" @click="setListing('stanice')">
                 Izlistaj
             </div>
         </div>
@@ -25,7 +25,7 @@
             <div class="dropdownCategoryItem">
                 Dodaj
             </div>
-            <div class="dropdownCategoryItem"  @click="listing = 'prevoznici'">
+            <div class="dropdownCategoryItem"  @click="setListing('prevoznici')">
                 Izlistaj
             </div>
         </div>
@@ -36,10 +36,10 @@
             <div :class="dropdownCategory === 'lokacije' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
         <div class="dropdownItems" v-if="dropdownCategory === 'lokacije'">
-            <div class="dropdownCategoryItem">
+            <div class="dropdownCategoryItem" @click="setListing('lokacije_dodaj')">
                 Dodaj
             </div>
-            <div class="dropdownCategoryItem"  @click="listing = 'lokacije'">
+            <div class="dropdownCategoryItem"  @click="setListing('lokacije')">
                 Izlistaj
             </div>
         </div>
@@ -53,7 +53,7 @@
             <div class="dropdownCategoryItem">
                 Dodaj
             </div>
-            <div class="dropdownCategoryItem"  @click="listing = 'voznje'">
+            <div class="dropdownCategoryItem"  @click="setListing('voznje')">
                 Izlistaj
             </div>
         </div>
@@ -67,7 +67,7 @@
             <div class="dropdownCategoryItem">
                 Dodaj
             </div>
-            <div class="dropdownCategoryItem"  @click="listing = 'korisnici'">
+            <div class="dropdownCategoryItem"  @click="setListing('korisnici')">
                 Izlistaj
             </div>
         </div>
@@ -78,10 +78,10 @@
             <div :class="dropdownCategory === 'vozila' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
         <div class="dropdownItems" v-if="dropdownCategory === 'vozila'">
-            <div class="dropdownCategoryItem">
+            <div class="dropdownCategoryItem" @click="setListing('vozila_dodaj')">
                 Dodaj
             </div>
-            <div class="dropdownCategoryItem"  @click="listing = 'vozila'">
+            <div class="dropdownCategoryItem"  @click="setListing('vozila')">
                 Izlistaj
             </div>
         </div>
@@ -90,21 +90,27 @@
       <BusStationListing v-if="listing === 'stanice'" />
       <CarrierListing v-else-if="listing === 'prevoznici'" />
       <UserListing v-else-if="listing === 'korisnici'" />
-      <VehicleListing v-else-if="listing === 'vozila'" />
+      <VehicleListing v-else-if="listing === 'vozila'" @edit-vehicle="editVehicle" />
       <DriveScheduleListing v-else-if="listing === 'voznje'" />
-      <LocationListing v-else-if="listing === 'lokacije'" />
+      <LocationListing v-else-if="listing === 'lokacije'" @edit-location="editLocation" />
+      <Location v-else-if="listing === 'lokacije_dodaj'" @reload="reload" />
+      <Location v-else-if="listing === 'lokacije_izmeni'" @reload="reload" :location="location" />
+      <Vehicle v-else-if="listing === 'vozila_dodaj'" @reload="reload" />
+      <Vehicle v-else-if="listing === 'vozila_izmeni'" @reload="reload" :vehicle="vehicle" />
     </div>
   </div>
 </template>
 
 <script>
 
-import BusStationListing from '@/components/AdminListings/BusStationListing.vue'
-import CarrierListing from '@/components/AdminListings/CarrierListing.vue'
-import DriveScheduleListing from '@/components/AdminListings/DriveScheduleListing.vue'
-import LocationListing from '@/components/AdminListings/LocationListing.vue'
-import UserListing from '@/components/AdminListings/UserListing.vue'
-import VehicleListing from '@/components/AdminListings/VehicleListing.vue'
+import BusStationListing from '@/components/Admin/BusStationListing.vue'
+import CarrierListing from '@/components/Admin/CarrierListing.vue'
+import DriveScheduleListing from '@/components/Admin/DriveScheduleListing.vue'
+import LocationListing from '@/components/Admin/LocationListing.vue'
+import UserListing from '@/components/Admin/UserListing.vue'
+import VehicleListing from '@/components/Admin/VehicleListing.vue'
+import Location from '@/components/Admin/Location.vue'
+import Vehicle from '@/components/Admin/Vehicle.vue'
 
 export default {
   name: 'AdminPage',
@@ -114,21 +120,60 @@ export default {
     DriveScheduleListing,
     LocationListing,
     UserListing,
-    VehicleListing
+    VehicleListing,
+    Location,
+    Vehicle
   },
   data () {
+    const dropdownCategory = this.$route.query.dropdownCategory || ''
+    const listing = this.$route.query.listing || ''
     return {
-      dropdownCategory: '',
-      listing: 'stanice'
+      dropdownCategory: dropdownCategory,
+      listing: listing,
+      key: 0,
+      location: null,
+      vehicle: null
     }
   },
   methods: {
     setCategory (category) {
+      let locationQuery = { query: {} }
       if (this.dropdownCategory === category) {
         this.dropdownCategory = ''
         return
       }
       this.dropdownCategory = category
+      if (this.$route.query.listing) {
+        locationQuery.query.listing = this.$route.query.listing
+      }
+      locationQuery.query.dropdownCategory = category
+      this.$router.replace(locationQuery).catch(e => {})
+    },
+    setListing (listing) {
+      let locationQuery = { query: {} }
+      if (this.listing === listing) {
+        this.listing = ''
+        return
+      }
+      this.listing = listing
+      if (this.$route.query.dropdownCategory) {
+        locationQuery.query.dropdownCategory = this.$route.query.dropdownCategory
+      }
+      locationQuery.query.listing = listing
+      this.$router.replace(locationQuery).catch(e => {})
+    },
+    reload (query) {
+      this.setListing(query.listing)
+      this.setCategory(query.dropdownCategory)
+      this.$router.replace({ query }).catch(e => {})
+    },
+    editLocation (location) {
+      this.location = location
+      this.setListing('lokacije_izmeni')
+    },
+    editVehicle (vehicle) {
+      this.vehicle = vehicle
+      this.setListing('vozila_izmeni')
     }
   }
 
