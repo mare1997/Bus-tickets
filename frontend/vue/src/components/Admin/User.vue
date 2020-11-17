@@ -1,53 +1,94 @@
 <template>
   <div class="container">
     <div id="contact">
-      <h3 v-if="!vehicle">Dodaj novo vozilo</h3>
-      <h3 v-else>Izmeni vozilo</h3>
+      <h3 v-if="!user">Dodaj novog korisnika</h3>
+      <h3 v-else>Izmeni korisnika</h3>
       <fieldset>
         <input
-          v-model="value.registration_number"
-          placeholder="Registracijski broj vozila"
+          v-model="value.userName"
+          placeholder="Korisnicko ime"
           type="text"
           tabindex="1"
           required
           autofocus
+          :disabled="!!user"
         />
       </fieldset>
       <fieldset>
         <input
-          v-model="value.driver"
-          placeholder="Vozac"
+          v-model="value.password"
+          placeholder="Sifra"
           type="text"
           tabindex="2"
           required
         />
       </fieldset>
       <fieldset>
-        <select
-          v-model="value.carrierId"
-          placeholder="Prevoznik"
+        <input
+          v-model="value.firstName"
+          placeholder="Ime"
+          type="text"
           tabindex="3"
           required
-          
-        >
-          <option 
-            v-for="carrier in carriers"
-            :key="carrier.id"
-            :value="carrier.id"
-          >{{carrier.name}}</option>
-        </select>
+        />
       </fieldset>
-      <fieldset v-if="!vehicle">
+      <fieldset>
         <input
-          v-model="value.numberSeats"
-          placeholder="Broj sedista u vozilu"
-          type="number"
+          v-model="value.lastName"
+          placeholder="Prezime"
+          type="email"
           tabindex="4"
           required
         />
       </fieldset>
       <fieldset>
-        <button name="submit" type="submit" id="contact-submit" @click="submit()">Submit</button>
+        <input
+          v-model="value.age"
+          placeholder="Godine"
+          type="text"
+          tabindex="5"
+          required
+        />
+      </fieldset>
+      <fieldset>
+        <select
+          v-model="value.role"
+          placeholder="Uloga"
+          tabindex="6"
+          required
+        >
+          <option
+            v-for="role in roles"
+            :key="role"
+            :value="role"
+            >{{ role }}</option
+          >
+        </select>
+      </fieldset>
+      <fieldset>
+        <select
+          v-model="value.locationId"
+          placeholder="Lokacija"
+          tabindex="7"
+          required
+        >
+          <option
+            v-for="location in locations"
+            :key="location.id"
+            :value="location.id"
+            >{{ location.name }}</option
+          >
+        </select>
+      </fieldset>
+      <fieldset>
+        <button
+          name="submit"
+          type="submit"
+          id="contact-submit"
+          @click="submit()"
+        >
+          Submit
+        </button>
       </fieldset>
     </div>
   </div>
@@ -55,9 +96,9 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Vehicle',
+  name: 'User',
   props: {
-    vehicle: {
+    user: {
       type: Object,
       default: null
     }
@@ -65,27 +106,37 @@ export default {
   data () {
     return {
       value: {
-        id: this.vehicle ? this.vehicle.id : '',
-        registration_number: this.vehicle ? this.vehicle.registration_number : '',
-        driver: this.vehicle ? this.vehicle.driver : '',
-        carrierId: this.vehicle ? this.vehicle.carrier.id : 0,
-        numberSeats: ''
-      }
+        id: this.user ? this.user.id : '',
+        userName: this.user ? this.user.userName : '',
+        password: '',
+        firstName: this.user ? this.user.firstName : '',
+        lastName: this.user ? this.user.lastName : '',
+        age: this.user ? this.user.age : '',
+        role: this.user ? this.user.role : '',
+        locationId: this.user && this.user.location ? this.user.location.id : ''
+      },
+      roles: ['ADMIN', 'USER']
     }
   },
   computed: {
     ...mapGetters({
-      carriers: 'carrier/getCarriers'
+      locations: 'location/getLocations'
     })
   },
   methods: {
     submit () {
-      if (this.vehicle) {
-        this.$store.dispatch('vehicle/update', this.value)
-        this.$emit('reload', { listing: 'vozila', dropdownCategory: 'vozila' })
+      if (this.user) {
+        this.$store.dispatch('user/update', this.value)
+        this.$emit('reload', {
+          listing: 'korisnici',
+          dropdownCategory: 'korisnici'
+        })
       } else {
-        this.$store.dispatch('vehicle/create', this.value)
-        this.$emit('reload', { listing: 'vozila', dropdownCategory: 'vozila' })
+        this.$store.dispatch('user/create', this.value)
+        this.$emit('reload', {
+          listing: 'korisnici',
+          dropdownCategory: 'korisnici'
+        })
       }
     }
   }
@@ -93,7 +144,12 @@ export default {
 </script>
 
 <style type="css">
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,600,400italic);
+@import url(
+  https://fonts.googleapis.com/css?family=Roboto:400,
+  300,
+  600,
+  400italic
+);
 * {
   margin: 0;
   padding: 0;

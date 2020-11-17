@@ -16,10 +16,15 @@
         <td>{{carrier.phone}}</td>
         <td>{{carrier.email}}</td>
         <td>{{carrier.site}}</td>
-        <td><i class="fa fa-edit"></i></td>
-        <td><i class="fa fa-remove"></i></td>
+        <td><i class="fa fa-edit" @click="edit(carrier)"></i></td>
+        <td><b-button v-b-modal.modal-1 id="show-btn" @click="showModal(carrier.id) " ref="btnShow"><i class="fa fa-remove"></i></b-button></td>
       </tr>
     </table>
+    <b-modal id="modal-1" title="Brisanje" hide-footer>
+      <div class="d-block">Da li ste sigruni da zelite obrisati?</div>
+      <b-button @click="hideModal" class="mt-2" variant="outline-warning" block>Zatvori</b-button>
+      <b-button @click="remove" class="mt-3" variant="outline-danger" block>Obrisi</b-button>
+    </b-modal>
   </div>
 </template>
 
@@ -41,6 +46,22 @@ export default {
   },
   mounted () {
     this.$store.dispatch('carrier/carriers')
+  },
+  methods: {
+    showModal (value) {
+      this.id = value
+      this.$root.$emit('bv::show::modal', 'modal-1', '#btnShow')
+    },
+    hideModal () {
+      this.$root.$emit('bv::hide::modal', 'modal-1', '#btnShow')
+    },
+    remove () {
+      this.$store.dispatch('carrier/delete', { id: this.id })
+      this.hideModal()
+    },
+    edit (carrier) {
+      this.$emit('edit-carrier', carrier)
+    }
   }
 
 }

@@ -8,7 +8,7 @@
             <div :class="dropdownCategory === 'stanice' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
         <div class="dropdownItems" v-if="dropdownCategory === 'stanice'">
-            <div class="dropdownCategoryItem">
+            <div class="dropdownCategoryItem" @click="setListing('stanice_dodaj')" >
                 Dodaj
             </div>
             <div class="dropdownCategoryItem" @click="setListing('stanice')">
@@ -22,7 +22,7 @@
             <div :class="dropdownCategory === 'prevoznici' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
         <div class="dropdownItems" v-if="dropdownCategory === 'prevoznici'">
-            <div class="dropdownCategoryItem">
+            <div class="dropdownCategoryItem" @click="setListing('prevoznici_dodaj')">
                 Dodaj
             </div>
             <div class="dropdownCategoryItem"  @click="setListing('prevoznici')">
@@ -64,7 +64,7 @@
             <div :class="dropdownCategory === 'korisnici' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
         <div class="dropdownItems" v-if="dropdownCategory === 'korisnici'">
-            <div class="dropdownCategoryItem">
+            <div class="dropdownCategoryItem" @click="setListing('korisnici_dodaj')">
                 Dodaj
             </div>
             <div class="dropdownCategoryItem"  @click="setListing('korisnici')">
@@ -87,9 +87,9 @@
         </div>
     </div>
     <div class="forms">
-      <BusStationListing v-if="listing === 'stanice'" />
-      <CarrierListing v-else-if="listing === 'prevoznici'" />
-      <UserListing v-else-if="listing === 'korisnici'" />
+      <BusStationListing v-if="listing === 'stanice'" @edit-busstation="editBusStation" />
+      <CarrierListing v-else-if="listing === 'prevoznici'" @edit-carrier="editCarrier" />
+      <UserListing v-else-if="listing === 'korisnici'" @edit-user="editUser" />
       <VehicleListing v-else-if="listing === 'vozila'" @edit-vehicle="editVehicle" />
       <DriveScheduleListing v-else-if="listing === 'voznje'" />
       <LocationListing v-else-if="listing === 'lokacije'" @edit-location="editLocation" />
@@ -97,6 +97,12 @@
       <Location v-else-if="listing === 'lokacije_izmeni'" @reload="reload" :location="location" />
       <Vehicle v-else-if="listing === 'vozila_dodaj'" @reload="reload" />
       <Vehicle v-else-if="listing === 'vozila_izmeni'" @reload="reload" :vehicle="vehicle" />
+      <BusStation v-else-if="listing === 'stanice_dodaj'" @reload="reload" />
+      <BusStation v-else-if="listing === 'stanice_izmeni'" @reload="reload" :busStation="busStation" />
+      <Carrier v-else-if="listing === 'prevoznici_dodaj'" @reload="reload" />
+      <Carrier v-else-if="listing === 'prevoznici_izmeni'" @reload="reload" :carrier="carrier" />
+      <User v-else-if="listing === 'korisnici_dodaj'" @reload="reload" />
+      <User v-else-if="listing === 'korisnici_izmeni'" @reload="reload" :user="user" />
     </div>
   </div>
 </template>
@@ -111,6 +117,9 @@ import UserListing from '@/components/Admin/UserListing.vue'
 import VehicleListing from '@/components/Admin/VehicleListing.vue'
 import Location from '@/components/Admin/Location.vue'
 import Vehicle from '@/components/Admin/Vehicle.vue'
+import BusStation from '@/components/Admin/BusStation.vue'
+import Carrier from '@/components/Admin/Carrier.vue'
+import User from '@/components/Admin/User.vue'
 
 export default {
   name: 'AdminPage',
@@ -122,7 +131,10 @@ export default {
     UserListing,
     VehicleListing,
     Location,
-    Vehicle
+    Vehicle,
+    BusStation,
+    Carrier,
+    User
   },
   data () {
     const dropdownCategory = this.$route.query.dropdownCategory || ''
@@ -132,16 +144,15 @@ export default {
       listing: listing,
       key: 0,
       location: null,
-      vehicle: null
+      vehicle: null,
+      busStation: null,
+      carrier: null,
+      user: null
     }
   },
   methods: {
     setCategory (category) {
       let locationQuery = { query: {} }
-      if (this.dropdownCategory === category) {
-        this.dropdownCategory = ''
-        return
-      }
       this.dropdownCategory = category
       if (this.$route.query.listing) {
         locationQuery.query.listing = this.$route.query.listing
@@ -151,10 +162,6 @@ export default {
     },
     setListing (listing) {
       let locationQuery = { query: {} }
-      if (this.listing === listing) {
-        this.listing = ''
-        return
-      }
       this.listing = listing
       if (this.$route.query.dropdownCategory) {
         locationQuery.query.dropdownCategory = this.$route.query.dropdownCategory
@@ -174,6 +181,18 @@ export default {
     editVehicle (vehicle) {
       this.vehicle = vehicle
       this.setListing('vozila_izmeni')
+    },
+    editBusStation (busStation) {
+      this.busStation = busStation
+      this.setListing('stanice_izmeni')
+    },
+    editCarrier (carrier) {
+      this.carrier = carrier
+      this.setListing('prevoznici_izmeni')
+    },
+    editUser (user) {
+      this.user = user
+      this.setListing('korisnici_izmeni')
     }
   }
 

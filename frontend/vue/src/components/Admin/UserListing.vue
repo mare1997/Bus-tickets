@@ -15,11 +15,16 @@
         <td>{{user.lastName}}</td>
         <td>{{user.age}}</td>
         <td>{{user.role}}</td>
-        <td>{{user.location.name}}</td>
-        <td><i class="fa fa-edit"></i></td>
-        <td><i class="fa fa-remove"></i></td>
+        <td>{{user.location ? user.location.name : ''}}</td>
+        <td><i class="fa fa-edit" @click="edit(user)"></i></td>
+        <td><b-button class="fa fa-remove" id="show-btn" @click="showModal(user.id) " ref="btnShow"></b-button></td>
       </tr>
     </table>
+    <b-modal id="modal-1" title="Brisanje" hide-footer>
+      <div class="d-block">Da li ste sigruni da zelite obrisati?</div>
+      <b-button @click="hideModal" class="mt-2" variant="outline-warning" block>Zatvori</b-button>
+      <b-button @click="remove" class="mt-3" variant="outline-danger" block>Obrisi</b-button>
+    </b-modal>
   </div>
 </template>
 
@@ -32,6 +37,7 @@ export default {
   },
   data () {
     return {
+      id: ''
     }
   },
   computed: {
@@ -41,6 +47,22 @@ export default {
   },
   mounted () {
     this.$store.dispatch('user/users')
+  },
+  methods: {
+    showModal (value) {
+      this.id = value
+      this.$root.$emit('bv::show::modal', 'modal-1', '#btnShow')
+    },
+    hideModal () {
+      this.$root.$emit('bv::hide::modal', 'modal-1', '#btnShow')
+    },
+    remove () {
+      this.$store.dispatch('user/delete', { id: this.id })
+      this.hideModal()
+    },
+    edit (user) {
+      this.$emit('edit-user', user)
+    }
   }
 
 }

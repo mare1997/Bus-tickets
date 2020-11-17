@@ -11,7 +11,7 @@
         <td>{{vehicle.driver}}</td>
         <td>{{vehicle.carrier.name}}</td>
         <td><i class="fa fa-edit" @click="edit(vehicle)"></i></td>
-        <td><b-button v-b-modal.modal-1 id="show-btn" @click="showModal(vehicle.id) " ref="btnShow"><i class="fa fa-remove"></i></b-button></td>
+        <td><b-button id="show-btn" @click="showModal(vehicle.id) " ref="btnShow"><i class="fa fa-remove"></i></b-button></td>
       </tr>
     </table>
     <b-modal id="modal-1" title="Brisanje" hide-footer>
@@ -44,7 +44,7 @@ export default {
   methods: {
     showModal (value) {
       this.id = value
-      // this.$root.$emit('bv::show::modal', 'modal-1', '#btnShow')
+      this.$root.$emit('bv::show::modal', 'modal-1', '#btnShow')
     },
     hideModal () {
       this.$root.$emit('bv::hide::modal', 'modal-1', '#btnShow')

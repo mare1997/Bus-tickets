@@ -14,6 +14,13 @@ export default {
   getters: {
     getBusStations (state) {
       return state.stations
+    },
+    removeBusStation (state, id) {
+      for (let i = 0; i < state.stations.length; i++) {
+        if (state.stations[i].id === id) {
+          state.stations.splice(i, 1)
+        }
+      }
     }
   },
   actions: {
@@ -87,6 +94,9 @@ export default {
     delete ({ commit }, payload) {
       return axios.delete('http://localhost:3001/busstation/' + payload.id)
         .then((response) => {
+          if (response.data === 'OK') {
+            commit('removeBusStation', payload.id)
+          }
           return response.data
         })
         .catch((error) => {

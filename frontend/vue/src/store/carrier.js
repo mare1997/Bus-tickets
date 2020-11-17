@@ -14,6 +14,13 @@ export default {
   getters: {
     getCarriers (state) {
       return state.carriers
+    },
+    removeCarrier (state, id) {
+      for (let i = 0; i < state.carriers.length; i++) {
+        if (state.carriers[i].id === id) {
+          state.carriers.splice(i, 1)
+        }
+      }
     }
   },
   actions: {
@@ -87,6 +94,9 @@ export default {
     delete ({ commit }, payload) {
       return axios.delete('http://localhost:3001/carrier/' + payload.id)
         .then((response) => {
+          if (response.data === 'OK') {
+            commit('removeCarrier', payload.id)
+          }
           return response.data
         })
         .catch((error) => {

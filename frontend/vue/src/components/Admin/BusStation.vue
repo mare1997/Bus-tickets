@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div id="contact">
-      <h3 v-if="!vehicle">Dodaj novo vozilo</h3>
-      <h3 v-else>Izmeni vozilo</h3>
+      <h3 v-if="!busStation">Dodaj novu autobusku stanicu</h3>
+      <h3 v-else>Izmeni autobusku stanicu</h3>
       <fieldset>
         <input
-          v-model="value.registration_number"
-          placeholder="Registracijski broj vozila"
+          v-model="value.name"
+          placeholder="Autobuska stanicaa ime"
           type="text"
           tabindex="1"
           required
@@ -15,39 +15,82 @@
       </fieldset>
       <fieldset>
         <input
-          v-model="value.driver"
-          placeholder="Vozac"
+          v-model="value.street"
+          placeholder="Ulica"
           type="text"
           tabindex="2"
           required
         />
       </fieldset>
       <fieldset>
-        <select
-          v-model="value.carrierId"
-          placeholder="Prevoznik"
+        <input
+          v-model="value.phone"
+          placeholder="Telefon"
+          type="text"
           tabindex="3"
           required
-          
-        >
-          <option 
-            v-for="carrier in carriers"
-            :key="carrier.id"
-            :value="carrier.id"
-          >{{carrier.name}}</option>
-        </select>
+        />
       </fieldset>
-      <fieldset v-if="!vehicle">
+      <fieldset>
         <input
-          v-model="value.numberSeats"
-          placeholder="Broj sedista u vozilu"
-          type="number"
+          v-model="value.email"
+          placeholder="Email"
+          type="email"
           tabindex="4"
           required
         />
       </fieldset>
       <fieldset>
-        <button name="submit" type="submit" id="contact-submit" @click="submit()">Submit</button>
+        <input
+          v-model="value.worktime"
+          placeholder="Radno vreme"
+          type="text"
+          tabindex="5"
+          required
+        />
+      </fieldset>
+      <fieldset>
+        <input
+          v-model="value.latitude"
+          placeholder="Latituda"
+          type="text"
+          tabindex="6"
+          required
+        />
+      </fieldset>
+      <fieldset>
+        <input
+          v-model="value.longitude"
+          placeholder="Longitude"
+          type="text"
+          tabindex="7"
+          required
+        />
+      </fieldset>
+      <fieldset>
+        <select
+          v-model="value.locationId"
+          placeholder="Lokacija"
+          tabindex="8"
+          required
+        >
+          <option
+            v-for="location in locations"
+            :key="location.id"
+            :value="location.id"
+            >{{ location.name }}</option
+          >
+        </select>
+      </fieldset>
+      <fieldset>
+        <button
+          name="submit"
+          type="submit"
+          id="contact-submit"
+          @click="submit()"
+        >
+          Submit
+        </button>
       </fieldset>
     </div>
   </div>
@@ -55,9 +98,9 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Vehicle',
+  name: 'busStation',
   props: {
-    vehicle: {
+    busStation: {
       type: Object,
       default: null
     }
@@ -65,27 +108,37 @@ export default {
   data () {
     return {
       value: {
-        id: this.vehicle ? this.vehicle.id : '',
-        registration_number: this.vehicle ? this.vehicle.registration_number : '',
-        driver: this.vehicle ? this.vehicle.driver : '',
-        carrierId: this.vehicle ? this.vehicle.carrier.id : 0,
-        numberSeats: ''
+        id: this.busStation ? this.busStation.id : '',
+        name: this.busStation ? this.busStation.name : '',
+        street: this.busStation ? this.busStation.street : '',
+        phone: this.busStation ? this.busStation.phone : '',
+        email: this.busStation ? this.busStation.email : '',
+        worktime: this.busStation ? this.busStation.worktime : '',
+        latitude: this.busStation ? this.busStation.latitude : '',
+        longitude: this.busStation ? this.busStation.longitude : '',
+        locationId: this.busStation ? this.busStation.location.id : ''
       }
     }
   },
   computed: {
     ...mapGetters({
-      carriers: 'carrier/getCarriers'
+      locations: 'location/getLocations'
     })
   },
   methods: {
     submit () {
-      if (this.vehicle) {
-        this.$store.dispatch('vehicle/update', this.value)
-        this.$emit('reload', { listing: 'vozila', dropdownCategory: 'vozila' })
+      if (this.busStation) {
+        this.$store.dispatch('busstation/update', this.value)
+        this.$emit('reload', {
+          listing: 'stanice',
+          dropdownCategory: 'stanice'
+        })
       } else {
-        this.$store.dispatch('vehicle/create', this.value)
-        this.$emit('reload', { listing: 'vozila', dropdownCategory: 'vozila' })
+        this.$store.dispatch('busstation/create', this.value)
+        this.$emit('reload', {
+          listing: 'stanice',
+          dropdownCategory: 'stanice'
+        })
       }
     }
   }
@@ -93,7 +146,12 @@ export default {
 </script>
 
 <style type="css">
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,600,400italic);
+@import url(
+  https://fonts.googleapis.com/css?family=Roboto:400,
+  300,
+  600,
+  400italic
+);
 * {
   margin: 0;
   padding: 0;

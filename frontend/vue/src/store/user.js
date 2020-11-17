@@ -14,7 +14,7 @@ export default {
   mutations: {
     addToken (state, token) {
       state.token = token
-      localStorage.setItem('token', JSON.stringify(token))
+      localStorage.setItem('token', token)
     },
     isLoggedIn (state, value) {
       state.isLoggedIn = value
@@ -27,6 +27,13 @@ export default {
     setUsers (state, users) {
       state.users = users
       localStorage.setItem('users', JSON.stringify(users))
+    },
+    removeUsers (state, id) {
+      for (let i = 0; i < state.users.length; i++) {
+        if (state.users[i].id === id) {
+          state.users.splice(i, 1)
+        }
+      }
     }
   },
   getters: {
@@ -41,6 +48,9 @@ export default {
     },
     getToken (state) {
       return state.token
+    },
+    isAdmin (state) {
+      return state.user ? state.user.role === 'ADMIN' : false
     }
   },
   actions: {
@@ -92,12 +102,29 @@ export default {
     users ({ commit, state }, payload) {
       return axios.get('http://localhost:3001/user', {
         headers: {
-          auth: state.token.slice(1, -1)
+          auth: state.token
         }
       })
         .then((response) => {
           commit('setUsers', response.data)
           return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    create ({ dispatch }, payload) {
+      axios.post('http://localhost:3001/register', {
+        userName: payload.userName,
+        password: payload.password,
+        firstName: payload.firstname,
+        lastName: payload.lastname,
+        age: payload.age,
+        role: payload.role,
+        locationId: payload.locationId
+      })
+        .then(() => {
+          dispatch('login', { userName: payload.userName, password: payload.password })
         })
         .catch((error) => {
           console.error(error)
@@ -114,7 +141,7 @@ export default {
         locationId: payload.locationId
       }, {
         headers: {
-          auth: state.token.slice(1, -1)
+          auth: state.token
         }
       })
         .then((response) => {
@@ -127,10 +154,13 @@ export default {
     delete ({ commit, state }, payload) {
       return axios.delete('http://localhost:3001/user/' + payload.id, {
         headers: {
-          auth: state.token.slice(1, -1)
+          auth: state.token
         }
       })
         .then((response) => {
+          if (response.data === 'OK') {
+            commit('removeUsers', payload.id)
+          }
           return response.data
         })
         .catch((error) => {
