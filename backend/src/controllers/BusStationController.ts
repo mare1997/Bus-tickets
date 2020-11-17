@@ -2,6 +2,7 @@ import * as express from 'express'
 import IControllerBase from "../interfaces/IControllerBase.interface";
 import { getRepository, Like } from 'typeorm';
 import { BusStation } from '../entity/BusStation';
+import { Location } from '../entity/Location';
 
 class BusStationController implements IControllerBase {
 
@@ -68,21 +69,27 @@ class BusStationController implements IControllerBase {
     this.router.post(this.path, async (req, res) => {
       try {
         const busstationRepository = getRepository(BusStation);
+        const locationRepository = getRepository(Location);
         let busstation = req.body;
+        let location = await locationRepository.findOne(busstation.locationId);
+        busstation.location = location;
         await busstationRepository.save(busstation);
 
         res.status(201);
         res.send(busstation);
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       };
     });
     this.router.put(this.path, async (req, res) => {
       try {
         const busstationRepository = getRepository(BusStation);
+        const locationRepository = getRepository(Location);
         let busstation = req.body;
+        let location = await locationRepository.findOne(busstation.locationId);
+        busstation.location = location;
         await busstationRepository.save(busstation);
 
         res.status(200);

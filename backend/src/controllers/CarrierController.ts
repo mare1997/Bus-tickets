@@ -2,6 +2,7 @@ import * as express from 'express'
 import IControllerBase from "../interfaces/IControllerBase.interface";
 import { Carrier } from '../entity/Carrier';
 import { getRepository, Like } from 'typeorm';
+import { Location } from '../entity/Location';
 
 
 class CarrierController implements IControllerBase {
@@ -16,7 +17,7 @@ class CarrierController implements IControllerBase {
     this.router.get(this.path, async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
-        const carriersFromDB = await carrierRepository.find();
+        const carriersFromDB = await carrierRepository.find({ relations: ["location"] });
         var carriers = [];
         carriersFromDB.forEach(element => {
           if (!element.deleted) {
@@ -34,7 +35,7 @@ class CarrierController implements IControllerBase {
       try {
         const carrierRepository = getRepository(Carrier);
         var carrierId = req.params.carrierId;
-        const carrier = await carrierRepository.findOne(carrierId);
+        const carrier = await carrierRepository.findOne(carrierId, { relations: ["location"] });
         
         if (!carrier.deleted) {
           res.send(carrier);
@@ -70,7 +71,10 @@ class CarrierController implements IControllerBase {
     this.router.post(this.path, async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
+        const locationRepository = getRepository(Location);
         let carrier = req.body;
+        let location = await locationRepository.findOne(carrier.locationId);
+        carrier.location = location;
         await carrierRepository.save(carrier);
         
         res.status(201);
@@ -84,7 +88,10 @@ class CarrierController implements IControllerBase {
     this.router.put(this.path, async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
+        const locationRepository = getRepository(Location);
         let carrier = req.body;
+        let location = await locationRepository.findOne(carrier.locationId);
+        carrier.location = location;
         await carrierRepository.save(carrier);
         
         res.status(200);

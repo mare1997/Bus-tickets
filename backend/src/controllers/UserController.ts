@@ -20,7 +20,7 @@ class UserContoller implements IControllerBase {
     this.router.get(this.path, [checkJwt, checkRole(["ADMIN"])], async (req, res) => {
       try {
         const userRepository = Database.getUserCustomRepository();
-        let usersFromDB = await userRepository.find();
+        let usersFromDB = await userRepository.find({ relations: ["location"] });
         let users = [];
         usersFromDB.forEach(element => {
           if (!element.deleted) {
@@ -38,7 +38,7 @@ class UserContoller implements IControllerBase {
       try {
         const userRepository = Database.getUserCustomRepository();
         var userId = req.params.userId;
-        let user = await userRepository.findOne(userId);
+        let user = await userRepository.findOne(userId, { relations: ["location"] });
         
         if (!user.deleted) {
           res.send(user);
@@ -84,7 +84,7 @@ class UserContoller implements IControllerBase {
         res.send("Error " + e);
       };
     });
-    this.router.put(this.path, [checkJwt, checkRole(["ADMIN", "EMPLOYER", "USER"])], async (req, res) => {
+    this.router.put(this.path, [checkJwt, checkRole(["ADMIN", "USER"])], async (req, res) => {
       try {
         const userRepository = Database.getUserCustomRepository();
         let user = req.body;

@@ -15,7 +15,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
       res.locals.jwtPayload = jwtPayload;
     } catch (error) {
       //If token is not valid, respond with 401 (unauthorized)
-      res.status(401).send("Zasto boze zasto");
+      res.status(401).send(error);
       return;
     }
 
@@ -23,7 +23,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     //We want to send a new token on every request
     const { userId, username } = jwtPayload;
     const newToken = jwt.sign({ userId, username }, config.jwtSecret, {
-      expiresIn: "1h"
+      expiresIn: "10h"
     });
     res.setHeader("token", newToken);
 
