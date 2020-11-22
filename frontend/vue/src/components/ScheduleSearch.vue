@@ -3,7 +3,7 @@
     <b-input-group class="search">
       <b-form-input placeholder="Polazak" list="list-station" v-model="start" style="margin-right: 15px"></b-form-input>
       <b-form-input placeholder="Odrediste" list="list-station" v-model="finish" style="margin-right: 15px"></b-form-input>
-      <date-picker v-model="datetime" type="datetime" placeholder="Datum i vreme" format="DD-MM-YYYY" style="margin-right: 15px"></date-picker>
+      <date-picker v-model="datetime" type="datetime" placeholder="Datum i vreme" format="DD-MM-YYYY hh:mm" style="margin-right: 15px"></date-picker>
       <b-input-group-append>
         <b-button variant="success" @click="search">Pretrazi</b-button>
       </b-input-group-append>

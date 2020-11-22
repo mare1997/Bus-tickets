@@ -43,17 +43,17 @@
                 Izlistaj
             </div>
         </div>
-        <div class="dropdownCategory" @click="setCategory('voznje')">
+        <div class="dropdownCategory" @click="setCategory('red_voznje')">
             <p class="categoryName">
                 Red voznje
             </p>
-            <div :class="dropdownCategory === 'voznje' ? 'arrow-up' : 'arrow-down'"></div>
+            <div :class="dropdownCategory === 'red_voznje' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
-        <div class="dropdownItems" v-if="dropdownCategory === 'voznje'">
-            <div class="dropdownCategoryItem">
+        <div class="dropdownItems" v-if="dropdownCategory === 'red_voznje'">
+            <div class="dropdownCategoryItem" @click="setListing('red_voznje_dodaj')">
                 Dodaj
             </div>
-            <div class="dropdownCategoryItem"  @click="setListing('voznje')">
+            <div class="dropdownCategoryItem"  @click="setListing('red_voznje')">
                 Izlistaj
             </div>
         </div>
@@ -93,6 +93,7 @@
       <VehicleListing v-else-if="listing === 'vozila'" @edit-vehicle="editVehicle" />
       <DriveScheduleListing v-else-if="listing === 'voznje'" />
       <LocationListing v-else-if="listing === 'lokacije'" @edit-location="editLocation" />
+      <ScheduleListing v-else-if="listing === 'red_voznje'" @edit-schedule="editSchedule" />
       <Location v-else-if="listing === 'lokacije_dodaj'" @reload="reload" />
       <Location v-else-if="listing === 'lokacije_izmeni'" @reload="reload" :location="location" />
       <Vehicle v-else-if="listing === 'vozila_dodaj'" @reload="reload" />
@@ -103,6 +104,8 @@
       <Carrier v-else-if="listing === 'prevoznici_izmeni'" @reload="reload" :carrier="carrier" />
       <User v-else-if="listing === 'korisnici_dodaj'" @reload="reload" />
       <User v-else-if="listing === 'korisnici_izmeni'" @reload="reload" :user="user" />
+      <Schedule v-else-if="listing === 'red_voznje_dodaj'" @reload="reload" />
+      <Schedule v-else-if="listing === 'red_voznje_izmeni'" @reload="reload" :schedule="schedule" />
     </div>
   </div>
 </template>
@@ -111,22 +114,23 @@
 
 import BusStationListing from '@/components/Admin/BusStationListing.vue'
 import CarrierListing from '@/components/Admin/CarrierListing.vue'
-import DriveScheduleListing from '@/components/Admin/DriveScheduleListing.vue'
 import LocationListing from '@/components/Admin/LocationListing.vue'
 import UserListing from '@/components/Admin/UserListing.vue'
 import VehicleListing from '@/components/Admin/VehicleListing.vue'
+import ScheduleListing from '@/components/Admin/ScheduleListing.vue'
 import Location from '@/components/Admin/Location.vue'
 import Vehicle from '@/components/Admin/Vehicle.vue'
 import BusStation from '@/components/Admin/BusStation.vue'
 import Carrier from '@/components/Admin/Carrier.vue'
 import User from '@/components/Admin/User.vue'
+import Schedule from '@/components/Admin/Schedule.vue'
 
 export default {
   name: 'AdminPage',
   components: {
     BusStationListing,
     CarrierListing,
-    DriveScheduleListing,
+    ScheduleListing,
     LocationListing,
     UserListing,
     VehicleListing,
@@ -134,7 +138,8 @@ export default {
     Vehicle,
     BusStation,
     Carrier,
-    User
+    User,
+    Schedule
   },
   data () {
     const dropdownCategory = this.$route.query.dropdownCategory || ''
@@ -147,7 +152,8 @@ export default {
       vehicle: null,
       busStation: null,
       carrier: null,
-      user: null
+      user: null,
+      schedule: null
     }
   },
   methods: {
@@ -193,6 +199,10 @@ export default {
     editUser (user) {
       this.user = user
       this.setListing('korisnici_izmeni')
+    },
+    editSchedule (schedule) {
+      this.schedule = schedule
+      this.setListing('red_voznje_izmeni')
     }
   }
 

@@ -30,6 +30,15 @@ export default {
         .catch((error) => {
           console.error(error)
         })
+    },
+    create ({ commit }, payload) {
+      return axios.post('http://localhost:3001/traveling', payload)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }
   }
 }

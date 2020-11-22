@@ -53,12 +53,12 @@
                 </div>
                 
                 <div v-else-if="selected === 'Paypal'">
-                  <p>kurcina</p>
+                  <p></p>
                 </div>
               </div>
               
             </div>
-            <input type="submit" value="Continue to checkout" class="btn">
+            <input type="submit" value="Pay" class="btn">
           </form>
         </div>
       </div>

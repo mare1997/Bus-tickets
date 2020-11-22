@@ -9,11 +9,6 @@ export default {
     setBusStations (state, stations) {
       state.stations = stations
       localStorage.setItem('stations', JSON.stringify(stations))
-    }
-  },
-  getters: {
-    getBusStations (state) {
-      return state.stations
     },
     removeBusStation (state, id) {
       for (let i = 0; i < state.stations.length; i++) {
@@ -21,6 +16,11 @@ export default {
           state.stations.splice(i, 1)
         }
       }
+    }
+  },
+  getters: {
+    getBusStations (state) {
+      return state.stations
     }
   },
   actions: {
