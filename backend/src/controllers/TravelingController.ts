@@ -102,7 +102,8 @@ class TravelingController implements IControllerBase {
       res.send(searchedTravels);
     });
 		/*
-		*req.body are travel object with vehicle id and array with stations
+    *req.body are travel object with vehicle id and array with stations
+    * adding traveling with all relations 
 		 */
     this.router.post(this.path, async (req, res) => {
       try {
@@ -110,23 +111,36 @@ class TravelingController implements IControllerBase {
         const vehicleRepository = getRepository(Vehicle);
         const stationRepository = getRepository(Station);
         const busStRepository = getRepository(BusStation);
+        const ticketsRepository = getRepository(Ticket);
+        const seatRepository = getRepository(Seats)
         let traveling = req.body;
-        let vehicle = await vehicleRepository.findOne(traveling.vehicleId);
-        for (let i = 0; i < traveling.stations.length; i++) {
-          let busstration = await busStRepository.findOne(traveling.stations[i].busStationId);
-          traveling.stations[i].busStation = busstration;
-          await stationRepository.save(traveling.stations[i]);
-          traveling.station = traveling.stations;
-        }
+        let vehicle = await vehicleRepository.findOne(traveling.vehicleId, { relations: ["seats"] });
         traveling.vehicle = vehicle;
-        traveling.date = new Date();
-        await travelingRepository.save(traveling);
+        const result = await travelingRepository.save(traveling);
+        for (const station of traveling.stations) {
+          const busstration = await busStRepository.findOne(station.busStationId);
+          station.busStation = busstration;
+          station.traveling = result
+          await stationRepository.save(station);
+        }
 
+        for (const seat of vehicle.seats) {
+          const seatObj = await seatRepository.findOne(seat.id)
+          let ticket = {
+            price: result.price,
+            seats: seatObj,
+            traveling: result
+          }
+          console.log('tiket: ', ticket)
+
+          await ticketsRepository.save(ticket)
+        }
+        
         res.status(201);
-        res.send(traveling);
+        res.send("Done");
 
       } catch (e) {
-
+        res.status(400);
         res.send("Error " + e);
       };
     });/*
