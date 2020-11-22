@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, OneToMany} from "typeorm";
 import { Vehicle } from "./Vehicle";
 import { Ticket } from "./Ticket";
 
@@ -16,6 +16,6 @@ export class Seats {
     @ManyToOne(type => Vehicle, vehicle => vehicle.seats)
     vehicle: Vehicle;
 
-    @OneToOne(type => Ticket, ticket => ticket.seats)
-    ticket: Ticket;
+    @OneToMany(type => Ticket, ticket => ticket.seats)
+    ticket: Ticket[];
 }

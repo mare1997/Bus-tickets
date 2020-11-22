@@ -16,8 +16,7 @@ export class Ticket {
     @Column({type: "boolean", default: false})
     deleted: boolean;
 
-    @OneToOne(type => Seats, seats => seats.ticket)
-    @JoinColumn()
+    @ManyToOne(type => Seats, seats => seats.ticket)
     seats: Seats;
 
     @OneToOne(type => Passenger, passenger => passenger.ticket)
