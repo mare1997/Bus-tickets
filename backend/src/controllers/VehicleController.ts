@@ -6,7 +6,10 @@ import { Carrier } from '../entity/Carrier';
 import { Seats } from '../entity/Seats';
 import { Traveling } from '../entity/Traveling';
 import { Ticket } from "../entity/Ticket";
-
+import { validateJOI } from '../middleware/validateJOI'
+import { schemas } from '../schemas'
+import { checkJwt } from "../middleware/checkJwt";
+import { checkRole } from "../middleware/checkRole";
 class VehicleController implements IControllerBase {
 
   public path = '/vehicle'
@@ -26,14 +29,14 @@ class VehicleController implements IControllerBase {
             vehicles.push(element);
           }
         });
-        
+        res.status(200);
         res.send(vehicles);
       } catch (e) {
-        
+        res.status(400);
         res.send("Error " + e);
       }
     });
-    this.router.get(this.path + '/carrier/:carrierId', async (req, res) => {
+    this.router.get(this.path + '/carrier/:carrierId', validateJOI(schemas.vehicleGetByCarrierId, 'params'), async (req, res) => {
       try {
         const vehicleRepository = getRepository(Vehicle);
         const vehicleFromDB = await vehicleRepository.find({ relations: ["carrier"] });
@@ -45,20 +48,21 @@ class VehicleController implements IControllerBase {
             vehicles.push(vehicle);
           }
         });
-        
+        res.status(200);
         res.send(vehicles);
       } catch (e) {
-        
+        res.status(400);
         res.send("Error " + e);
       }
     });
-    this.router.get(this.path + '/:vehicleId', async (req, res) => {
+    this.router.get(this.path + '/:vehicleId', validateJOI(schemas.vehicleGetByVhicleId, 'params'), async (req, res) => {
       try {
         const vehicleRepository = getRepository(Vehicle);
         var vehicleId = req.params.vehicleId;
         const vehicle = await vehicleRepository.findOne(vehicleId, { relations: ["carrier"] });
         
         if (!vehicle.deleted) {
+          res.status(200);
           res.send(vehicle);
         } else {
           res.status(404);
@@ -66,14 +70,14 @@ class VehicleController implements IControllerBase {
         }
 
       } catch (e) {
-        
+        res.status(400);
         res.send("Error " + e);
       }
     });
     /**
      * Get free seats for traveling
      */
-    this.router.get(this.path + '/freeseats/:travelingId', async (req, res) => {
+    this.router.get(this.path + '/freeseats/:travelingId', validateJOI(schemas.vehicleGetByTravelingId, 'params'), async (req, res) => {
       try {
         const vehicleRepository = getRepository(Vehicle);
         const travelingRepository = getRepository(Traveling);
@@ -91,6 +95,7 @@ class VehicleController implements IControllerBase {
         });
         
         if (!vehicle.deleted) {
+          res.status(200);
           res.send(s);
         } else {
           res.status(404);
@@ -98,11 +103,11 @@ class VehicleController implements IControllerBase {
         }
 
       } catch (e) {
-        
+        res.status(400);
         res.send("Error " + e);
       }
     });
-    this.router.post(this.path, async (req, res) => {
+    this.router.post(this.path, [checkJwt, checkRole(["ADMIN", "CARRIER"]), validateJOI(schemas.vehiclePOST, 'body')], async (req, res) => {
       try {
         const vehicleRepository = getRepository(Vehicle);
         const carrierRepository = getRepository(Carrier);
@@ -125,11 +130,11 @@ class VehicleController implements IControllerBase {
         res.send(vehicle);
 
       } catch (e) {
-        
+        res.status(400);
         res.send("Error " + e);
       };
     });
-    this.router.put(this.path, async (req, res) => {
+    this.router.put(this.path, [checkJwt, checkRole(["ADMIN", "CARRIER"]), validateJOI(schemas.vehiclePUT, 'body')], async (req, res) => {
       try {
         const vehicleRepository = getRepository(Vehicle);
         const carrierRepository = getRepository(Carrier);
@@ -144,11 +149,11 @@ class VehicleController implements IControllerBase {
         res.send(vehicle);
 
       } catch (e) {
-        
+        res.status(400);
         res.send("Error " + e);
       };
     });
-    this.router.delete(this.path + '/:vehicleId', async (req, res) => {
+    this.router.delete(this.path + '/:vehicleId', [checkJwt, checkRole(["ADMIN", "CARRIER"]), validateJOI(schemas.vehicleGetByVhicleId, 'params')], async (req, res) => {
       try {
         const vehicleRepository = getRepository(Vehicle);
         var vehicleId = req.params.vehicleId;
@@ -159,7 +164,7 @@ class VehicleController implements IControllerBase {
         res.send(200);
 
       } catch (e) {
-        
+        res.status(400);
         res.send("Error " + e);
       };
     });

@@ -8,8 +8,10 @@ import { Seats } from '../entity/Seats';
 import { Station } from '../entity/Station';
 import { Ticket } from '../entity/Ticket';
 import { BusStation } from '../entity/BusStation';
-import { Location } from '../entity/Location';
-
+import { validateJOI } from '../middleware/validateJOI'
+import { schemas } from '../schemas'
+import { checkJwt } from "../middleware/checkJwt";
+import { checkRole } from "../middleware/checkRole";
 class TravelingController implements IControllerBase {
   public path = '/traveling'
   public router = express.Router()
@@ -18,23 +20,53 @@ class TravelingController implements IControllerBase {
     this.initRoutes()
   }
   public initRoutes() {
-    // this.router.get(this.path, async (req, res) => {
-    // 	try {
-    // 		const travelingRepository = getRepository(Traveling);
-    // 		const travelingFromDB = await travelingRepository.find({ relations: ["vehicle", "station", "ticket"] });
-    // 		var traveling = [];
-    // 		travelingFromDB.forEach(element => {
-    // 			if (!element.deleted) {
-    // 				traveling.push(element);
-    // 			}
-    // 		});
+    this.router.get(this.path, async (req, res) => {
+    	try {
+    		const travelingRepository = getRepository(Traveling);
+    		const travelingFromDB = await travelingRepository.find({ relations: ["vehicle", "station", "ticket"] });
+    		var traveling = [];
+        const dateFromBody = new Date()
+        travelingFromDB.forEach(travel => {
+          const dateFromTravel = new Date(travel.date)
+          if (!travel.deleted && +dateFromTravel >= +dateFromBody) {
+            traveling.push(travel);
+          }
+    		});
+        res.status(200);
+    		res.send(traveling);
+    	} catch (e) {
 
-    // 		res.send(traveling);
-    // 	} catch (e) {
+    		res.send("Error " + e);
+    	}
+    });
+    this.router.get(this.path + '/carrier/:carrierId', validateJOI(schemas.vehicleGetByCarrierId, 'params'), async (req, res) => {
+      try {
+        const vehicleRepository = getRepository(Vehicle);
+        const vehicleFromDB = await vehicleRepository.find({ relations: ["carrier", "traveling"] });
+        const travelingRepository = getRepository(Traveling);
+    		const travelingFromDB = await travelingRepository.find({ relations: ["vehicle", "station", "ticket"] });
+        let vehicles = [];
+        let travelings = [];
+        const carrierId = req.params.carrierId;
+        
+        vehicleFromDB.forEach(vehicle => {
+          if (!vehicle.deleted && vehicle.carrier.id === parseInt(carrierId)) {
+            travelingFromDB.map((traveling) => {
+              if (!traveling.deleted && traveling.vehicle.id === vehicle.id) { 
+                travelings.push(traveling)
+              }
+            })
+          }
+        });
 
-    // 		res.send("Error " + e);
-    // 	}
-    // });
+
+        res.status(200);
+        res.send(travelings);
+      } catch (e) {
+        res.status(400);
+        res.send("Error " + e);
+      }
+    });
     // this.router.get(this.path + '/:travelingId', async (req, res) => {
     // 	try {
     // 		const travelingRepository = getRepository(Traveling);
@@ -53,7 +85,7 @@ class TravelingController implements IControllerBase {
     // 		res.send("Error " + e);
     // 	}
     // });
-    this.router.post(this.path + '/search', async (req, res) => {
+    this.router.post(this.path + '/search', validateJOI(schemas.travelingSearch, 'body'), async (req, res) => {
       const travelingRepository = getRepository(Traveling);
       const stationRepository = getRepository(Station);
       const busStationRepository = getRepository(BusStation);
@@ -105,7 +137,7 @@ class TravelingController implements IControllerBase {
     *req.body are travel object with vehicle id and array with stations
     * adding traveling with all relations 
 		 */
-    this.router.post(this.path, async (req, res) => {
+    this.router.post(this.path, [checkJwt, checkRole(["ADMIN", "CARRIER"]), validateJOI(schemas.travelingPOST, 'body')], async (req, res) => {
       try {
         const travelingRepository = getRepository(Traveling);
         const vehicleRepository = getRepository(Vehicle);
@@ -146,7 +178,7 @@ class TravelingController implements IControllerBase {
     });/*
         *Not tested.
         */
-    this.router.put(this.path, async (req, res) => {
+    this.router.put(this.path, [checkJwt, checkRole(["ADMIN", "CARRIER"]), validateJOI(schemas.travelingPUT, 'body')], async (req, res) => {
       try {
         const travelingRepository = getRepository(Traveling);
         const vehicleRepository = getRepository(Vehicle);
@@ -171,7 +203,7 @@ class TravelingController implements IControllerBase {
         res.send("Error " + e);
       };
     });
-    this.router.delete(this.path + '/:travelingId', async (req, res) => {
+    this.router.delete(this.path + '/:travelingId', [checkJwt, checkRole(["ADMIN", "CARRIER"]), validateJOI(schemas.travelingGetById, 'params')], async (req, res) => {
       try {
         const travelingRepository = getRepository(Traveling);
         var travelingId = req.params.vehicleId;

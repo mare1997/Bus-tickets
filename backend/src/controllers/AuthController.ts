@@ -19,7 +19,6 @@ class AuthController implements IControllerBase {
       //Check if username and password are set
       let { userName, password } = req.body;
       if (!(userName && password)) {
-
         res.status(400).send();
       }
 
@@ -27,10 +26,9 @@ class AuthController implements IControllerBase {
       const userRepository = getRepository(User);
       let user: User;
       try {
-        user = await userRepository.findOneOrFail({ where: { userName } });
+        user = await userRepository.findOneOrFail({ relations: [ "location", "carrier" ], where: { userName } });
       } catch (error) {
-
-        res.status(401).send();
+        res.status(401).send('User not found');
       }
       //Check if encrypted password match
       if (!user.checkIfUnencryptedPasswordIsValid(password)) {

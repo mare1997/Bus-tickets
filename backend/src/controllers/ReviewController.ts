@@ -5,7 +5,8 @@ import { Comment } from '../entity/Comment';
 import { Carrier } from '../entity/Carrier';
 import { User } from '../entity/User';
 import { Review } from '../entity/Review';
-
+import { validateJOI } from '../middleware/validateJOI'
+import { schemas } from '../schemas'
 class ReviewController implements IControllerBase {
 
   public path = '/review'
@@ -15,7 +16,7 @@ class ReviewController implements IControllerBase {
     this.initRoutes()
   }
   public initRoutes() {
-    this.router.get(this.path + '/carrier/:carrierId', async (req, res) => {
+    this.router.get(this.path + '/carrier/:carrierId', validateJOI(schemas.reviewGetByCarrierId, 'paramas'), async (req, res) => {
       try {
         const reviewRepository = getRepository(Review);
         const commentFromDB = await reviewRepository.find({ relations: ["carrier", "user"]});
@@ -33,7 +34,7 @@ class ReviewController implements IControllerBase {
         res.send("Error " + e);
       }
     });
-    this.router.post(this.path, async (req, res) => {
+    this.router.post(this.path, validateJOI(schemas.reviewPOST, 'body'), async (req, res) => {
       try {
         const reviewRepository = getRepository(Review);
         const carrierRepository = getRepository(Carrier);

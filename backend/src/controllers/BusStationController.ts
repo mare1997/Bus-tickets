@@ -3,7 +3,10 @@ import IControllerBase from "../interfaces/IControllerBase.interface";
 import { getRepository, Like } from 'typeorm';
 import { BusStation } from '../entity/BusStation';
 import { Location } from '../entity/Location';
-
+import { validateJOI } from '../middleware/validateJOI'
+import { schemas } from '../schemas'
+import { checkJwt } from "../middleware/checkJwt";
+import { checkRole } from "../middleware/checkRole";
 class BusStationController implements IControllerBase {
 
   public path = '/busstation'
@@ -26,11 +29,11 @@ class BusStationController implements IControllerBase {
 
         res.send(bstations);
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       }
     });
-    this.router.get(this.path + '/:busstationId', async (req, res) => {
+    this.router.get(this.path + '/:busstationId', validateJOI(schemas.busStationGetById, 'params'), async (req, res) => {
       try {
         const busstationRepository = getRepository(BusStation);
         var busstationId = req.params.busstationId;
@@ -44,11 +47,11 @@ class BusStationController implements IControllerBase {
         }
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       }
     });
-    this.router.post(this.path + '/search', async (req, res) => {
+    this.router.post(this.path + '/search', validateJOI(schemas.busStationSearch, 'body'), async (req, res) => {
       try {
         const busstationRepository = getRepository(BusStation);
         let filterOptions = req.body;
@@ -61,12 +64,12 @@ class BusStationController implements IControllerBase {
           res.send("Bus station not found");
         }
       } catch (e) {
-        
+        res.status(400)
         res.send("Error " + e);
       }
 
     });
-    this.router.post(this.path, async (req, res) => {
+    this.router.post(this.path, [checkJwt, checkRole(["ADMIN"]), validateJOI(schemas.busStationPOST, 'body')], async (req, res) => {
       try {
         const busstationRepository = getRepository(BusStation);
         const locationRepository = getRepository(Location);
@@ -83,7 +86,7 @@ class BusStationController implements IControllerBase {
         res.send("Error " + e);
       };
     });
-    this.router.put(this.path, async (req, res) => {
+    this.router.put(this.path, [checkJwt, checkRole(["ADMIN"]), validateJOI(schemas.busStationPUT, 'body')], async (req, res) => {
       try {
         const busstationRepository = getRepository(BusStation);
         const locationRepository = getRepository(Location);
@@ -96,11 +99,11 @@ class BusStationController implements IControllerBase {
         res.send(busstation);
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       };
     });
-    this.router.delete(this.path + '/:busstationId', async (req, res) => {
+    this.router.delete(this.path + '/:busstationId', [checkJwt, checkRole(["ADMIN"]), validateJOI(schemas.busStationGetById, 'params')], async (req, res) => {
       try {
         const busstationRepository = getRepository(BusStation);
         var busstationId = req.params.busstationId;
@@ -111,7 +114,7 @@ class BusStationController implements IControllerBase {
         res.send(200);
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       };
     });

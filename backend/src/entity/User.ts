@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, Unique } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, Unique, OneToOne, JoinColumn } from "typeorm";
 import { Length, IsNotEmpty } from "class-validator";
 import { Location } from "./Location";
 import { Passenger } from "./Passenger";
 import * as bcrypt from "bcryptjs";
 import { Comment } from "./Comment";
 import { Review } from "./Review";
+import { Carrier } from "./Carrier";
 
 @Entity()
 @Unique(["userName"])
@@ -46,6 +47,10 @@ export class User {
 
   @OneToMany(type => Review, review => review.carrier)
   review: Review[];
+
+  @OneToOne(type => Carrier, carrier => carrier.user) 
+  @JoinColumn()
+  carrier: Carrier;
 
   hashPassword() {
     this.password = bcrypt.hashSync(this.password, 8);

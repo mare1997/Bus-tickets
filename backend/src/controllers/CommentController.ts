@@ -4,7 +4,8 @@ import { getRepository } from 'typeorm';
 import { Comment } from '../entity/Comment';
 import { Carrier } from '../entity/Carrier';
 import { User } from '../entity/User';
-
+import { validateJOI } from '../middleware/validateJOI'
+import { schemas } from '../schemas'
 class CommentCotroller implements IControllerBase {
 
   public path = '/comment'
@@ -14,7 +15,7 @@ class CommentCotroller implements IControllerBase {
     this.initRoutes()
   }
   public initRoutes() {
-    this.router.get(this.path + '/carrier/:carrierId', async (req, res) => {
+    this.router.get(this.path + '/carrier/:carrierId',validateJOI(schemas.commentGetByCarrierId, 'paramas'), async (req, res) => {
       try {
         const commentRepository = getRepository(Comment);
         const commentFromDB = await commentRepository.find({ relations: ["carrier", "user"]});
@@ -25,14 +26,14 @@ class CommentCotroller implements IControllerBase {
             comments.push(comment);
           }
         });
-
+        res.status(200)
         res.send(comments);
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       }
     });
-    this.router.post(this.path, async (req, res) => {
+    this.router.post(this.path, validateJOI(schemas.commentPOST, 'body'), async (req, res) => {
       try {
         const commentRepository = getRepository(Comment);
         const carrierRepository = getRepository(Carrier);
@@ -53,11 +54,11 @@ class CommentCotroller implements IControllerBase {
         res.send(comment);
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       };
     });
-    this.router.put(this.path, async (req, res) => {
+    this.router.put(this.path, validateJOI(schemas.carrierPUT, 'body'), async (req, res) => {
       try {
         const commentRepository = getRepository(Comment);
         const carrierRepository = getRepository(Carrier);
@@ -78,11 +79,11 @@ class CommentCotroller implements IControllerBase {
         res.send(comment);
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       };
     });
-    this.router.delete(this.path + '/:commentId', async (req, res) => {
+    this.router.delete(this.path + '/:commentId', validateJOI(schemas.commentGetByCommentId, 'params'), async (req, res) => {
       try {
         const commentRepository = getRepository(Comment);
         var commentId = req.params.commentId;
@@ -93,7 +94,7 @@ class CommentCotroller implements IControllerBase {
         res.send(200);
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       };
     });

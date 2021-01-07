@@ -3,8 +3,10 @@ import IControllerBase from "../interfaces/IControllerBase.interface";
 import { Carrier } from '../entity/Carrier';
 import { getRepository, Like } from 'typeorm';
 import { Location } from '../entity/Location';
-
-
+import { validateJOI } from '../middleware/validateJOI'
+import { schemas } from '../schemas'
+import { checkJwt } from "../middleware/checkJwt";
+import { checkRole } from "../middleware/checkRole";
 class CarrierController implements IControllerBase {
 
   public path = '/carrier'
@@ -24,20 +26,21 @@ class CarrierController implements IControllerBase {
             carriers.push(element);
           }
         });
-        
+        res.status(200)
         res.send(carriers);
       } catch (e) {
-        
+        res.status(400)
         res.send("Error " + e);
       }
     });
-    this.router.get(this.path + '/:carrierId', async (req, res) => {
+    this.router.get(this.path + '/:carrierId', validateJOI(schemas.carrierGetById, 'params'), async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
         var carrierId = req.params.carrierId;
         const carrier = await carrierRepository.findOne(carrierId, { relations: ["location"] });
         
         if (!carrier.deleted) {
+          res.status(200)
           res.send(carrier);
         } else {
           res.status(404);
@@ -45,30 +48,31 @@ class CarrierController implements IControllerBase {
         }
 
       } catch (e) {
-        
+        res.status(400)
         res.send("Error " + e);
       }
     });
-    this.router.post(this.path + '/search', async (req, res) => {
+    this.router.post(this.path + '/search', validateJOI(schemas.carrierSearch, 'body'), async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
         let filterOptions = req.body;
         const carriers = await carrierRepository.find({ name: Like('%' + filterOptions.value + '%') });
         
         if (carriers) {
+          res.status(200)
           res.send(carriers);
         } else {
           res.status(404);
           res.send("Carriers not found");
         }
       } catch (e) {
-        
+        res.status(400)
         res.send("Error " + e);
       }
 
     });
 
-    this.router.post(this.path, async (req, res) => {
+    this.router.post(this.path, [checkJwt, checkRole(["ADMIN"]), validateJOI(schemas.carrierPOST, 'body')], async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
         const locationRepository = getRepository(Location);
@@ -81,11 +85,11 @@ class CarrierController implements IControllerBase {
         res.send(carrier);
 
       } catch (e) {
-        
+        res.status(400)
         res.send("Error " + e);
       };
     });
-    this.router.put(this.path, async (req, res) => {
+    this.router.put(this.path, [checkJwt, checkRole(["ADMIN", "CARRIER"]), validateJOI(schemas.carrierPUT, 'body')], async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
         const locationRepository = getRepository(Location);
@@ -98,12 +102,12 @@ class CarrierController implements IControllerBase {
         res.send(carrier);
 
       } catch (e) {
-        
+        res.status(400)
         res.send("Error " + e);
       };
     });
 
-    this.router.delete(this.path + '/:carrierId', async (req, res) => {
+    this.router.delete(this.path + '/:carrierId', [checkJwt, checkRole(["ADMIN"]), validateJOI(schemas.carrierGetById, 'params')], async (req, res) => {
       try {
         const carrierRepository = getRepository(Carrier);
         var carrierId = req.params.carrierId;
@@ -114,7 +118,7 @@ class CarrierController implements IControllerBase {
         res.send(200);
 
       } catch (e) {
-        
+        res.status(400)
         res.send("Error " + e);
       };
     });
