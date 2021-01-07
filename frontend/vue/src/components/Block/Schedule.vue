@@ -5,7 +5,7 @@
         <p style='width: 15%;'>{{schedule.station[0].time}}</p>
         <i class="fa fa-bus" aria-hidden="true"></i>
         <p>{{schedule.station[0].bus_station.name}}</p>
-        <p style="margin-left: 10%">{{getDate}}</p>
+        <p style="margin-left: 10%">{{schedule.date}}</p>
         <p class="price">{{schedule.price}} RSD</p>
       </div>
       <div class="half">
@@ -15,7 +15,7 @@
         <p class="price" v-else>{{schedule.carrier.name}}</p>
       </div>
       <div class="quarter">
-        <p style='width: 15%;'>{{schedule.station[schedule.station.length - 1].time}}</p>
+        <p style='width: 15%;'>{{getDate(schedule.station[schedule.station.length - 1].time)}}</p>
         <i class="fa fa-map-marker" aria-hidden="true"></i>
         <p>{{schedule.station[schedule.station.length - 1].bus_station.name}}</p>
         <button class="checkoutButton">Buy ticket</button>
@@ -24,7 +24,7 @@
     <div class="stationList" v-if="clicked">
       <div class="stationHeader">
         <div class="stationIconHeader"></div>
-        <p class="stationItem">Stanice</p>
+        <p class="stationItem">Stations</p>
         <p class="stationItem">Dolazak</p>
         <p class="stationItem">Odlazak</p>
       </div>
@@ -33,8 +33,8 @@
           <div class="dot"></div>
         </div>
         <p class="stationItem">{{station.bus_station.name}}</p>
-        <p class="stationItem">{{station.time}}</p>
-        <p class="stationItem">{{station.time}}</p>
+        <p class="stationItem">{{getDate(station.time)}}</p>
+        <p class="stationItem">{{getDate(station.time)}}</p>
       </div>
     </div>
   </div>
@@ -54,10 +54,18 @@ export default {
       clicked: false
     }
   },
-  computed: {
-    getDate () {
-      let date = new Date(this.schedule.date)
-      return date.toLocaleDateString('en-US')
+  methods: {
+    getDate (date) {
+      const d = new Date(date)
+      const time = d.toLocaleDateString('en-US')
+      const day = time ? time.getDate() : ''
+      const month = time ? time.getMonth() + 1 : ''
+      const year = time ? time.getFullYear() : ''
+      const hour = time ? time.getHours() : ''
+      const minute = time ? time.getMinutes() : ''
+      const formattedHour = ('0' + hour).slice(-2)
+      const formattedMinute = ('0' + minute).slice(-2)
+      return day + '/' + month + '/' + year + '  ' + formattedHour + ':' + formattedMinute
     }
   }
 }

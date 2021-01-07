@@ -13,6 +13,14 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   namespaced: true,
+  state: {
+    activeId: ''
+  },
+  getters: {
+    activeId (state) {
+      return state.activeId
+    }
+  },
   mutations: {
     initialiseStore (state) {
       if (localStorage.getItem('token')) {
@@ -39,6 +47,20 @@ export const store = new Vuex.Store({
       if (localStorage.getItem('vehicles')) {
         state.vehicle.vehicles = JSON.parse(localStorage.getItem('vehicles'))
       }
+      if (localStorage.getItem('schedules')) {
+        state.schedule.schedules = JSON.parse(localStorage.getItem('schedules'))
+      }
+      if (localStorage.getItem('activeId')) {
+        state.activeId = JSON.parse(localStorage.getItem('activeId'))
+      }
+    },
+    setActiveObjectForEdit (state, activeId) {
+      localStorage.setItem('activeId', activeId)
+    }
+  },
+  actions: {
+    setActiveObjectForEdit ({ commit }, payload) {
+      commit('setActiveObjectForEdit', payload.id)
     }
   },
   modules: {

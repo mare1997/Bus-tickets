@@ -34,11 +34,8 @@ export default {
           console.error(error)
         })
     },
-    create ({ commit }, payload) {
-      return axios.post('http://localhost:3001/location', {
-        name: payload.name,
-        zip_code: payload.zip_code
-      })
+    location ({ commit }, payload) {
+      return axios.get('http://localhost:3001/location/' + payload.id)
         .then((response) => {
           return response.data
         })
@@ -46,12 +43,24 @@ export default {
           console.error(error)
         })
     },
-    update ({ commit }, payload) {
+    create ({ rootState }, payload) {
+      return axios.post('http://localhost:3001/location', {
+        name: payload.name,
+        zip_code: payload.zip_code
+      }, { headers: { auth: rootState.user.token } })
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    update ({ rootState }, payload) {
       return axios.put('http://localhost:3001/location', {
         id: payload.id,
         name: payload.name,
         zip_code: payload.zip_code
-      })
+      }, { headers: { auth: rootState.user.token } })
         .then((response) => {
           return response.data
         })
@@ -59,8 +68,8 @@ export default {
           console.error(error)
         })
     },
-    delete ({ commit }, payload) {
-      return axios.delete('http://localhost:3001/location/' + payload.id)
+    delete ({ commit, rootState }, payload) {
+      return axios.delete('http://localhost:3001/location/' + payload.id, { headers: { auth: rootState.user.token } })
         .then((response) => {
           if (response.data === 'OK') {
             commit('removeLocation', payload.id)

@@ -1,85 +1,130 @@
 <template>
   <div class="container">
     <div id="contact">
-      <h3 v-if="!user">Dodaj novog korisnika</h3>
-      <h3 v-else>Izmeni korisnika</h3>
-      <fieldset>
-        <input
-          v-model="value.userName"
-          placeholder="Korisnicko ime"
-          type="text"
-          tabindex="1"
-          required
-          autofocus
-          :disabled="!!user"
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.password"
-          placeholder="Sifra"
-          type="text"
-          tabindex="2"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.firstName"
-          placeholder="Ime"
-          type="text"
-          tabindex="3"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.lastName"
-          placeholder="Prezime"
-          type="email"
-          tabindex="4"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.age"
-          placeholder="Godine"
-          type="text"
-          tabindex="5"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <select
-          v-model="value.role"
-          placeholder="Uloga"
-          tabindex="6"
-          required
-        >
-          <option
-            v-for="role in roles"
-            :key="role"
-            :value="role"
-            >{{ role }}</option
-          >
-        </select>
-      </fieldset>
-      <fieldset>
-        <select
-          v-model="value.locationId"
-          placeholder="Lokacija"
-          tabindex="7"
-          required
-        >
-          <option
-            v-for="location in locations"
-            :key="location.id"
-            :value="location.id"
-            >{{ location.name }}</option
-          >
-        </select>
-      </fieldset>
+      <ValidationObserver ref="form" v-slot="{ }">
+        <h3 v-if="!user">Add new user</h3>
+        <h3 v-else>Edit user</h3>
+        <ValidationProvider name="Email" rules="required|email" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.userName"
+              placeholder="Email *"
+              type="text"
+              tabindex="1"
+              required
+              autofocus
+              :disabled="!!user"
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Password" rules="required|password:6,Password must have at least 6 letters" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.password"
+              placeholder="Password *"
+              type="password"
+              tabindex="2"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        
+        <ValidationProvider name="Firstname" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.firstName"
+              placeholder="Firstname *"
+              type="text"
+              tabindex="3"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Lastname" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.lastName"
+              placeholder="Lastname *"
+              type="text"
+              tabindex="4"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Age" rules="required|min:0, Age must be a positive number." v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.age"
+              placeholder="Age *"
+              type="number"
+              tabindex="5"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Role" rules="required|role:NONE, * You must selecet a role" v-slot="{ errors }">
+          <fieldset>
+            <select
+              v-model="value.role"
+              placeholder="Role *"
+              tabindex="6"
+              required
+            >
+              <option value="NONE" disabled selected>Role *</option>
+              <option
+                v-for="role in roles"
+                :key="role"
+                :value="role"
+                >{{ role }}</option
+              >
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider v-show="value.role === 'CARRIER'" name="Carrier" rules="required|min:0, You must select a carrier." v-slot="{ errors }">
+          <fieldset>
+            <select
+              v-model="value.carrierId"
+              placeholder="Carrier"
+              tabindex="7"
+              required
+            >
+              <option value="-1" disabled selected>Carrier *</option>
+              <option
+                v-for="carrier in carriers"
+                :key="carrier.id"
+                :value="carrier.id"
+                >{{ carrier.name }}</option
+              >
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Location" rules="required|min:0, You must select a location." v-slot="{ errors }">
+          <fieldset>
+            <select
+              v-model="value.locationId"
+              placeholder="Lokacija"
+              tabindex="8"
+              required
+            >
+              <option value="-1" disabled selected>Location *</option>
+              <option
+                v-for="location in locations"
+                :key="location.id"
+                :value="location.id"
+                >{{ location.name }}</option
+              >
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+      </ValidationObserver>
       <fieldset>
         <button
           name="submit"
@@ -112,32 +157,42 @@ export default {
         firstName: this.user ? this.user.firstName : '',
         lastName: this.user ? this.user.lastName : '',
         age: this.user ? this.user.age : '',
-        role: this.user ? this.user.role : '',
-        locationId: this.user && this.user.location ? this.user.location.id : ''
+        role: this.user ? this.user.role : 'NONE',
+        locationId: this.user && this.user.location ? this.user.location.id : '-1',
+        carrierId: this.user && this.user.carrier ? this.user.carrier.id : '-1'
       },
-      roles: ['ADMIN', 'USER']
+      roles: ['ADMIN', 'USER', 'CARRIER']
     }
   },
   computed: {
     ...mapGetters({
-      locations: 'location/getLocations'
+      locations: 'location/getLocations',
+      carriers: 'carrier/getCarriers'
     })
+  },
+  mounted () {
+    this.$store.dispatch('carrier/carriers')
   },
   methods: {
     submit () {
-      if (this.user) {
-        this.$store.dispatch('user/update', this.value)
-        this.$emit('reload', {
-          listing: 'korisnici',
-          dropdownCategory: 'korisnici'
-        })
-      } else {
-        this.$store.dispatch('user/create', this.value)
-        this.$emit('reload', {
-          listing: 'korisnici',
-          dropdownCategory: 'korisnici'
-        })
-      }
+      this.$refs.form.validate().then(success => {
+        if (!success) {
+          return
+        }
+        if (this.user) {
+          this.$store.dispatch('user/update', this.value)
+          this.$emit('reload', {
+            listing: 'users',
+            dropdownCategory: 'users'
+          })
+        } else {
+          this.$store.dispatch('user/create', this.value)
+          this.$emit('reload', {
+            listing: 'users',
+            dropdownCategory: 'users'
+          })
+        }
+      })
     }
   }
 }
@@ -180,6 +235,7 @@ body {
 }
 
 #contact input[type="text"],
+#contact input[type="password"],
 #contact input[type="email"],
 #contact input[type="tel"],
 #contact input[type="url"],
@@ -220,6 +276,7 @@ fieldset {
 }
 
 #contact input[type="text"],
+#contact input[type="password"],
 #contact input[type="email"],
 #contact input[type="tel"],
 #contact input[type="url"],
@@ -234,6 +291,7 @@ fieldset {
 }
 
 #contact input[type="text"]:hover,
+#contact input[type="password"]:hover,
 #contact input[type="email"]:hover,
 #contact input[type="tel"]:hover,
 #contact input[type="url"]:hover,

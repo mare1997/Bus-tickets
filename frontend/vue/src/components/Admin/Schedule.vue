@@ -1,73 +1,85 @@
 <template>
   <div class="container">
     <div id="contact">
-      <h3 v-if="!schedule">Dodaj novi red voznje</h3>
-      <h3 v-else>Izmeni red voznje</h3>
-      <fieldset>
-        <input
-          v-model="value.price"
-          placeholder="Cena karte"
-          type="text"
-          tabindex="1"
-          required
-          autofocus
-        />
-      </fieldset>
-      <fieldset>
-        <select
-          v-model="value.vehicleId"
-          tabindex="2"
-          required
-        >
-          <option value="" disabled selected>Vozilo</option>
-          <option
-            v-for="vehicle in vehicles"
-            :key="vehicle.id"
-            :value="vehicle.id"
-            >{{ vehicle.registration_number }}</option
+      <ValidationObserver novalidate ref="form" v-slot="{ }">
+        <h3 v-if="!schedule">Add new schedule</h3>
+        <h3 v-else>Edit schedule</h3>
+        <ValidationProvider name="Ticket price" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.price"
+              placeholder="Ticket price *"
+              type="text"
+              tabindex="1"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Vehicle" rules="required|min:0, You must select a location." v-slot="{ errors }">
+          <fieldset>
+            <select
+              v-model="value.vehicleId"
+              tabindex="2"
+              required
+            >
+              <option value="-1" disabled selected>Vehicle *</option>
+              <option
+                v-for="vehicle in vehicles"
+                :key="vehicle.id"
+                :value="vehicle.id"
+                >{{ vehicle.registration_number }}
+              </option>
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Date and time" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <date-picker v-model="value.date" type="datetime" placeholder="Date and time *" format="DD-MM-YYYY hh:mm" style="width: 100%"></date-picker>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        
+        <fieldset>
+          <h6 class="h6-station">Stations</h6>
+            <div id="stations">
+              <div class="station-listing">
+                <div id="busstation">
+                  <select
+                    v-model="busStation"
+                    tabindex="3"
+                    required
+                  >
+                    <option value="-1" disabled selected>Bus station *</option>
+                    <option
+                      v-for="station in busStations"
+                      :key="station.id"
+                      :value="station"
+                      >{{ station.name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="time">
+                  <date-picker v-model="time" type="time" placeholder="Time *" format="hh:mm" style="width: 100%"></date-picker>
+                </div>
+              </div>
+            </div>
+          <button
+            class="btn-add-station"
+            name="addStation"
+            @click="addStation()"
           >
-        </select>
-      </fieldset>
-      <fieldset>
-        <date-picker v-model="value.date" type="datetime" placeholder="Datum i vreme polaska" format="DD-MM-YYYY hh:mm" style="width: 100%"></date-picker>
-      </fieldset>
-      <fieldset>
-        <h6 class="h6-station">Stations</h6>
-        <div id="stations">
-          <div class="station-listing">
-            <div id="busstation">
-              <select
-                v-model="busStationId"
-                tabindex="3"
-                required
-              >
-                <option value="" disabled selected>Stanica</option>
-                <option
-                  v-for="station in busStations"
-                  :key="station.id"
-                  :value="station.id"
-                  >{{ station.name }}</option
-                >
-              </select>
-            </div>
-            <div class="time">
-              <date-picker v-model="time" type="time" placeholder="Vreme" format="hh:mm" style="width: 100%"></date-picker>
-            </div>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </fieldset>
+        
+        <fieldset v-if="value.stations">
+          <div v-for="(station, i) of value.stations" :key="station.id">
+            <span>{{i+1}}. {{station.busStation.name}}  {{getTime(station)}}h</span>
           </div>
-        </div>
-        <button
-          class="btn-add-station"
-          name="addStation"
-          @click="addStation()"
-        >
-          <i class="fa fa-plus" aria-hidden="true"></i>
-        </button>
-      </fieldset>
-      <fieldset v-if="value.stations">
-        <div v-for="(station, i) of value.stations" :key="station.id">
-          <span>{{i+1}}. {{getStation(station.busStationId)}}  {{getTime(station)}}h</span>
-        </div>
-      </fieldset>
+        </fieldset>
+      </ValidationObserver>
       <fieldset>
         <button
           name="submit"
@@ -101,47 +113,73 @@ export default {
     return {
       value: {
         id: this.schedule ? this.schedule.id : '',
-        vehicleId: this.schedule && this.schedule.vehicleId ? this.schedule.vehicleId : '',
+        vehicleId: this.schedule && this.schedule.vehicleId ? this.schedule.vehicleId : '-1',
         price: this.schedule && this.schedule.price ? this.schedule.price : '',
         date: this.schedule && this.schedule.date ? this.schedule.date : '',
         stations: this.schedule && this.schedule.stations ? this.schedule.stations : []
       },
       time: '',
-      busStationId: 0,
+      busStation: '-1',
       stationName: ''
     }
   },
   computed: {
     ...mapGetters({
-      vehicles: 'vehicle/getVehicles',
-      busStations: 'busstation/getBusStations'
-    })
+      allVehicles: 'vehicle/getVehicles',
+      busStations: 'busstation/getBusStations',
+      currentUser: 'user/getUser'
+    }),
+    vehicles () {
+      const carrierId = this.currentUser && this.currentUser.carrier ? this.currentUser.carrier.id : -1
+      if (this.currentUser.role !== 'CARRIER') {
+        return this.allVehicles
+      }
+      const vehicles = []
+      this.allVehicles.map(vehicle => {
+        if (vehicle && vehicle.carrier && vehicle.carrier.id === carrierId) {
+          vehicles.push(vehicle)
+        }
+      })
+      return vehicles
+    }
+  },
+  async mounted () {
+    await this.$store.dispatch('busstation/stations')
+    await this.$store.dispatch('vehicle/vehicles')
   },
   methods: {
     submit () {
-      if (this.schedule) {
-        this.$store.dispatch('schedule/update', this.value)
-        this.$emit('reload', {
-          listing: 'red_voznje',
-          dropdownCategory: 'red_voznje'
-        })
-      } else {
-        this.$store.dispatch('schedule/create', this.value)
-        this.$emit('reload', {
-          listing: 'red_voznje',
-          dropdownCategory: 'red_voznje'
-        })
-      }
-    },
-    addStation () {
-      this.value.stations.push({
-        time: this.time,
-        busStationId: this.busStationId
+      this.$refs.form.validate().then(success => {
+        if (!success) {
+          return
+        }
+        if (this.schedule) {
+          this.$store.dispatch('schedule/update', this.value)
+          this.$emit('reload', {
+            listing: 'schedules',
+            dropdownCategory: 'schedules'
+          })
+        } else {
+          this.$store.dispatch('schedule/create', this.value)
+          this.$emit('reload', {
+            listing: 'schedules',
+            dropdownCategory: 'schedules'
+          })
+        }
       })
     },
-    async getStation (id) {
-      const station = await this.$store.dispatch('busstation/station', { id }, { root: true })
-      return station.name
+    addStation () {
+      if (!this.busStation || this.busStation === '-1' || !this.time) {
+        alert('You must select bus station and time before you add station!')
+        return
+      }
+      this.value.stations.push({
+        time: this.time,
+        busStationId: this.busStation.id,
+        busStation: this.busStation
+      })
+      this.busStation = '-1'
+      this.time = ''
     },
     getTime (station) {
       const time = new Date(station.time)

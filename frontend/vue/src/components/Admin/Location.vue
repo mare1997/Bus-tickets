@@ -1,14 +1,35 @@
 <template>
   <div class="container">  
     <div id="contact">
-      <h3 v-if="!location">Dodaj novu lokaciju</h3>
-      <h3 v-else>Izmeni lokaciju</h3>
-      <fieldset>
-        <input v-model="place.name" placeholder="Ime mesta" type="text" tabindex="1" required autofocus>
-      </fieldset>
-      <fieldset>
-        <input v-model="place.zip_code" placeholder="Postanski broj" type="text" tabindex="2" required>
-      </fieldset>
+      <ValidationObserver ref="form" v-slot="{ }">
+        <h3 v-if="!location">Add new location</h3>
+        <h3 v-else>Edit location</h3>
+        <ValidationProvider name="Name of location" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="place.name"
+              placeholder="Name of location *"
+              type="text"
+              tabindex="1"
+              required
+              autofocus
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Zip code" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="place.zip_code"
+              placeholder="Zip code *"
+              type="text"
+              tabindex="2"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+      </ValidationObserver>
       <fieldset>
         <button name="submit" type="submit" id="contact-submit" @click="submit()">Submit</button>
       </fieldset>
@@ -36,15 +57,20 @@ export default {
   },
   methods: {
     submit () {
-      if (this.location) {
-        this.$store.dispatch('location/update', this.place)
-        this.$router.push({ name: 'AdminPage', query: { listing: 'lokacije', dropdownCategory: 'lokacije' } })
-        this.$emit('reload', { listing: 'lokacije', dropdownCategory: 'lokacije' })
-      } else {
-        this.$store.dispatch('location/create', this.place)
-        this.$router.push({ name: 'AdminPage', query: { listing: 'lokacije', dropdownCategory: 'lokacije' } })
-        this.$emit('reload', { listing: 'lokacije', dropdownCategory: 'lokacije' })
-      }
+      this.$refs.form.validate().then(success => {
+        if (!success) {
+          return
+        }
+        if (this.location) {
+          this.$store.dispatch('location/update', this.place)
+          this.$router.push({ name: 'AdminPage', query: { listing: 'locations', dropdownCategory: 'locations' } })
+          this.$emit('reload', { listing: 'locations', dropdownCategory: 'locations' })
+        } else {
+          this.$store.dispatch('location/create', this.place)
+          this.$router.push({ name: 'AdminPage', query: { listing: 'locations', dropdownCategory: 'locations' } })
+          this.$emit('reload', { listing: 'locations', dropdownCategory: 'locations' })
+        }
+      })
     }
   }
 }

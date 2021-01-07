@@ -1,111 +1,117 @@
 <template>
   <div class="main" :key="key">
     <div class="dropdowns">
-        <div class="dropdownCategory" @click="setCategory('stanice')">
+        <div class="dropdownCategory" @click="setCategory('stations')" v-show="currentUser.role !== 'CARRIER'">
             <p class="categoryName">
-                Autobuske stanice
+                Stations
             </p>
-            <div :class="dropdownCategory === 'stanice' ? 'arrow-up' : 'arrow-down'"></div>
+            <div :class="dropdownCategory === 'stations' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
-        <div class="dropdownItems" v-if="dropdownCategory === 'stanice'">
-            <div class="dropdownCategoryItem" @click="setListing('stanice_dodaj')" >
-                Dodaj
+        <div class="dropdownItems" v-if="dropdownCategory === 'stations'">
+            <div class="dropdownCategoryItem" @click="setListing('stations_add')" >
+                Add
             </div>
-            <div class="dropdownCategoryItem" @click="setListing('stanice')">
-                Izlistaj
+            <div class="dropdownCategoryItem" @click="setListing('stations')">
+                List
             </div>
         </div>
-        <div class="dropdownCategory" @click="setCategory('prevoznici')">
+        <div class="dropdownCategory" @click="setCategory('my_carrier'), setListing('my_carrier'), getCarrier()" v-show="currentUser.role === 'CARRIER'">
             <p class="categoryName">
-                Prevoznici
+                My Carrier
             </p>
-            <div :class="dropdownCategory === 'prevoznici' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
-        <div class="dropdownItems" v-if="dropdownCategory === 'prevoznici'">
-            <div class="dropdownCategoryItem" @click="setListing('prevoznici_dodaj')">
-                Dodaj
-            </div>
-            <div class="dropdownCategoryItem"  @click="setListing('prevoznici')">
-                Izlistaj
-            </div>
-        </div>
-        <div class="dropdownCategory" @click="setCategory('lokacije')">
+        <div class="dropdownCategory" @click="setCategory('carriers')" v-show="currentUser.role !== 'CARRIER'">
             <p class="categoryName">
-                Lokacije
+                Carriers
             </p>
-            <div :class="dropdownCategory === 'lokacije' ? 'arrow-up' : 'arrow-down'"></div>
+            <div :class="dropdownCategory === 'carriers' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
-        <div class="dropdownItems" v-if="dropdownCategory === 'lokacije'">
-            <div class="dropdownCategoryItem" @click="setListing('lokacije_dodaj')">
-                Dodaj
+        <div class="dropdownItems" v-if="dropdownCategory === 'carriers'">
+            <div class="dropdownCategoryItem" @click="setListing('carriers_add')">
+                Add
             </div>
-            <div class="dropdownCategoryItem"  @click="setListing('lokacije')">
-                Izlistaj
+            <div class="dropdownCategoryItem"  @click="setListing('carriers')">
+                List
             </div>
         </div>
-        <div class="dropdownCategory" @click="setCategory('red_voznje')">
+        <div class="dropdownCategory" @click="setCategory('locations')">
             <p class="categoryName">
-                Red voznje
+                Locations
             </p>
-            <div :class="dropdownCategory === 'red_voznje' ? 'arrow-up' : 'arrow-down'"></div>
+            <div :class="dropdownCategory === 'locations' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
-        <div class="dropdownItems" v-if="dropdownCategory === 'red_voznje'">
-            <div class="dropdownCategoryItem" @click="setListing('red_voznje_dodaj')">
-                Dodaj
+        <div class="dropdownItems" v-if="dropdownCategory === 'locations'">
+            <div class="dropdownCategoryItem" @click="setListing('locations_add')">
+                Add
             </div>
-            <div class="dropdownCategoryItem"  @click="setListing('red_voznje')">
-                Izlistaj
+            <div class="dropdownCategoryItem"  @click="setListing('locations')">
+                List
             </div>
         </div>
-        <div class="dropdownCategory" @click="setCategory('korisnici')">
+        <div class="dropdownCategory" @click="setCategory('schedules')">
             <p class="categoryName">
-                Korisnici
+                Schedule
             </p>
-            <div :class="dropdownCategory === 'korisnici' ? 'arrow-up' : 'arrow-down'"></div>
+            <div :class="dropdownCategory === 'schedules' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
-        <div class="dropdownItems" v-if="dropdownCategory === 'korisnici'">
-            <div class="dropdownCategoryItem" @click="setListing('korisnici_dodaj')">
-                Dodaj
+        <div class="dropdownItems" v-if="dropdownCategory === 'schedules'">
+            <div class="dropdownCategoryItem" @click="setListing('schedules_add')">
+                Add
             </div>
-            <div class="dropdownCategoryItem"  @click="setListing('korisnici')">
-                Izlistaj
+            <div class="dropdownCategoryItem"  @click="setListing('schedules')">
+                List
             </div>
         </div>
-        <div class="dropdownCategory" @click="setCategory('vozila')">
+        <div class="dropdownCategory" @click="setCategory('users')" v-show="currentUser.role !== 'CARRIER'">
             <p class="categoryName">
-                Vozila
+                Users
             </p>
-            <div :class="dropdownCategory === 'vozila' ? 'arrow-up' : 'arrow-down'"></div>
+            <div :class="dropdownCategory === 'users' ? 'arrow-up' : 'arrow-down'"></div>
         </div>
-        <div class="dropdownItems" v-if="dropdownCategory === 'vozila'">
-            <div class="dropdownCategoryItem" @click="setListing('vozila_dodaj')">
-                Dodaj
+        <div class="dropdownItems" v-if="dropdownCategory === 'users'">
+            <div class="dropdownCategoryItem" @click="setListing('users_add')">
+                Add
             </div>
-            <div class="dropdownCategoryItem"  @click="setListing('vozila')">
-                Izlistaj
+            <div class="dropdownCategoryItem"  @click="setListing('users')">
+                List
+            </div>
+        </div>
+        <div class="dropdownCategory" @click="setCategory('vehicles')">
+            <p class="categoryName">
+                Vehicles
+            </p>
+            <div :class="dropdownCategory === 'vehicles' ? 'arrow-up' : 'arrow-down'"></div>
+        </div>
+        <div class="dropdownItems" v-if="dropdownCategory === 'vehicles'">
+            <div class="dropdownCategoryItem" @click="setListing('vehicles_add')">
+                Add
+            </div>
+            <div class="dropdownCategoryItem"  @click="setListing('vehicles')">
+                List
             </div>
         </div>
     </div>
     <div class="forms">
-      <BusStationListing v-if="listing === 'stanice'" @edit-busstation="editBusStation" />
-      <CarrierListing v-else-if="listing === 'prevoznici'" @edit-carrier="editCarrier" />
-      <UserListing v-else-if="listing === 'korisnici'" @edit-user="editUser" />
-      <VehicleListing v-else-if="listing === 'vozila'" @edit-vehicle="editVehicle" />
+      <BusStationListing v-if="listing === 'stations'" @edit-busstation="editBusStation" />
+      <CarrierListing v-else-if="listing === 'carriers'" @edit-carrier="editCarrier" />
+      <UserListing v-else-if="listing === 'users'" @edit-user="editUser" />
+      <VehicleListing v-else-if="listing === 'vehicles'" @edit-vehicle="editVehicle" />
       <DriveScheduleListing v-else-if="listing === 'voznje'" />
-      <LocationListing v-else-if="listing === 'lokacije'" @edit-location="editLocation" />
-      <ScheduleListing v-else-if="listing === 'red_voznje'" @edit-schedule="editSchedule" />
-      <Location v-else-if="listing === 'lokacije_dodaj'" @reload="reload" />
-      <Location v-else-if="listing === 'lokacije_izmeni'" @reload="reload" :location="location" />
-      <Vehicle v-else-if="listing === 'vozila_dodaj'" @reload="reload" />
-      <Vehicle v-else-if="listing === 'vozila_izmeni'" @reload="reload" :vehicle="vehicle" />
-      <BusStation v-else-if="listing === 'stanice_dodaj'" @reload="reload" />
-      <BusStation v-else-if="listing === 'stanice_izmeni'" @reload="reload" :busStation="busStation" />
-      <Carrier v-else-if="listing === 'prevoznici_dodaj'" @reload="reload" />
-      <Carrier v-else-if="listing === 'prevoznici_izmeni'" @reload="reload" :carrier="carrier" />
-      <User v-else-if="listing === 'korisnici_dodaj'" @reload="reload" />
-      <User v-else-if="listing === 'korisnici_izmeni'" @reload="reload" :user="user" />
-      <Schedule v-else-if="listing === 'red_voznje_dodaj'" @reload="reload" />
-      <Schedule v-else-if="listing === 'red_voznje_izmeni'" @reload="reload" :schedule="schedule" />
+      <LocationListing v-else-if="listing === 'locations'" @edit-location="editLocation" />
+      <ScheduleListing v-else-if="listing === 'schedules'" @edit-schedule="editSchedule" />
+      <Location v-else-if="listing === 'locations_add'" @reload="reload" />
+      <Location v-else-if="listing === 'locations_edit'" @reload="reload" :location="location" />
+      <Vehicle v-else-if="listing === 'vehicles_add'" @reload="reload" />
+      <Vehicle v-else-if="listing === 'vehicles_edit'" @reload="reload" :vehicle="vehicle" />
+      <BusStation v-else-if="listing === 'stations_add'" @reload="reload" />
+      <BusStation v-else-if="listing === 'stations_edit'" @reload="reload" :busStation="busStation" />
+      <Carrier v-else-if="listing === 'carriers_add'" @reload="reload" />
+      <Carrier v-else-if="listing === 'carriers_edit'" @reload="reload" :carrier="carrier" />
+      <Carrier v-else-if="listing === 'my_carrier'" @reload="reload" :carrier="carrier" />
+      <User v-else-if="listing === 'users_add'" @reload="reload" />
+      <User v-else-if="listing === 'users_edit'" @reload="reload" :user="user" />
+      <Schedule v-else-if="listing === 'schedules_add'" @reload="reload" />
+      <Schedule v-else-if="listing === 'schedules_edit'" @reload="reload" :schedule="schedule" />
     </div>
   </div>
 </template>
@@ -124,6 +130,8 @@ import BusStation from '@/components/Admin/BusStation.vue'
 import Carrier from '@/components/Admin/Carrier.vue'
 import User from '@/components/Admin/User.vue'
 import Schedule from '@/components/Admin/Schedule.vue'
+import { mapGetters } from 'vuex'
+import { bus } from '../main'
 
 export default {
   name: 'AdminPage',
@@ -156,6 +164,17 @@ export default {
       schedule: null
     }
   },
+  computed: {
+    ...mapGetters({
+      currentUser: 'user/getUser',
+      activeId: 'activeId'
+    })
+  },
+  mounted () {
+    if (this.listing.includes('edit') || this.listing.includes('my_carrier')) {
+      this.getObject(this.listing)
+    }
+  },
   methods: {
     setCategory (category) {
       let locationQuery = { query: {} }
@@ -167,6 +186,9 @@ export default {
       this.$router.replace(locationQuery).catch(e => {})
     },
     setListing (listing) {
+      if (!(listing.includes('add') || listing.includes('edit'))) {
+        bus.$emit(`reload-${listing}`)
+      }
       let locationQuery = { query: {} }
       this.listing = listing
       if (this.$route.query.dropdownCategory) {
@@ -182,27 +204,72 @@ export default {
     },
     editLocation (location) {
       this.location = location
-      this.setListing('lokacije_izmeni')
+      this.setListing('locations_edit')
+      this.$store.dispatch('setActiveObjectForEdit', { id: location.id })
     },
     editVehicle (vehicle) {
       this.vehicle = vehicle
-      this.setListing('vozila_izmeni')
+      this.setListing('vehicles_edit')
+      this.$store.dispatch('setActiveObjectForEdit', { id: vehicle.id })
     },
     editBusStation (busStation) {
       this.busStation = busStation
-      this.setListing('stanice_izmeni')
+      this.setListing('stations_edit')
+      this.$store.dispatch('setActiveObjectForEdit', { id: busStation.id })
     },
     editCarrier (carrier) {
       this.carrier = carrier
-      this.setListing('prevoznici_izmeni')
+      this.setListing('carriers_edit')
+      this.$store.dispatch('setActiveObjectForEdit', { id: carrier.id })
     },
     editUser (user) {
       this.user = user
-      this.setListing('korisnici_izmeni')
+      this.setListing('users_edit')
+      this.$store.dispatch('setActiveObjectForEdit', { id: user.id })
     },
     editSchedule (schedule) {
       this.schedule = schedule
-      this.setListing('red_voznje_izmeni')
+      this.setListing('schedules_edit')
+      this.$store.dispatch('setActiveObjectForEdit', { id: schedule.id })
+    },
+    getObject (listing) {
+      if (listing.includes('carrier') && !this.carrier) {
+        this.getCarrier()
+      }
+      if (listing.includes('location') && !this.location) {
+        this.getLocation()
+      }
+      if (listing.includes('user') && !this.user) {
+        this.getUser()
+      }
+      if (listing.includes('station') && !this.station) {
+        this.getBusStation()
+      }
+      if (listing.includes('vehicle') && !this.vehicle) {
+        this.getVehicle()
+      }
+      if (listing.includes('schedule') && !this.schedule) {
+        this.getSchedule()
+      }
+    },
+    async getCarrier () {
+      this.carrier = await this.$store.dispatch('carrier/carrier', { id: this.currentUser.carrier.id }, { root: true })
+    },
+    async getLocation () {
+      this.location = await this.$store.dispatch('location/location', { id: this.activeId }, { root: true })
+    },
+    async getUser () {
+      this.user = await this.$store.dispatch('user/user', { id: this.activeId }, { root: true })
+    },
+    async getBusStation () {
+      this.busStation = await this.$store.dispatch('busStation/station', { id: this.activeId }, { root: true })
+    },
+    async getVehicle () {
+      this.vehicle = await this.$store.dispatch('vehicle/vehicleById', { id: this.activeId }, { root: true })
+      this.key++
+    },
+    async getSchedule () {
+      this.schedule = await this.$store.dispatch('schedule/schedule', { id: this.activeId }, { root: true })
     }
   }
 

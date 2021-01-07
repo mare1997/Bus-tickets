@@ -33,6 +33,15 @@ export default {
           console.error(error)
         })
     },
+    vehicleById ({ commit }, payload) {
+      return axios.get('http://localhost:3001/vehicle/' + payload.id)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
     vehicles ({ commit }) {
       return axios.get('http://localhost:3001/vehicle')
         .then((response) => {
@@ -43,13 +52,13 @@ export default {
           console.error(error)
         })
     },
-    create ({ commit }, payload) {
+    create ({ rootState }, payload) {
       return axios.post('http://localhost:3001/vehicle', {
         registration_number: payload.registration_number,
         driver: payload.driver,
         carrierId: payload.carrierId,
         numberSeats: payload.numberSeats
-      })
+      }, { headers: { auth: rootState.user.token } })
         .then((response) => {
           return response.data
         })
@@ -57,13 +66,13 @@ export default {
           console.error(error)
         })
     },
-    update ({ commit }, payload) {
+    update ({ rootState }, payload) {
       return axios.put('http://localhost:3001/vehicle', {
         id: payload.id,
         registration_number: payload.registration_number,
         driver: payload.driver,
         carrierId: payload.carrierId
-      })
+      }, { headers: { auth: rootState.user.token } })
         .then((response) => {
           return response.data
         })
@@ -71,8 +80,8 @@ export default {
           console.error(error)
         })
     },
-    delete ({ commit }, payload) {
-      return axios.delete('http://localhost:3001/vehicle/' + payload.id)
+    delete ({ commit, rootState }, payload) {
+      return axios.delete('http://localhost:3001/vehicle/' + payload.id, { headers: { auth: rootState.user.token } })
         .then((response) => {
           if (response.data === 'OK') {
             commit('removeVehicle', payload.id)

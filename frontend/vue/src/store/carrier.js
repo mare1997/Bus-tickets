@@ -54,7 +54,7 @@ export default {
           console.error(error)
         })
     },
-    create ({ commit }, payload) {
+    create ({ rootState }, payload) {
       return axios.post('http://localhost:3001/carrier', {
         name: payload.name,
         pib: payload.pib,
@@ -62,9 +62,8 @@ export default {
         phone: payload.phone,
         email: payload.email,
         site: payload.site,
-        image: payload.image,
         locationId: payload.locationId
-      })
+      }, { headers: { auth: rootState.user.token } })
         .then((response) => {
           return response.data
         })
@@ -72,7 +71,7 @@ export default {
           console.error(error)
         })
     },
-    update ({ commit }, payload) {
+    update ({ rootState }, payload) {
       return axios.put('http://localhost:3001/carrier', {
         id: payload.id,
         name: payload.name,
@@ -81,9 +80,8 @@ export default {
         phone: payload.phone,
         email: payload.email,
         site: payload.site,
-        image: payload.image,
         locationId: payload.locationId
-      })
+      }, { headers: { auth: rootState.user.token } })
         .then((response) => {
           return response.data
         })
@@ -91,8 +89,8 @@ export default {
           console.error(error)
         })
     },
-    delete ({ commit }, payload) {
-      return axios.delete('http://localhost:3001/carrier/' + payload.id)
+    delete ({ commit, rootState }, payload) {
+      return axios.delete('http://localhost:3001/carrier/' + payload.id, { headers: { auth: rootState.user.token } })
         .then((response) => {
           if (response.data === 'OK') {
             commit('removeCarrier', payload.id)

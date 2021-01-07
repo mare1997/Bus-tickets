@@ -18,7 +18,7 @@
       <router-link :to="{ name: 'Home' }"><h1 class="brand brand-name navbar-left bus-tickets-text">Bus Tickets</h1></router-link>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item v-if="isLoggedIn && isAdmin"><router-link :to="{ name: 'AdminPage' }">Admin panel</router-link></b-nav-item>
+          <b-nav-item v-if="isLoggedIn && (isAdmin || isCarrier)"><router-link :to="{ name: 'AdminPage' }">Admin panel</router-link></b-nav-item>
           <b-nav-item><router-link :to="{ name: 'CarriersPage' }">Prevoznici</router-link></b-nav-item>
           <b-nav-item><router-link :to="{ name: 'BusStationsPage' }">Autobuske Statnice</router-link></b-nav-item>
           <b-nav-item-dropdown right v-if="isLoggedIn">
@@ -63,7 +63,8 @@ export default {
       getUser: 'user/getUser',
       getCarriers: 'carrier/getCarriers',
       getBusStations: 'busstation/getBusStations',
-      isAdmin: 'user/isAdmin'
+      isAdmin: 'user/isAdmin',
+      isCarrier: 'user/isCarrier'
     })
   },
   // mounted () {

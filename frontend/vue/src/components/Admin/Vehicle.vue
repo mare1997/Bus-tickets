@@ -1,51 +1,76 @@
 <template>
   <div class="container">
     <div id="contact">
-      <h3 v-if="!vehicle">Dodaj novo vozilo</h3>
-      <h3 v-else>Izmeni vozilo</h3>
-      <fieldset>
-        <input
-          v-model="value.registration_number"
-          placeholder="Registracijski broj vozila"
-          type="text"
-          tabindex="1"
-          required
-          autofocus
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.driver"
-          placeholder="Vozac"
-          type="text"
-          tabindex="2"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <select
-          v-model="value.carrierId"
-          placeholder="Prevoznik"
-          tabindex="3"
-          required
-          
-        >
-          <option 
-            v-for="carrier in carriers"
-            :key="carrier.id"
-            :value="carrier.id"
-          >{{carrier.name}}</option>
-        </select>
-      </fieldset>
-      <fieldset v-if="!vehicle">
-        <input
-          v-model="value.numberSeats"
-          placeholder="Broj sedista u vozilu"
-          type="number"
-          tabindex="4"
-          required
-        />
-      </fieldset>
+      <ValidationObserver novalidate ref="form" v-slot="{ }">
+        <h3 v-if="!vehicle">Add new vehicle</h3>
+        <h3 v-else>Edit vehicle</h3>
+        <ValidationProvider name="Registration number" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.registration_number"
+              placeholder="Registration number *"
+              type="text"
+              tabindex="1"
+              required
+              autofocus
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Driver" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.driver"
+              placeholder="Driver *"
+              type="text"
+              tabindex="2"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Carrier" rules="required|min:0, You must select a carrier." v-slot="{ errors }">
+          <fieldset>
+            <select
+              v-if="currentUser.role === 'ADMIN'"
+              v-model="value.carrierId"
+              placeholder="Carrier *"
+              tabindex="3"
+              required
+            >
+              <option value="-1" disabled selected>Carrier *</option>
+              <option
+                v-for="carrier in carriers"
+                :key="carrier.id"
+                :value="carrier.id"
+              >{{carrier.name}}</option>
+            </select>
+            <select
+              v-else
+              v-model="value.carrierId"
+              placeholder="Carrier *"
+              tabindex="3"
+              required
+            >
+              <option value="-1" disabled selected>Carrier *</option>
+              <option :value="currentUser.carrier.id">{{currentUser.carrier.name}}</option>
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Number of seats" rules="required|min:5, The minimum number of seats is 5." v-slot="{ errors }" v-if="!vehicle">
+          <fieldset>
+            <input
+              v-model="value.numberSeats"
+              placeholder="Number of seats in vehicle *"
+              type="number"
+              tabindex="4"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+      </ValidationObserver>
       <fieldset>
         <button name="submit" type="submit" id="contact-submit" @click="submit()">Submit</button>
       </fieldset>
@@ -68,25 +93,31 @@ export default {
         id: this.vehicle ? this.vehicle.id : '',
         registration_number: this.vehicle ? this.vehicle.registration_number : '',
         driver: this.vehicle ? this.vehicle.driver : '',
-        carrierId: this.vehicle ? this.vehicle.carrier.id : 0,
+        carrierId: this.vehicle ? this.vehicle.carrier.id : '-1',
         numberSeats: ''
       }
     }
   },
   computed: {
     ...mapGetters({
-      carriers: 'carrier/getCarriers'
+      carriers: 'carrier/getCarriers',
+      currentUser: 'user/getUser'
     })
   },
   methods: {
     submit () {
-      if (this.vehicle) {
-        this.$store.dispatch('vehicle/update', this.value)
-        this.$emit('reload', { listing: 'vozila', dropdownCategory: 'vozila' })
-      } else {
-        this.$store.dispatch('vehicle/create', this.value)
-        this.$emit('reload', { listing: 'vozila', dropdownCategory: 'vozila' })
-      }
+      this.$refs.form.validate().then(success => {
+        if (!success) {
+          return
+        }
+        if (this.vehicle) {
+          this.$store.dispatch('vehicle/update', this.value)
+          this.$emit('reload', { listing: 'vehicles', dropdownCategory: 'vehicles' })
+        } else {
+          this.$store.dispatch('vehicle/create', this.value)
+          this.$emit('reload', { listing: 'vehicles', dropdownCategory: 'vehicles' })
+        }
+      })
     }
   }
 }

@@ -21,7 +21,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/prevoznici',
+      path: '/carriers',
       name: 'CarriersPage',
       component: CarriersPage,
       props: (route) => ({
@@ -37,7 +37,7 @@ export default new Router({
       })
     },
     {
-      path: '/stanice',
+      path: '/stations',
       name: 'BusStationsPage',
       component: BusStationsPage
     },

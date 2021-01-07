@@ -1,87 +1,113 @@
 <template>
   <div class="container">
     <div id="contact">
-      <h3 v-if="!busStation">Dodaj novu autobusku stanicu</h3>
-      <h3 v-else>Izmeni autobusku stanicu</h3>
-      <fieldset>
-        <input
-          v-model="value.name"
-          placeholder="Autobuska stanicaa ime"
-          type="text"
-          tabindex="1"
-          required
-          autofocus
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.street"
-          placeholder="Ulica"
-          type="text"
-          tabindex="2"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.phone"
-          placeholder="Telefon"
-          type="text"
-          tabindex="3"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.email"
-          placeholder="Email"
-          type="email"
-          tabindex="4"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.worktime"
-          placeholder="Radno vreme"
-          type="text"
-          tabindex="5"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.latitude"
-          placeholder="Latituda"
-          type="text"
-          tabindex="6"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <input
-          v-model="value.longitude"
-          placeholder="Longitude"
-          type="text"
-          tabindex="7"
-          required
-        />
-      </fieldset>
-      <fieldset>
-        <select
-          v-model="value.locationId"
-          placeholder="Lokacija"
-          tabindex="8"
-          required
-        >
-          <option
-            v-for="location in locations"
-            :key="location.id"
-            :value="location.id"
-            >{{ location.name }}</option
-          >
-        </select>
-      </fieldset>
+      <ValidationObserver novalidate ref="form" v-slot="{ }">
+        <h3 v-if="!busStation">Add new bus station</h3>
+        <h3 v-else>Edit bus station</h3>
+        <ValidationProvider name="Bus station name" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.name"
+              placeholder="Bus station name *"
+              type="text"
+              tabindex="1"
+              required
+              autofocus
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Street" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.street"
+              placeholder="Street *"
+              type="text"
+              tabindex="2"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Phone" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.phone"
+              placeholder="Phone *"
+              type="text"
+              tabindex="3"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Email" rules="required|email" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.email"
+              placeholder="Email *"
+              type="text"
+              tabindex="4"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Work time" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.worktime"
+              placeholder="Work time *"
+              type="text"
+              tabindex="5"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Latitude" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.latitude"
+              placeholder="Latitude *"
+              type="number"
+              tabindex="6"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Longitude" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.longitude"
+              placeholder="Longitude *"
+              type="number"
+              tabindex="7"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        <ValidationProvider name="Location" rules="required|min:0, You must select a location." v-slot="{ errors }">
+          <fieldset>
+            <select
+              v-model="value.locationId"
+              tabindex="8"
+              required
+            >
+              <option value="-1" disabled selected>Location *</option>
+              <option
+                v-for="location in locations"
+                :key="location.id"
+                :value="location.id"
+                >{{ location.name }}</option
+              >
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+      </ValidationObserver>
       <fieldset>
         <button
           name="submit"
@@ -116,7 +142,7 @@ export default {
         worktime: this.busStation ? this.busStation.worktime : '',
         latitude: this.busStation ? this.busStation.latitude : '',
         longitude: this.busStation ? this.busStation.longitude : '',
-        locationId: this.busStation ? this.busStation.location.id : ''
+        locationId: this.busStation ? this.busStation.location.id : '-1'
       }
     }
   },
@@ -127,19 +153,24 @@ export default {
   },
   methods: {
     submit () {
-      if (this.busStation) {
-        this.$store.dispatch('busstation/update', this.value)
-        this.$emit('reload', {
-          listing: 'stanice',
-          dropdownCategory: 'stanice'
-        })
-      } else {
-        this.$store.dispatch('busstation/create', this.value)
-        this.$emit('reload', {
-          listing: 'stanice',
-          dropdownCategory: 'stanice'
-        })
-      }
+      this.$refs.form.validate().then(success => {
+        if (!success) {
+          return
+        }
+        if (this.busStation) {
+          this.$store.dispatch('busstation/update', this.value)
+          this.$emit('reload', {
+            listing: 'stations',
+            dropdownCategory: 'stations'
+          })
+        } else {
+          this.$store.dispatch('busstation/create', this.value)
+          this.$emit('reload', {
+            listing: 'stations',
+            dropdownCategory: 'stations'
+          })
+        }
+      })
     }
   }
 }

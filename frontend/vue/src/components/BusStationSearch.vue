@@ -1,12 +1,16 @@
 <template>
   <div class="parent">
-    <b-input-group>
-      <b-form-input placeholder="Stanica" list="list-station" v-model="station" style="margin-right: 15px"></b-form-input>
-      <b-input-group-append>
-        <b-button variant="success" @click="search">Pretrazi</b-button>
-      </b-input-group-append>
-    </b-input-group>
-
+    <ValidationObserver novalidate ref="form" v-slot="{ }" class="search">
+      <b-input-group>
+        <ValidationProvider name="Station" rules="required" v-slot="{ errors }" style="margin-right: 15px">
+          <b-form-input placeholder="Station" list="list-station" v-model="station"></b-form-input>
+          <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+        </ValidationProvider>
+        <b-input-group-append>
+          <b-button variant="success" @click="search">Search</b-button>
+        </b-input-group-append>
+      </b-input-group>
+    </ValidationObserver>
     <datalist id="list-station">
       <option v-for="station in cities" :key="station.length * Math.random()">{{ station.name }}</option>
     </datalist>
@@ -33,7 +37,12 @@ export default {
   },
   methods: {
     search () {
-      this.$router.push({ name: 'BusStationsPage', query: { q: this.station } }).catch(() => {})
+      this.$refs.form.validate().then(success => {
+        if (!success) {
+          return
+        }
+        this.$router.push({ name: 'BusStationsPage', query: { q: this.station } }).catch(() => {})
+      })
     },
     async getL () {
       this.cities = await this.$store.dispatch('location/locations', {}, {root: true})

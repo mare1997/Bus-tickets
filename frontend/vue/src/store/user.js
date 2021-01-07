@@ -51,6 +51,9 @@ export default {
     },
     isAdmin (state) {
       return state.user ? state.user.role === 'ADMIN' : false
+    },
+    isCarrier (state) {
+      return state.user ? state.user.role === 'CARRIER' : false
     }
   },
   actions: {
@@ -69,6 +72,7 @@ export default {
           router.push({name: 'Home'}).catch(() => {})
         })
         .catch((error) => {
+          alert(error)
           console.error(error)
         })
     },
@@ -80,7 +84,7 @@ export default {
         lastName: payload.lastname,
         age: payload.age,
         role: 'USER',
-        locationId: 1 // hardcoded
+        locationId: payload.locationId
       })
         .then(() => {
           dispatch('login', { userName: payload.userName, password: payload.password })
@@ -113,18 +117,28 @@ export default {
           console.error(error)
         })
     },
+    user ({ commit }, payload) {
+      return axios.get('http://localhost:3001/user/' + payload.id)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
     create ({ dispatch }, payload) {
-      axios.post('http://localhost:3001/register', {
+      return axios.post('http://localhost:3001/register', {
         userName: payload.userName,
         password: payload.password,
-        firstName: payload.firstname,
-        lastName: payload.lastname,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
         age: payload.age,
         role: payload.role,
-        locationId: payload.locationId
+        locationId: payload.locationId,
+        carrierId: payload.carrierId || null
       })
-        .then(() => {
-          dispatch('login', { userName: payload.userName, password: payload.password })
+        .then((response) => {
+          return response.data
         })
         .catch((error) => {
           console.error(error)
@@ -135,6 +149,7 @@ export default {
         id: payload.id,
         userName: payload.userName,
         firstName: payload.firstName,
+        password: payload.password,
         lastName: payload.lastName,
         age: payload.age,
         role: payload.role,

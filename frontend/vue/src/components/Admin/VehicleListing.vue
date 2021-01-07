@@ -24,22 +24,30 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { bus } from '../../main'
 export default {
   name: 'VehicleListing',
   components: {
   },
   data () {
     return {
-      id: ''
+      id: '',
+      vehicles: []
     }
   },
   computed: {
     ...mapGetters({
-      vehicles: 'vehicle/getVehicles'
+      currentUser: 'user/getUser'
     })
   },
   mounted () {
-    this.$store.dispatch('vehicle/vehicles')
+    this.get()
+  },
+  beforeMount () {
+    bus.$on('reload-vehicles', this.get)
+  },
+  beforeDestroy () {
+    bus.$off('reload-vehicle')
   },
   methods: {
     showModal (value) {
@@ -55,6 +63,19 @@ export default {
     },
     edit (vehicle) {
       this.$emit('edit-vehicle', vehicle)
+    },
+    async getVehiclesByCarrierId () {
+      this.vehicles = await this.$store.dispatch('vehicle/vehicle', { id: this.currentUser.carrier.id }, { root: true })
+    },
+    async getVehicles () {
+      this.vehicles = await this.$store.dispatch('vehicle/vehicles')
+    },
+    get () {
+      if (this.currentUser.role === 'CARRIER') {
+        this.getVehiclesByCarrierId()
+      } else {
+        this.getVehicles()
+      }
     }
   }
 

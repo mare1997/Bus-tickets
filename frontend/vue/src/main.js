@@ -12,13 +12,19 @@ import { store } from './store/index.js'
 import { VueStars } from 'vue-stars'
 import VueLayers from 'vuelayers'
 import 'vuelayers/lib/style.css' // needs css-loader
-
+import './vee-validate'
+import {
+  ValidationProvider,
+  ValidationObserver
+} from 'vee-validate'
+Vue.component('ValidationProvider', ValidationProvider)
+Vue.component('ValidationObserver', ValidationObserver)
 Vue.use(VueLayers)
 Vue.component('vue-stars', VueStars)
 Vue.use(Vuex)
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false
-
+export const bus = new Vue()
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

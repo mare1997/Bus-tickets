@@ -54,7 +54,7 @@ export default {
           console.error(error)
         })
     },
-    create ({ commit }, payload) {
+    create ({ rootState }, payload) {
       return axios.post('http://localhost:3001/busstation', {
         name: payload.name,
         worktime: payload.worktime,
@@ -64,6 +64,11 @@ export default {
         latitude: payload.latitude,
         longitude: payload.longitude,
         locationId: payload.locationId
+      },
+      {
+        headers: {
+          auth: rootState.user.token
+        }
       })
         .then((response) => {
           return response.data
@@ -72,7 +77,7 @@ export default {
           console.error(error)
         })
     },
-    update ({ commit }, payload) {
+    update ({ rootState }, payload) {
       return axios.put('http://localhost:3001/busstation', {
         id: payload.id,
         name: payload.name,
@@ -83,6 +88,11 @@ export default {
         latitude: payload.latitude,
         longitude: payload.longitude,
         locationId: payload.locationId
+      },
+      {
+        headers: {
+          auth: rootState.user.token
+        }
       })
         .then((response) => {
           return response.data
@@ -91,8 +101,8 @@ export default {
           console.error(error)
         })
     },
-    delete ({ commit }, payload) {
-      return axios.delete('http://localhost:3001/busstation/' + payload.id)
+    delete ({ commit, rootState }, payload) {
+      return axios.delete('http://localhost:3001/busstation/' + payload.id, { headers: { auth: rootState.user.token } })
         .then((response) => {
           if (response.data === 'OK') {
             commit('removeBusStation', payload.id)

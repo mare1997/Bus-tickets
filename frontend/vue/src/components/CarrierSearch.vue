@@ -1,12 +1,16 @@
 <template>
   <div class="parent">
-    <b-input-group>
-      <b-form-input placeholder="Prevznici" list="list-carrier" v-model="carrier" style="margin-right: 15px"></b-form-input>
-      <b-input-group-append>
-        <b-button variant="success" @click="search">Pretrazi</b-button>
-      </b-input-group-append>
-    </b-input-group>
-
+    <ValidationObserver novalidate ref="form" v-slot="{ }" class="search">
+      <b-input-group>
+        <ValidationProvider name="Carrier" rules="required" v-slot="{ errors }" style="margin-right: 15px">
+          <b-form-input placeholder="Carrier" list="list-carrier" v-model="carrier"></b-form-input>
+          <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+        </ValidationProvider>
+        <b-input-group-append>
+          <b-button variant="success" @click="search">Search</b-button>
+        </b-input-group-append>
+      </b-input-group>
+    </ValidationObserver>
     <datalist id="list-carrier">
       <option v-for="carrier in getCarriers" :key="carrier.id * Math.random()">{{ carrier.name }}</option>
     </datalist>
@@ -37,7 +41,12 @@ export default {
   },
   methods: {
     search () {
-      this.$router.push({ name: 'CarriersPage', query: { q: this.carrier } }).catch(() => {})
+      this.$refs.form.validate().then(success => {
+        if (!success) {
+          return
+        }
+        this.$router.push({ name: 'CarriersPage', query: { q: this.carrier } }).catch(() => {})
+      })
     }
   }
 }

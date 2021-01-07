@@ -13,7 +13,6 @@ export default {
         })
     },
     create ({ commit }, payload) {
-      debugger
       return axios.post('http://localhost:3001/review', {
         rollingStock: payload.rollingStock,
         staff: payload.staff,
