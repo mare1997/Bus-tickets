@@ -2,15 +2,15 @@
   <div>
     <MainSearchNavBar :activeNav="'activeRV'" />
     <div class="parent">
-      <div class="h2"><h2>Red voznje</h2></div>
+      <div class="h2"><h2>Schedule</h2></div>
       <div v-if="schedules.length !== 0">
         <Schedule v-for="schedule in schedules" :key="schedule + Math.random()" :schedule="schedule" />
       </div>
       <div class="h2" v-else>
-        <h4>Ne postoji red voznje za ponudjene vrednosti :</h4>
-        <h4>Polazak: {{this.$route.query.start}}</h4>
-        <h4>Odrediste: {{this.$route.query.finish}}</h4>
-        <h4>Vreme: {{this.date}}</h4>
+        <h4>There is no drive for these parameters :</h4>
+        <h4>Arrival: {{this.$route.query.start}}</h4>
+        <h4>Departure: {{this.$route.query.finish}}</h4>
+        <h4>Time: {{this.date}}</h4>
       </div>
     </div>
   </div>

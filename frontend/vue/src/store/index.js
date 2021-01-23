@@ -8,6 +8,7 @@ import location from './location.js'
 import vehicle from './vehicle.js'
 import comment from './comment.js'
 import review from './review.js'
+import order from './order.js'
 
 Vue.use(Vuex)
 
@@ -53,6 +54,9 @@ export const store = new Vuex.Store({
       if (localStorage.getItem('activeId')) {
         state.activeId = JSON.parse(localStorage.getItem('activeId'))
       }
+      if (localStorage.getItem('order')) {
+        state.order = JSON.parse(localStorage.getItem('order'))
+      }
     },
     setActiveObjectForEdit (state, activeId) {
       localStorage.setItem('activeId', activeId)
@@ -71,6 +75,7 @@ export const store = new Vuex.Store({
     location,
     vehicle,
     comment,
-    review
+    review,
+    order
   }
 })

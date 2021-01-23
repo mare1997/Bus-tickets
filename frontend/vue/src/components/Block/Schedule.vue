@@ -2,39 +2,40 @@
   <div class="container">
     <div class="ride" @click="clicked = !clicked">
       <div class="quarter">
-        <p style='width: 15%;'>{{schedule.station[0].time}}</p>
+        <p style='width: 15%;'>{{getTime(schedule.station[0].time)}}</p>
         <i class="fa fa-bus" aria-hidden="true"></i>
         <p>{{schedule.station[0].bus_station.name}}</p>
-        <p style="margin-left: 10%">{{schedule.date}}</p>
+        <p style="margin-left: 10%">{{getDate(schedule.date)}}</p>
         <p class="price">{{schedule.price}} RSD</p>
       </div>
       <div class="half">
         <div class="line"></div>
-        <p class="duration">Trajanje voznje: 2 sata</p>
+        <!-- <p class="duration">Trajanje voznje: 2 sata</p> -->
         <img class="driveCompanyLogo" v-if="schedule.carrier.image" :src="'~@/assets/' + schedule.carrier.image" />
         <p class="price" v-else>{{schedule.carrier.name}}</p>
       </div>
       <div class="quarter">
-        <p style='width: 15%;'>{{getDate(schedule.station[schedule.station.length - 1].time)}}</p>
+        <p style='width: 15%;'>{{getTime(schedule.station[schedule.station.length - 1].time)}}</p>
         <i class="fa fa-map-marker" aria-hidden="true"></i>
         <p>{{schedule.station[schedule.station.length - 1].bus_station.name}}</p>
-        <button class="checkoutButton">Buy ticket</button>
+        <button class="checkoutButton" @click="buyTicket()">Buy ticket</button>
       </div>
     </div>
     <div class="stationList" v-if="clicked">
       <div class="stationHeader">
         <div class="stationIconHeader"></div>
         <p class="stationItem">Stations</p>
-        <p class="stationItem">Dolazak</p>
-        <p class="stationItem">Odlazak</p>
+        <p class="stationItem">Arrival</p>
+        <p class="stationItem">Departure</p>
       </div>
-      <div class="station" v-for="station in schedule.station" :key="station.id + Math.random()">
+      <div class="station" v-for="(station, index) in schedule.station" :key="station.id + Math.random()">
         <div class="stationIcon">
           <div class="dot"></div>
         </div>
         <p class="stationItem">{{station.bus_station.name}}</p>
-        <p class="stationItem">{{getDate(station.time)}}</p>
-        <p class="stationItem">{{getDate(station.time)}}</p>
+        <p class="stationItem">{{getTime(station.time)}}</p>
+        <p class="stationItem" v-if="(index + 1) !== schedule.station.length">{{getTime(station.time)}}</p>
+        <p class="stationItem" v-else>{{'/'}}</p>
       </div>
     </div>
   </div>
@@ -56,8 +57,7 @@ export default {
   },
   methods: {
     getDate (date) {
-      const d = new Date(date)
-      const time = d.toLocaleDateString('en-US')
+      const time = new Date(date)
       const day = time ? time.getDate() : ''
       const month = time ? time.getMonth() + 1 : ''
       const year = time ? time.getFullYear() : ''
@@ -66,6 +66,17 @@ export default {
       const formattedHour = ('0' + hour).slice(-2)
       const formattedMinute = ('0' + minute).slice(-2)
       return day + '/' + month + '/' + year + '  ' + formattedHour + ':' + formattedMinute
+    },
+    getTime (timee) {
+      const time = new Date(timee)
+      const hour = time ? time.getHours() : ''
+      const minute = time ? time.getMinutes() : ''
+      const formattedHour = ('0' + hour).slice(-2)
+      const formattedMinute = ('0' + minute).slice(-2)
+      return formattedHour + ':' + formattedMinute
+    },
+    buyTicket () {
+      this.$router.push({ name: 'Checkout', query: { id: this.schedule.id } }).catch(() => {})
     }
   }
 }

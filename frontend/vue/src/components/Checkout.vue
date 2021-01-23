@@ -7,19 +7,81 @@
             <div class="row">
               <div class="col-33">
                 <h3>Korpa</h3>
-                
+                <div class="cart">
+                  <div >
+                    <p><b>{{ schedule ? schedule.station[0].bus_station.name : '' }}</b></p>
+                  </div>
+                  <span><b>&#8594;</b></span>
+                  <div>
+                    <p><b>{{ schedule ? schedule.station[schedule.station.length - 1].bus_station.name : ''}}</b></p>
+                  </div>
+                </div>
+                <p>Date: {{ schedule ? getDate(schedule.date) : ''}}</p>
+                <p>Arrival: {{ schedule ? getTime(schedule.station[0].time) : ''}}</p>
+                <p>Departure: {{ schedule ? getTime(schedule.station[schedule.station.length - 1].time) : ''}}</p>
+                <p>Carrier: {{ schedule ? schedule.carrier.name : ''}}</p>
               </div>
 
               <div class="col-33">
-                <h3>Adresa</h3>
-                <label for="fname"><i class="fa fa-user"></i> First Name</label>
-                <input type="text" id="fname" name="firstname" placeholder="Petar">
-                <label for="lname"><i class="fa fa-user"></i> Last Name</label>
-                <input type="text" id="lname" name="firstname" placeholder="Petrovic">
-                <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                <input type="text" id="email" name="email" placeholder="john@example.com">
-                <label for="tel"><i class="fa fa-phone"></i> Telefon</label>
-                <input type="text" id="tel" name="telefon" placeholder="06555555555">
+                <ValidationObserver novalidate ref="form" v-slot="{ }">
+                  <h3>Adresa</h3>
+                  <label for="fname"><i class="fa fa-user"></i> First Name</label>
+                  <ValidationProvider name="Firstname" rules="required" v-slot="{ errors }">
+                    <fieldset>
+                      <input
+                        v-model="order.firstName"
+                        placeholder="Petar"
+                        type="text"
+                        tabindex="1"
+                        id="fname"
+                        required
+                      />
+                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                    </fieldset>
+                  </ValidationProvider>
+                  <label for="lname"><i class="fa fa-user"></i> Last Name</label>
+                  <ValidationProvider name="Lastname" rules="required" v-slot="{ errors }">
+                    <fieldset>
+                      <input
+                        v-model="order.lastName"
+                        placeholder="Petrovic"
+                        type="text"
+                        tabindex="2"
+                        id="lname"
+                        required
+                      />
+                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                    </fieldset>
+                  </ValidationProvider>
+                  <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                  <ValidationProvider name="Email" rules="required|email" v-slot="{ errors }">
+                    <fieldset>
+                      <input
+                        v-model="order.email"
+                        placeholder="petarpetrovic@gmail.com"
+                        type="text"
+                        tabindex="3"
+                        id="email"
+                        required
+                      />
+                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                    </fieldset>
+                  </ValidationProvider>
+                  <label for="tel"><i class="fa fa-phone"></i> Telefon</label>
+                  <ValidationProvider name="Phone" rules="required" v-slot="{ errors }">
+                    <fieldset>
+                      <input
+                        v-model="order.phone"
+                        placeholder="0655555555"
+                        type="text"
+                        tabindex="4"
+                        id="tel"
+                        required
+                      />
+                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                    </fieldset>
+                  </ValidationProvider>
+                </ValidationObserver>
               </div>
 
               <div class="col-33">
@@ -31,34 +93,39 @@
                   <i class="fa fa-cc-mastercard" style="color:red;"></i>
                   <i class="fa fa-cc-discover" style="color:orange;"></i>
                 </div>
-                <b-form-group label="Nacini placanja">
+                <b-form-group label="Nacini placanja" @click="submit()">
                   <b-form-radio v-model="selected" name="paypal" value="Paypal">Paypal</b-form-radio>
                   <b-form-radio v-model="selected" name="card" value="PK">Placnje karticom</b-form-radio>
                 </b-form-group>
-                <div v-if="selected === 'PK'">
-                  <label for="cname">Name on Card</label>
-                  <input type="text" id="cname" name="cardname" placeholder="John More Doe">
-                  <label for="ccnum">Credit card number</label>
-                  <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
-                  <div class="row">
-                    <div class="col-50">
-                      <label for="expyear">Exp Date</label>
-                      <input type="text" id="expyear" name="expyear" placeholder="03/2018">
-                    </div>
-                    <div class="col-50">
-                      <label for="cvv">CVV</label>
-                      <input type="text" id="cvv" name="cvv" placeholder="352">
-                    </div>
+                <div>
+                  <div v-if="selected === 'PK' && isValidate">
+                    <stripe-element-card
+                      ref="elementRef"
+                      :pk="pulishableKey"
+                      :elementStyle="stripeOptions"
+                      @token="tokenCreated"
+                    />
                   </div>
-                </div>
-                
-                <div v-else-if="selected === 'Paypal'">
-                  <p></p>
+                  
+                  <div v-else-if="selected === 'Paypal' && isValidate">
+                    <PayPal
+                      :amount="(schedule.price / 117).toFixed(2)"
+                      currency="EUR"
+                      :client="credentials"
+                      :experience="experienceOptions"
+                      :button-style="myStyle"
+                      @payment-completed="createOrder"
+                      env="sandbox"
+                    >
+                    </PayPal>
+                  </div>
+                  <div v-else>
+                    <p>All fileds must be filled! If you still do not see payments after filling out the form. Change payment and return to the one you want.</p>
+                  </div>
                 </div>
               </div>
               
             </div>
-            <input type="submit" value="Pay" class="btn">
           </form>
         </div>
       </div>
@@ -67,16 +134,152 @@
 </template>
 <script>
 import {BFormGroup, BFormRadio} from 'bootstrap-vue'
+import { mapGetters } from 'vuex'
+import PayPal from 'vue-paypal-checkout'
+import { StripeElementCard } from '@vue-stripe/vue-stripe'
+
 export default {
   name: 'Checkout',
   components: {
     'b-form-group': BFormGroup,
-    'b-form-radio': BFormRadio
+    'b-form-radio': BFormRadio,
+    PayPal,
+    StripeElementCard
   },
   data () {
     return {
-      selected: 'Paypal'
+      selected: 'PK',
+      schedule: null,
+      isValidate: false,
+      response: null,
+      order: {
+        firstName: this.user ? this.user.firstName : '',
+        lastName: this.user ? this.user.lastName : '',
+        email: this.user ? this.user.userName : '',
+        phone: '',
+        qty: 1,
+        travelingId: null,
+        userId: this.user ? this.user.id : null,
+        additionalData: {}
+      },
+      credentials: {
+        sandbox: 'AcjDjYdG9NrIBo_mOQCSq5LnYf1mJin1vy0xP3RK7uQBjz5toNp9hXp0VJWjfPb-S-gpiT4BJG2jzNLX',
+        production: '<production client id>'
+      },
+      experienceOptions: {
+        input_fields: {
+          no_shipping: 1
+        }
+      },
+      myStyle: {
+        label: 'checkout',
+        size: 'responsive',
+        shape: 'pill',
+        color: 'gold'
+      },
+      pulishableKey: 'pk_test_51HToNlBJ6JLvaHzMugrOicSO0yXvhMuR6Tbwa9FbHSOSlVfHilAYrTT8NiysdvwtjW6rE3urglzg4QKlau1iL9D500xOZZGZo5',
+      token: '',
+      stripeOptions: {
+        base: {
+          color: '#32325d',
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
+      }
     }
+  },
+  updated () {
+    if (this.selected === 'PK') {
+      this.$nextTick(() => {
+        this.$refs.elementRef.$refs.submitButtonRef.innerHTML = 'Pay'
+      })
+    }
+  },
+  computed: {
+    getScheduleID () {
+      return this.$route.query.id
+    },
+    ...mapGetters({
+      user: 'user/getUser'
+    })
+  },
+  mounted () {
+    this.search()
+    this.order.firstName = this.user ? this.user.firstName : ''
+    this.order.lastName = this.user ? this.user.lastName : ''
+    this.order.email = this.user ? this.user.userName : ''
+    this.order.userId = this.user ? this.user.id : null
+    this.$nextTick(() => {
+      this.$refs.elementRef.$refs.submitButtonRef.innerHTML = 'Pay'
+    })
+  },
+  methods: {
+    async search (value) {
+      this.schedule = await this.$store.dispatch('schedule/schedule', { id: this.getScheduleID }, { root: true })
+      this.order.travelingId = this.schedule.id
+    },
+    getDate (date) {
+      const time = new Date(date)
+      const day = time ? time.getDate() : ''
+      const month = time ? time.getMonth() + 1 : ''
+      const year = time ? time.getFullYear() : ''
+      const hour = time ? time.getHours() : ''
+      const minute = time ? time.getMinutes() : ''
+      const formattedHour = ('0' + hour).slice(-2)
+      const formattedMinute = ('0' + minute).slice(-2)
+      return day + '/' + month + '/' + year + '  ' + formattedHour + ':' + formattedMinute
+    },
+    getTime (timee) {
+      const time = new Date(timee)
+      const hour = time ? time.getHours() : ''
+      const minute = time ? time.getMinutes() : ''
+      const formattedHour = ('0' + hour).slice(-2)
+      const formattedMinute = ('0' + minute).slice(-2)
+      return formattedHour + ':' + formattedMinute
+    },
+    createOrder (response) {
+      console.error(response)
+    },
+    async tokenCreated (token) {
+      this.order.additionalData = {
+        paymentMethod: 'stripe',
+        token: token.id,
+        amount: (this.order.qty * this.schedule.price / 117).toFixed(2),
+        currency: 'EUR'
+      }
+      this.response = await this.$store.dispatch('order/create', this.order, { root: true })
+      console.error(this.response)
+    },
+    submit () {
+      this.$refs.form.validate().then(success => {
+        this.isValidate = success
+      })
+    }
+  },
+  watch: {
+    selected: function (val) {
+      this.submit()
+    }
+    // 'order.phone': function (val) {
+    //   this.submit()
+    // },
+    // 'order.email': function (val) {
+    //   this.submit()
+    // },
+    // 'order.firstName': function (val) {
+    //   this.submit()
+    // },
+    // 'order.lastName': function (val) {
+    //   this.submit()
+    // }
   }
 }
 </script>
@@ -123,6 +326,7 @@ text-align:left;
 .col-100 {
   -ms-flex: 100%; /* IE10 */
   flex: 100%;
+  height: 676px;
 }
 
 .col-33 {
@@ -141,13 +345,13 @@ text-align:left;
 
 input[type=text] {
   width: 100%;
-  margin-bottom: 20px;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
 
 label {
+  margin-top: 10px;
   margin-bottom: 10px;
   display: block;
 }
@@ -186,7 +390,16 @@ span.price {
   float: right;
   color: grey;
 }
-
+.cart {
+  display: flex;
+}
+.hide {
+  visibility: visible !important;
+  content: "Pay " !important;
+  width: 100%;
+  height: auto;
+  margin-top: 20px; 
+}
 /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
 @media (max-width: 800px) {
   .row {

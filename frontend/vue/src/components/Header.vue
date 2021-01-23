@@ -18,6 +18,7 @@
       <router-link :to="{ name: 'Home' }"><h1 class="brand brand-name navbar-left bus-tickets-text">Bus Tickets</h1></router-link>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
+          <b-nav-item><p v-if="isLoggedIn">Welcome, <b>{{ user.firstName}}</b></p></b-nav-item>
           <b-nav-item v-if="isLoggedIn && (isAdmin || isCarrier)"><router-link :to="{ name: 'AdminPage' }">Admin panel</router-link></b-nav-item>
           <b-nav-item><router-link :to="{ name: 'CarriersPage' }">Prevoznici</router-link></b-nav-item>
           <b-nav-item><router-link :to="{ name: 'BusStationsPage' }">Autobuske Statnice</router-link></b-nav-item>
@@ -59,6 +60,7 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: 'user/isLoggedIn',
+      user: 'user/getUser',
       getToken: 'user/getToken',
       getUser: 'user/getUser',
       getCarriers: 'carrier/getCarriers',

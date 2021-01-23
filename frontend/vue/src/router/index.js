@@ -50,9 +50,12 @@ export default new Router({
       })
     },
     {
-      path: '/placanje',
+      path: '/checkout',
       name: 'Checkout',
-      component: Checkout
+      component: Checkout,
+      props: (route) => ({
+        ...route.params
+      })
     },
     {
       path: '/red-voznje',
