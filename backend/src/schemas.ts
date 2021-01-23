@@ -172,4 +172,19 @@ export const schemas = {
   ticketPOST: Joi.object({ 
     
   }),
+  orderPOST: Joi.object({ 
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    email: Joi.string().required(),
+    phone: Joi.string().required(),
+    travelingId: Joi.number().required(),
+    qty: Joi.number().required(),
+    userId: Joi.number() || null,
+    additionalData:  Joi.object({
+      paymentMethod: Joi.string().required(),
+      token: Joi.string().required(),
+      amount: Joi.string().required(),
+      currency: Joi.string().required()
+    })
+  }),
 }; 

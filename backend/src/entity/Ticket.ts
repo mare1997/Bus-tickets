@@ -1,7 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne, JoinColumn} from "typeorm";
 import { Seats } from "./Seats";
-import { Passenger } from "./Passenger";
-import { Station } from "./Station";
+import { Order } from "./Order";
 import { Traveling } from "./Traveling";
 
 @Entity()
@@ -19,8 +18,8 @@ export class Ticket {
     @ManyToOne(type => Seats, seats => seats.ticket)
     seats: Seats;
 
-    @OneToOne(type => Passenger, passenger => passenger.ticket)
-    passenger: Passenger;
+    @ManyToOne(type => Order, order => order.ticket)
+    order: Order;
 
     @ManyToOne(type => Traveling, traveling => traveling.ticket)
     traveling: Traveling;

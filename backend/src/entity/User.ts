@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, Unique, OneToOne, JoinColumn } from "typeorm";
 import { Length, IsNotEmpty } from "class-validator";
 import { Location } from "./Location";
-import { Passenger } from "./Passenger";
+import { Order } from "./Order";
 import * as bcrypt from "bcryptjs";
 import { Comment } from "./Comment";
 import { Review } from "./Review";
@@ -39,8 +39,8 @@ export class User {
   @ManyToOne(type => Location, location => location.user)
   location: Location;
 
-  @OneToMany(type => Passenger, passenger => passenger.user)
-  passenger: Passenger[];
+  @OneToMany(type => Order, order => order.user)
+  order: Order[];
 
   @OneToMany(type => Comment, comment => comment.carrier)
   comment: Comment[];

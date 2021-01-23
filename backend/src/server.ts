@@ -10,6 +10,7 @@ import TravelingController from './controllers/TravelingController'
 import TicketController from './controllers/TicketController'
 import CommentController from './controllers/CommentController'
 import ReviewController from './controllers/ReviewController'
+import OrderController from './controllers/OrderController'
 import * as helmet from "helmet";
 import * as cors from "cors";
 import AuthController from './controllers/AuthController'
@@ -26,7 +27,8 @@ const app = new App({
         new TicketController(),
         new AuthController(),
         new CommentController(),
-        new ReviewController()
+        new ReviewController(),
+        new OrderController()
     ],
     middleWares: [
         bodyParser.json(),

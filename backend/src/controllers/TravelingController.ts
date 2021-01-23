@@ -67,24 +67,41 @@ class TravelingController implements IControllerBase {
         res.send("Error " + e);
       }
     });
-    // this.router.get(this.path + '/:travelingId', async (req, res) => {
-    // 	try {
-    // 		const travelingRepository = getRepository(Traveling);
-    // 		var travelingId = req.params.vehicleId;
-    // 		const traveling = await travelingRepository.findOne(travelingId, { relations: ["vehicle", "station", "ticket"] });
+    this.router.get(this.path + '/:travelingId', async (req, res) => {
+    	try {
+    		const travelingRepository = getRepository(Traveling);
+    		var travelingId = req.params.travelingId;
+    		const traveling = await travelingRepository.findOne(travelingId, { relations: ["vehicle", "station", "ticket"] });
+        const stationRepository = getRepository(Station);
+        const busStationRepository = getRepository(BusStation);
+        const vehicleRepository = getRepository(Vehicle);
+        const carrierRepository = getRepository(Carrier);
 
-    // 		if (!traveling.deleted) {
-    // 			res.send(traveling);
-    // 		} else {
-    // 			res.status(404);
-    // 			res.send("Bus station not found");
-    // 		}
+        for (let l = 0; traveling.station.length > l; l++) {
+          const station = await stationRepository.findOne(traveling.station[l].id, { relations: ["busStation"] });
+          const busStation = await busStationRepository.findOne(station.busStation.id, { relations: ["location"] });
+          // @ts-ignore
+          traveling.station[l].bus_station = busStation
+        }
+        // @ts-ignore
+        traveling.price = traveling.ticket[0].price
+        const vehicle = await vehicleRepository.findOne(traveling.vehicle.id, { relations: ["carrier"] });
+        const carrier = await carrierRepository.findOne(vehicle.carrier.id, { relations: ["location"] });
+        // @ts-ignore
+        traveling.carrier = carrier
+        
+        if (!traveling.deleted) {
+    			res.status(200).send(traveling);
+    		} else {
+    			res.status(404);
+    			res.send("Bus station not found");
+    		}
 
-    // 	} catch (e) {
-
-    // 		res.send("Error " + e);
-    // 	}
-    // });
+    	} catch (e) {
+        res.status(404);
+    		res.send("Error " + e);
+    	}
+    });
     this.router.post(this.path + '/search', validateJOI(schemas.travelingSearch, 'body'), async (req, res) => {
       const travelingRepository = getRepository(Traveling);
       const stationRepository = getRepository(Station);
