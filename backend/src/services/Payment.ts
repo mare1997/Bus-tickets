@@ -14,5 +14,6 @@ const finalizeOrderStripe = async (data) => {
 		description: 'Charge',
 		source: token,
 	});
+	return charge
 }
 export { finalizeOrderStripe }

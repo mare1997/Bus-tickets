@@ -179,7 +179,7 @@ export const schemas = {
     phone: Joi.string().required(),
     travelingId: Joi.number().required(),
     qty: Joi.number().required(),
-    userId: Joi.number() || null,
+    userId: Joi.any(),
     additionalData:  Joi.object({
       paymentMethod: Joi.string().required(),
       token: Joi.string().required(),
