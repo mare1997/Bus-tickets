@@ -109,8 +109,8 @@
                   
                   <div v-else-if="selected === 'Paypal' && isValidate">
                     <PayPal
-                      :amount="(schedule.price / 117).toFixed(2)"
-                      currency="EUR"
+                      :amount="(schedule.price / 97.40).toFixed(2)"
+                      currency="USD"
                       :client="credentials"
                       :experience="experienceOptions"
                       :button-style="myStyle"
@@ -245,18 +245,33 @@ export default {
       const formattedMinute = ('0' + minute).slice(-2)
       return formattedHour + ':' + formattedMinute
     },
-    createOrder (response) {
+    async createOrder (response) {
       console.error(response)
+      this.order.additionalData = {
+        paymentMethod: 'paypal',
+        token: response.id,
+        amount: response.transactions[0].amount.total,
+        currency: response.transactions[0].amount.currency
+      }
+      this.response = await this.$store.dispatch('order/create', this.order, { root: true })
+      if (this.response.status === 201) {
+        alert('Your order has been successfully placed. Tickets will be sent to you by e-mail.')
+        this.$router.push('/')
+      }
     },
     async tokenCreated (token) {
       this.order.additionalData = {
         paymentMethod: 'stripe',
         token: token.id,
-        amount: (this.order.qty * this.schedule.price / 117).toFixed(2),
-        currency: 'EUR'
+        amount: (this.schedule.price * 100).toString(),
+        currency: 'RSD'
       }
       this.response = await this.$store.dispatch('order/create', this.order, { root: true })
       console.error(this.response)
+      if (this.response.status === 201) {
+        alert('Your order has been successfully placed. Tickets will be sent to you by e-mail.')
+        this.$router.push('/')
+      }
     },
     submit () {
       this.$refs.form.validate().then(success => {

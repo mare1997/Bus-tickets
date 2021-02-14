@@ -30,7 +30,7 @@ export default {
       })
         .then((response) => {
           commit('setOrder', response.data)
-          return response.data
+          return response
         })
         .catch((error) => {
           alert(error)

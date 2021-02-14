@@ -83,6 +83,9 @@ export default {
 
   /* Needed to position the navbar */
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .navbar-border {
   background-color: lightblue;
