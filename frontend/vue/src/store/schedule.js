@@ -34,8 +34,26 @@ export default {
           console.error(error)
         })
     },
+    schedulesByBusId ({ commit }, payload) {
+      return axios.get('http://localhost:3001/traveling/bus/' + payload.id)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
     schedule ({ commit }, payload) {
       return axios.get('http://localhost:3001/traveling/' + payload.id)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    schedulesPopular ({ commit }, payload) {
+      return axios.get('http://localhost:3001/traveling/popular')
         .then((response) => {
           return response.data
         })
@@ -72,6 +90,7 @@ export default {
         vehicleId: payload.vehicleId,
         price: payload.price,
         date: payload.date,
+        isPopularDestination: payload.isPopularDestination,
         stations: payload.stations
       }, { headers: { auth: rootState.user.token } })
         .then((response) => {

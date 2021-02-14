@@ -2,7 +2,7 @@
   <div>
     <div class="m-4 h2"><h2>Popularne destinacije</h2></div>
     <div class="destinations">
-      <Destination v-for="destination in destinations" :key="destination * Math.random()" />
+      <Destination v-for="destination in destinations" :destination="destination" :key="destination * Math.random()" />
     </div>
   </div>
 </template>
@@ -16,7 +16,20 @@ export default {
   },
   data () {
     return {
-      destinations: [1, 2, 3]
+      destinations: []
+    }
+  },
+  computed: {
+    getDestinations () {
+      return this.destinations.slice(0, 8)
+    }
+  },
+  mounted () {
+    this.getPopularDestinations()
+  },
+  methods: {
+    async getPopularDestinations () {
+      this.destinations = await this.$store.dispatch('schedule/schedulesPopular', {}, { root: true })
     }
   }
 }

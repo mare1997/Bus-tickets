@@ -1,40 +1,9 @@
 <template>
-  <!-- <div class="comment-section">
-    <div class="comment_block">
-      <div class="create_new_comment">
-      <div class="user_avatar">
-        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/BillSKenney/73.jpg">
-      </div><div class="input_comment">
-        <input type="text" placeholder="Ime..">
-        <input type="text" placeholder="Vas komentar..">
-      </div>
-
-      </div>
-      <div class="new_comment">
-        <ul class="user_comment">
-          <div class="user_avatar">
-            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/73.jpg">
-          </div><div class="comment_body">
-            <p>Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore. Organic chillwave vinyl Neutra. Bushwick Helvetica cred freegan, crucifix Godard craft beer deep v mixtape cornhole Truffaut master cleanse pour-over Odd Future beard. Portland polaroid iPhone.</p>
-          </div>
-          <div class="comment_toolbar">
-            <div class="comment_details">
-              <ul>
-                <li><i class="fa fa-clock-o"></i> 13:94</li>
-                <li><i class="fa fa-calendar"></i> 04/01/2015</li>
-                <li><i class="fa fa-pencil"></i> <span class="user">John Smith</span></li>
-              </ul>
-              </div>
-          </div>
-        </ul>
-      </div>
-    </div>
-  </div> -->
   <div class="comment-section">
     <div class="comment_block">
       <div class="create_new_comment">
       <div class="user_avatar">
-        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/BillSKenney/73.jpg">
+        <img src="@/assets/profile.jpg">
       </div><div class="input_comment">
         <input type="text" v-model="fullname" placeholder="Ime i prezime (nadimak)...">
         <input type="text" v-model="title" placeholder="Naslov...">
@@ -46,7 +15,7 @@
       <div class="new_comment">
         <ul class="user_comment" v-for="comm in comments" :key="comm.id + Math.random()">
           <div class="user_avatar">
-            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/BillSKenney/73.jpg">
+            <img src="@/assets/profile.jpg">
           </div><div class="comment_body">
             <p><b>{{comm.title}}</b></p>
             <p>{{comm.description}}</p>
@@ -56,7 +25,8 @@
               <ul>
                 <li><i class="fa fa-clock-o"></i>{{getDate(comm.date)}}</li>
                 <li><i class="fa fa-calendar"></i>{{getTime(comm.date)}}</li>
-                <li><i class="fa fa-pencil"></i> <span class="user">{{comm.fullname}}</span></li>
+                <li><i class="fa fa-pencil"></i> {{comm.fullname}}</li>
+                <li v-if="isLoggedIn && isAdmin" @click="hideComment(comm.id)"><i class="fa fa-remove"></i> <span class="user">{{ 'HIDE'}}</span></li>
               </ul>
             </div>
           </div>
@@ -81,7 +51,8 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: 'user/isLoggedIn',
-      getUser: 'user/getUser'
+      getUser: 'user/getUser',
+      isAdmin: 'user/isAdmin'
     }),
     getUserId () {
       if (this.isLoggedIn) {
@@ -120,6 +91,10 @@ export default {
     getTime (value) {
       let date = new Date(value)
       return date.getTime()
+    },
+    async hideComment (id) {
+      await this.$store.dispatch('comment/hide', { id }, { root: true })
+      await this.getComments()
     }
   }
 }
@@ -250,7 +225,7 @@ body {
   color: #ccc;
 }
 .comment_block .new_comment .user:hover {
-  color: #6495ed;
+  color: red;
   text-decoration: underline;
 }
 .comment_block .new_comment .love:hover {

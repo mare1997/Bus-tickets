@@ -2,15 +2,16 @@
   <div class="flip-card">
     <div class="flip-card-inner">
       <div class="flip-card-front">
-        <div class="h4"><h4>Ime grada</h4></div>
+        <h4 class="h4">{{ getDepartureDestination }}</h4>
         <img src="~@/assets/city.jpg" alt="Avatar" style="width:100%;height:180px;">
         
       </div>
       <div class="flip-card-back">
-        <p>Prevoznik: Lasta</p>
-        <p>Polazak: Beograd</p>
-        <p>Odrediste: Novi Sad</p>
-        <p>Cena: 1000</p>
+        <p>Carrier: {{ destination.carrier.name}}</p>
+        <p>Arrival: {{ getArrivalDestination }}</p>
+        <p>Date: {{ getDate(destination.date) }}</p>
+        <p>Number of avaiable tickets: {{ destination.ticket.length }}</p>
+        <p>Price: {{ destination.price }}</p>
       </div>
     </div>
   </div>
@@ -18,7 +19,34 @@
 
 <script>
 export default {
-  name: 'Destionation'
+  name: 'Destionation',
+  props: {
+    destination: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    getDepartureDestination () {
+      return this.destination.station[this.destination.station.length - 1].bus_station.location.name
+    },
+    getArrivalDestination () {
+      return this.destination.station[this.destination.station.length - 1].bus_station.location.name
+    }
+  },
+  methods: {
+    getDate (date) {
+      const time = new Date(date)
+      const day = time ? time.getDate() : ''
+      const month = time ? time.getMonth() + 1 : ''
+      const year = time ? time.getFullYear() : ''
+      const hour = time ? time.getHours() : ''
+      const minute = time ? time.getMinutes() : ''
+      const formattedHour = ('0' + hour).slice(-2)
+      const formattedMinute = ('0' + minute).slice(-2)
+      return day + '/' + month + '/' + year + '  ' + formattedHour + ':' + formattedMinute
+    }
+  }
 }
 </script>
 
@@ -29,6 +57,12 @@ export default {
   text-align: center;
   background-color: white;
 }
+
+p {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
 .flip-card {
   padding-left: 5%;
   padding-right: 5%;
@@ -66,11 +100,13 @@ export default {
 .flip-card-front {
   background-color: #bbb;
   color: black;
+  border: 1px solid lightblue;
+  border-radius: 15px
 }
 
 /* Style the back side */
 .flip-card-back {
-  background-color: dodgerblue;
+  background-color: gray;
   color: white;
   transform: rotateY(180deg);
 }

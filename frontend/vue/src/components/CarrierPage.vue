@@ -6,20 +6,20 @@
       <section id="info">
         <div class="row">
           <div class="card">
-            <h2 v-if="carrier.name">Prevoznik: {{carrier.name}}</h2>
-            <p v-if="carrier.phone">Telefon: {{carrier.phone}}</p>
+            <h2 v-if="carrier.name">Carrier: {{carrier.name}}</h2>
+            <p v-if="carrier.phone">Phone: {{carrier.phone}}</p>
             <p v-if="carrier.email">Email: {{carrier.email}}</p>
             <p v-if="carrier.site">Web: {{carrier.site}}</p>
-            <p v-if="carrier.street">Ulica: {{carrier.street}}</p>
+            <p v-if="carrier.street">Street: {{carrier.street}}</p>
           </div>
         </div>
       </section>
-      <div class="h2"><h2>Vozila</h2></div>
+      <div class="h2"><h2>Vehicles</h2></div>
       <table style="width:100%">
         <thead class="thead">
           <tr>
-            <th>Registracijski broj</th>
-            <th>Vozac</th>
+            <th>Registration number</th>
+            <th>Driver</th>
           </tr>
         </thead>
         <tbody class="tbody">

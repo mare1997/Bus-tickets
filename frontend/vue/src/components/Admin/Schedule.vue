@@ -42,6 +42,12 @@
         </ValidationProvider>
         
         <fieldset>
+          <input type="checkbox" id="pd" name="popularDestination" v-model="value.isPopularDestination">
+          <label for="pd"> Popular destination</label><br>
+        </fieldset>
+        
+
+        <fieldset>
           <h6 class="h6-station">Stations</h6>
             <div id="stations">
               <div class="station-listing">
@@ -116,6 +122,7 @@ export default {
         vehicleId: this.schedule && this.schedule.vehicleId ? this.schedule.vehicleId : '-1',
         price: this.schedule && this.schedule.price ? this.schedule.price : '',
         date: this.schedule && this.schedule.date ? this.schedule.date : '',
+        isPopularDestination: this.schedule && this.schedule.isPopularDestination ? this.schedule.isPopularDestination : false,
         stations: this.schedule && this.schedule.stations ? this.schedule.stations : []
       },
       time: '',

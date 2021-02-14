@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="h2"><h2>Recenzije</h2></div>
+    <div class="h2"><h2>Reviews</h2></div>
     <div class="parent-raiting">
       <div class="carrier-raiting">
         <div class="avg-raiting">
           <div class="line">
-            <p>Ocene koristnika ({{reviews.length}})</p>
+            <p>Averge ({{reviews.length}})</p>
             <p>({{average}})</p>
             <vue-stars
               name="Avg"
@@ -192,28 +192,28 @@ export default {
       this.reviews.forEach(review => {
         array.push(parseInt(review.rollingStock))
       })
-      return this.calculate(array)
+      return this.calculate(array) || 0
     },
     avgStaff () {
       let array = []
       this.reviews.forEach(review => {
         array.push(parseInt(review.staff))
       })
-      return this.calculate(array)
+      return this.calculate(array) || 0
     },
     avgAccuaracy () {
       let array = []
       this.reviews.forEach(review => {
         array.push(parseInt(review.accuracy))
       })
-      return this.calculate(array)
+      return this.calculate(array) || 0
     },
     avgHygiene () {
       let array = []
       this.reviews.forEach(review => {
         array.push(parseInt(review.hygiene))
       })
-      return this.calculate(array)
+      return this.calculate(array) || 0
     },
     average () {
       let array = []
@@ -223,7 +223,7 @@ export default {
         array.push(parseInt(review.accuracy))
         array.push(parseInt(review.hygiene))
       })
-      return this.calculate(array)
+      return this.calculate(array) || 0
     }
   },
   async mounted () {
@@ -234,7 +234,6 @@ export default {
       this.reviews = await this.$store.dispatch('review/search', { id: this.$route.params.id }, { root: true })
     },
     async createReview () {
-      debugger
       let review = await this.$store.dispatch('review/create',
         {
           rollingStock: this.rollingStock,

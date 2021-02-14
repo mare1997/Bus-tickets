@@ -27,6 +27,15 @@ export default {
         .catch((error) => {
           console.error(error)
         })
+    },
+    hide ({ commit, rootState }, payload) {
+      return axios.put('http://localhost:3001/comment/hide/' + payload.id)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }
   }
 }

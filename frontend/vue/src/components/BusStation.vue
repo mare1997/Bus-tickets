@@ -1,37 +1,39 @@
 <template>
   <div>
     <MainSearchNavBar :activeNav="'activeAS'" />
-    <div  class="parent">
+    <div  class="parent" ref="station">
       <div class="h2"><h2>{{station.name}}</h2></div>
       <section id="info">
         <div class="row">
           <div class="card">
-            <h2 v-if="station.name">Autobuska Stanica: {{station.name}}</h2>
-            <p v-if="station.phone">Telefon: {{station.phone}}</p>
+            <h2 v-if="station.name">Bus station: {{station.name}}</h2>
+            <p v-if="station.phone">Phone: {{station.phone}}</p>
             <p v-if="station.email">Email: {{station.email}}</p>
-            <p v-if="station.street">Ulica: {{station.street}}</p>
-            <p v-if="station.worktime">Radno vreme: {{station.worktime}}</p>
+            <p v-if="station.street">Street: {{station.street}}</p>
+            <p v-if="station.worktime">Worktime: {{station.worktime}}</p>
           </div>
         </div>
       </section>
-      <div class="h2"><h2>Polasci</h2></div>
+      <div class="h2"><h2>Schedules</h2></div>
       <table style="width:100%">
         <thead class="thead">
           <tr>
-            <th>Prevoznik</th>
-            <th>Odrediste</th>
-            <th>Polazak</th>
+            <th>Carrier</th>
+            <th>Departure</th>
+            <th>Date</th>
+            <th>Price</th>
           </tr>
         </thead>
         <tbody class="tbody">
           <tr v-for="schedule in schedules" :key="schedule + Math.random()" :schedule="schedule">
             <td>{{schedule.carrier.name}}</td>
             <td>{{schedule.station[0].bus_station.name}}</td>
-            <td>{{schedule.station[0].time}}</td>
+            <td>{{getDate(schedule.date)}}</td>
+            <td>{{schedule.price}}</td>
           </tr>
         </tbody>
       </table>
-      <div class="h2"><h2>Mapa</h2></div>
+      <div class="h2"><h2>Map</h2></div>
       <div>
         <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
           <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
@@ -65,12 +67,15 @@ export default {
     }
   },
   async mounted () {
+    this.$nextTick(() => {
+      window.scrollTo(0, this.$refs.station.offsetTop)
+    })
     if (this.$route.params.station) {
       this.station = this.$route.params.station
       this.center[0] = this.station.latitude
       this.center[1] = this.station.longitude
     } else {
-      this.getStationData()
+      await this.getStationData()
     }
     await this.search()
   },
@@ -81,7 +86,18 @@ export default {
       this.center[1] = this.station.longitude
     },
     async search () {
-      this.schedules = await this.$store.dispatch('schedule/search', { date: new Date(), start: this.station.location.name, finish: '' }, { root: true })
+      this.schedules = await this.$store.dispatch('schedule/schedulesByBusId', { id: this.station.id }, { root: true })
+    },
+    getDate (date) {
+      const time = new Date(date)
+      const day = time ? time.getDate() : ''
+      const month = time ? time.getMonth() + 1 : ''
+      const year = time ? time.getFullYear() : ''
+      const hour = time ? time.getHours() : ''
+      const minute = time ? time.getMinutes() : ''
+      const formattedHour = ('0' + hour).slice(-2)
+      const formattedMinute = ('0' + minute).slice(-2)
+      return day + '/' + month + '/' + year + '  ' + formattedHour + ':' + formattedMinute
     }
   }
 
