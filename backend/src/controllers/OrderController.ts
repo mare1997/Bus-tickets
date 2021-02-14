@@ -71,7 +71,7 @@ class OrderController implements IControllerBase {
         // }
 				
 				//create pdf
-				createPdf({ id: 5})
+				// createPdf({ id: 5})
 				// send email
 				//sendEmail(`../pdfs/${backOrder.id}.pdf`, backOrder)
 

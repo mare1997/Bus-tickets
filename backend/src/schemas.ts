@@ -112,6 +112,9 @@ export const schemas = {
   travelingGetById: Joi.object({ 
     travelingId: Joi.number().required() 
   }),
+  travelingGetByBusId: Joi.object({ 
+    busId: Joi.number().required() 
+  }),
   travelingSearch: Joi.object({ 
     date: Joi.string().required(),
     start: Joi.string().required(),
@@ -121,12 +124,14 @@ export const schemas = {
     vehicleId: Joi.number().integer().required(),
     price: Joi.number().integer().required(),
     date: Joi.string().required(),
+    isPopularDestination: Joi.boolean().required(),
     stations: Joi.array()
   }),
   travelingPUT: Joi.object({
     id: Joi.number().integer().required(), 
     vehicleId: Joi.number().integer().required(),
     price: Joi.number().integer().required(),
+    isPopularDestination: Joi.boolean().required(),
     date: Joi.string().required()
   }),
   commentGetByCommentId: Joi.object({ 

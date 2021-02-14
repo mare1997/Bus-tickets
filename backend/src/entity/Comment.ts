@@ -23,6 +23,9 @@ export class Comment {
   @Column({ type: "boolean", default: false })
   deleted: boolean;
 
+  @Column({ type: "boolean", default: false })
+  hidden: boolean;
+
   @ManyToOne(type => Carrier, carrier => carrier.comment)
   carrier: Carrier;
 

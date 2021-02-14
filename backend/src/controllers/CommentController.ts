@@ -22,7 +22,7 @@ class CommentCotroller implements IControllerBase {
         const carrierId = req.params.carrierId;
         var comments = [];
         commentFromDB.forEach(comment => {
-          if (!comment.deleted && comment.carrier.id === parseInt(carrierId)) {
+          if (!comment.deleted && !comment.hidden && comment.carrier.id === parseInt(carrierId)) {
             comments.push(comment);
           }
         });
@@ -83,6 +83,23 @@ class CommentCotroller implements IControllerBase {
         res.send("Error " + e);
       };
     });
+
+    this.router.put(this.path + '/hide/:commentId', validateJOI(schemas.commentGetByCommentId, 'params'), async (req, res) => {
+      try {
+        const commentRepository = getRepository(Comment);
+        var commentId = req.params.commentId;
+        const comment = await commentRepository.findOne(commentId);
+        comment.hidden = true;
+        await commentRepository.save(comment);
+
+        res.send(200);
+
+      } catch (e) {
+        res.status(400)
+        res.send("Error " + e);
+      };
+    });
+
     this.router.delete(this.path + '/:commentId', validateJOI(schemas.commentGetByCommentId, 'params'), async (req, res) => {
       try {
         const commentRepository = getRepository(Comment);

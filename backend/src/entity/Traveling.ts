@@ -14,6 +14,9 @@ export class Traveling {
     @Column({type: "boolean", default: false})
     deleted: boolean;
 
+		@Column({type: "boolean", default: false})
+    isPopularDestination: boolean;
+
     @OneToMany(type => Station, station => station.traveling)
     station: Station[];
 

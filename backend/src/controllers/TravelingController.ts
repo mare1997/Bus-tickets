@@ -39,6 +39,43 @@ class TravelingController implements IControllerBase {
     		res.send("Error " + e);
     	}
     });
+    this.router.get(this.path + '/popular', async (req, res) => {
+    	try {
+    		const travelingRepository = getRepository(Traveling);
+    		const travelingFromDB = await travelingRepository.find({ relations: ["vehicle", "station", "ticket"] });
+        const stationRepository = getRepository(Station);
+        const busStationRepository = getRepository(BusStation);
+        const vehicleRepository = getRepository(Vehicle);
+        const carrierRepository = getRepository(Carrier);
+
+    		var travelings = [];
+        const dateFromBody = new Date()
+        for (let travel of travelingFromDB) {
+          const dateFromTravel = new Date(travel.date)
+          if (!travel.deleted && +dateFromTravel >= +dateFromBody && travel.isPopularDestination) {
+            for (let l = 0; travel.station.length > l; l++) {
+              const station = await stationRepository.findOne(travel.station[l].id, { relations: ["busStation"] });
+              const busStation = await busStationRepository.findOne(station.busStation.id, { relations: ["location"] });
+              // @ts-ignore
+              travel.station[l].bus_station = busStation
+            }
+            // @ts-ignore
+            travel.price = travel.ticket[0].price
+            const vehicle = await vehicleRepository.findOne(travel.vehicle.id, { relations: ["carrier"] });
+            const carrier = await carrierRepository.findOne(vehicle.carrier.id, { relations: ["location"] });
+            // @ts-ignore
+            travel.carrier = carrier
+            travelings.push(travel);
+          }
+        }
+        res.status(200);
+    		res.send(travelings);
+    	} catch (e) {
+
+    		res.send("Error " + e);
+    	}
+    });
+
     this.router.get(this.path + '/carrier/:carrierId', validateJOI(schemas.vehicleGetByCarrierId, 'params'), async (req, res) => {
       try {
         const vehicleRepository = getRepository(Vehicle);
@@ -67,6 +104,48 @@ class TravelingController implements IControllerBase {
         res.send("Error " + e);
       }
     });
+
+    this.router.get(this.path + '/bus/:busId', validateJOI(schemas.travelingGetByBusId, 'params'), async (req, res) => {
+      try {
+        const stationRepository = getRepository(Station);
+        const busStationRepository = getRepository(BusStation);
+        const travelingRepository = getRepository(Traveling);
+        const vehicleRepository = getRepository(Vehicle);
+        const carrierRepository = getRepository(Carrier);
+    		const travelingFromDB = await travelingRepository.find({ relations: ["vehicle", "station", "ticket"] });
+        let travelings = [];
+        const busId = req.params.busId;
+
+        const dateFromBody = new Date()
+        for (let travel of travelingFromDB) {
+          const dateFromTravel = new Date(travel.date)
+          if (!travel.deleted && +dateFromTravel >= +dateFromBody) {
+            const station = await stationRepository.findOne(travel.station[0].id, { relations: ["busStation"] });
+            if (station.busStation.id === +busId) {
+              for (let l = 0; travel.station.length > l; l++) {
+                const busStation = await busStationRepository.findOne(station.busStation.id, { relations: ["location"] });
+                // @ts-ignore
+                travel.station[l].bus_station = busStation
+              }
+              // @ts-ignore
+              travel.price = travel.ticket[0].price
+              const vehicle = await vehicleRepository.findOne(travel.vehicle.id, { relations: ["carrier"] });
+              const carrier = await carrierRepository.findOne(vehicle.carrier.id, { relations: ["location"] });
+              // @ts-ignore
+              travel.carrier = carrier
+              travelings.push(travel)
+            }
+          }
+        }
+
+        res.status(200);
+        res.send(travelings);
+      } catch (e) {
+        res.status(400);
+        res.send("Error " + e);
+      }
+    });
+
     this.router.get(this.path + '/:travelingId', async (req, res) => {
     	try {
     		const travelingRepository = getRepository(Traveling);
