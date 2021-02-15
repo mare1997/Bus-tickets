@@ -1,7 +1,7 @@
 <template>
   <div class="footer-border">
     <footer class="footer">
-      <div class="text-center py-3">© 2020 Copyright:
+      <div class="text-center py-3">© 2021 Copyright:
           <router-link :to="{ name: 'Home'}"> BusTickets.com</router-link>
           by Marko Radojkovic
       </div>

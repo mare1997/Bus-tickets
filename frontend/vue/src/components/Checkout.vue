@@ -6,7 +6,7 @@
           <form action="">
             <div class="row">
               <div class="col-33">
-                <h3>Korpa</h3>
+                <h3>Cart</h3>
                 <div class="cart">
                   <div>
                     <p>
@@ -47,7 +47,7 @@
 
               <div class="col-33">
                 <ValidationObserver novalidate ref="form" v-slot="{}">
-                  <h3>Adresa</h3>
+                  <h3>Address</h3>
                   <label for="fname"
                     ><i class="fa fa-user"></i> First Name</label
                   >
@@ -114,7 +114,7 @@
                       }}</span>
                     </fieldset>
                   </ValidationProvider>
-                  <label for="tel"><i class="fa fa-phone"></i> Telefon</label>
+                  <label for="tel"><i class="fa fa-phone"></i> Phone</label>
                   <ValidationProvider
                     name="Phone"
                     rules="required"
@@ -138,7 +138,7 @@
               </div>
 
               <div class="col-33">
-                <h3>Placanje</h3>
+                <h3>Payment</h3>
                 <label for="fname">Accepted Cards</label>
                 <div class="icon-container">
                   <i class="fa fa-cc-visa" style="color:navy;"></i>
@@ -151,7 +151,7 @@
                     >Paypal</b-form-radio
                   >
                   <b-form-radio v-model="selected" name="card" value="PK"
-                    >Placnje karticom</b-form-radio
+                    >Pay by cards</b-form-radio
                   >
                 </b-form-group>
                 <div>

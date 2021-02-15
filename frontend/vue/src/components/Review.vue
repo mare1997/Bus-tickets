@@ -22,7 +22,7 @@
         </div>
         <div class="all-raiting">
           <div class="line">
-            <p>Vozni park</p>
+            <p>Vehicles</p>
             <p>({{avgRollingStock}})</p>
             <div class="stars">
               <vue-stars
@@ -40,7 +40,7 @@
             
           </div>
           <div class="line">
-            <p>Osoblje</p>
+            <p>Staff</p>
             <p>({{avgStaff}})</p>
             <vue-stars
               name="Staff"
@@ -55,7 +55,7 @@
             />
           </div>
           <div class="line">
-            <p>Tačnost</p>
+            <p>Accuaracy</p>
             <p>({{avgAccuaracy}})</p>
             <vue-stars
               name="Accuaracy"
@@ -70,7 +70,7 @@
             />
           </div>
           <div class="line">
-            <p>Higijena u vozilima</p>
+            <p>Hygiene</p>
             <p>({{avgHygiene}})</p>
             <vue-stars
               name="Hygiene"
@@ -88,11 +88,11 @@
       </div>
       <div class="make-carrier-raiting">
         <div class="make-raiting">
-          <p>Oceni prevoznika ...</p>
+          <p>Review carrier ...</p>
         </div>
         <div class="make-all-raiting">
           <div class="line">
-            <p>Vozni park</p>
+            <p>Vehicles</p>
             <vue-stars
               name="RollingStockMake"
               :active-color="'#f5120a'"
@@ -107,7 +107,7 @@
               />
           </div>
           <div class="line">
-            <p>Osoblje</p>
+            <p>Staff</p>
             <vue-stars
               name="StaffMake"
               :active-color="'#f5120a'"
@@ -122,7 +122,7 @@
             />
           </div>
           <div class="line">
-            <p>Tačnost</p>
+            <p>Accuaracy</p>
             <vue-stars
               name="AccuaracyMake"
               :active-color="'#f5120a'"
@@ -137,7 +137,7 @@
             />
           </div>
           <div class="line">
-            <p>Higijena u vozilima</p>
+            <p>Hygiene</p>
             <vue-stars
               name="HygieneMake"
               :active-color="'#f5120a'"
@@ -151,7 +151,7 @@
               v-model="hygiene"
             />
           </div>
-          <button @click="createReview" class="button">Dodaj recenziju</button>
+          <button @click="createReview" class="button">Add review</button>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="m-4 h2"><h2>Popularne destinacije</h2></div>
+    <div class="m-4 h2"><h2>Popular destination</h2></div>
     <div class="destinations">
       <Destination v-for="destination in destinations" :destination="destination" :key="destination * Math.random()" />
     </div>

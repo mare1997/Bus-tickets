@@ -23,9 +23,9 @@
       </tr>
     </table>
     <b-modal id="modal-1" title="Brisanje" hide-footer>
-      <div class="d-block">Da li ste sigruni da zelite obrisati?</div>
-      <b-button @click="hideModal" class="mt-2" variant="outline-warning" block>Zatvori</b-button>
-      <b-button @click="remove" class="mt-3" variant="outline-danger" block>Obrisi</b-button>
+      <div class="d-block">Are you sure you want to remove user?</div>
+      <b-button @click="hideModal" class="mt-2" variant="outline-warning" block>Close</b-button>
+      <b-button @click="remove" class="mt-3" variant="outline-danger" block>Remove</b-button>
     </b-modal>
   </div>
 </template>

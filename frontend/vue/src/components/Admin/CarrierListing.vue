@@ -2,12 +2,12 @@
   <div>
     <table>
       <tr>
-        <th>Prevoznik</th>
-        <th>Ulica</th>
+        <th>Carrier</th>
+        <th>Street</th>
         <th>PIB</th>
-        <th>Telefon</th>
+        <th>Phone</th>
         <th>Email</th>
-        <th>Sajt</th>
+        <th>Site</th>
       </tr>
       <tr v-for="carrier in carriers" :key="carrier.id">
         <td>{{carrier.name}}</td>
@@ -21,9 +21,9 @@
       </tr>
     </table>
     <b-modal id="modal-1" title="Brisanje" hide-footer>
-      <div class="d-block">Da li ste sigruni da zelite obrisati?</div>
-      <b-button @click="hideModal" class="mt-2" variant="outline-warning" block>Zatvori</b-button>
-      <b-button @click="remove" class="mt-3" variant="outline-danger" block>Obrisi</b-button>
+      <div class="d-block">Are you sure you want to remove carrier?</div>
+      <b-button @click="hideModal" class="mt-2" variant="outline-warning" block>Close</b-button>
+      <b-button @click="remove" class="mt-3" variant="outline-danger" block>Remove</b-button>
     </b-modal>
   </div>
 </template>

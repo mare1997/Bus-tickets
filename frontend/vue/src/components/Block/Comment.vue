@@ -5,10 +5,10 @@
       <div class="user_avatar">
         <img src="@/assets/profile.jpg">
       </div><div class="input_comment">
-        <input type="text" v-model="fullname" placeholder="Ime i prezime (nadimak)...">
-        <input type="text" v-model="title" placeholder="Naslov...">
-        <input type="text" v-model="description" placeholder="Vas komentar...">
-        <button @click="createComment" class="button">Dodaj komentar</button>
+        <input type="text" v-model="fullname" placeholder="Full name (nickname)...">
+        <input type="text" v-model="title" placeholder="Title...">
+        <input type="text" v-model="description" placeholder="Comment...">
+        <button @click="createComment" class="button">Add comment</button>
       </div>
 
       </div>

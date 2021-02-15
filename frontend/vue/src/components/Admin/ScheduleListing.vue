@@ -2,10 +2,10 @@
   <div>
     <table>
       <tr>
-        <th>Voznja ID</th>
-        <th>Vozac</th>
-        <th>Vozilo</th>
-        <th>Datum polaska</th>
+        <th>Schedule ID</th>
+        <th>Driver</th>
+        <th>Vehicle</th>
+        <th>Date</th>
       </tr>
       <tr v-for="schedule in schedules" :key="schedule.id">
         <td>{{ schedule.id }}</td>
@@ -25,12 +25,12 @@
       </tr>
     </table>
     <b-modal id="modal-1" title="Brisanje" hide-footer>
-      <div class="d-block">Da li ste sigruni da zelite obrisati?</div>
+      <div class="d-block">Are you sure you want to remove schedule?</div>
       <b-button @click="hideModal" class="mt-2" variant="outline-warning" block
-        >Zatvori</b-button
+        >Close</b-button
       >
       <b-button @click="remove" class="mt-3" variant="outline-danger" block
-        >Obrisi</b-button
+        >Remove</b-button
       >
     </b-modal>
   </div>
