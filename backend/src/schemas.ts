@@ -6,6 +6,7 @@ export const schemas = {
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     age: Joi.number().integer().required(),
+    phone: Joi.string().required(),
     locationId: Joi.number().integer().required(),
     carrierId: Joi.number() || null,
     role: Joi.string().required()
@@ -16,6 +17,7 @@ export const schemas = {
     id: Joi.number().integer().required(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
+    phone: Joi.string().required(),
     age: Joi.number().integer().required(),
     locationId: Joi.number().integer().required(),
     carrierId: Joi.number() || null,

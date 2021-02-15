@@ -29,6 +29,9 @@ export class User {
   @Column()
   age: number;
 
+  @Column()
+  phone: string;s
+
   @Column({ type: "boolean", default: false })
   deleted: boolean;
 

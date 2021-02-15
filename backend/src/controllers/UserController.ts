@@ -61,6 +61,7 @@ class UserContoller implements IControllerBase {
         user.firstName = req.body.firstName;
         user.lastName = req.body.lastName;
         user.age = req.body.age;
+        user.phone = req.body.phone;
         user.location = await locationRepository.findOne(req.body.locationId);
         if(req.body.carrierId) {
           user.carrier = await carrierRepository.findOne(req.body.carrierId);
@@ -101,6 +102,7 @@ class UserContoller implements IControllerBase {
           user.firstName = req.body.firstName;
           user.lastName = req.body.lastName;
           user.age = req.body.age;
+          user.phone = req.body.phone;
           user.location = await locationRepository.findOne(req.body.locationId);
           if(req.body.carrierId) {
             user.carrier = await carrierRepository.findOne(req.body.carrierId);
