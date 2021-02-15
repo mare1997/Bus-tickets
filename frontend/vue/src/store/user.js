@@ -82,6 +82,7 @@ export default {
         password: payload.password,
         firstName: payload.firstname,
         lastName: payload.lastname,
+        phone: payload.phone,
         age: payload.age,
         role: 'USER',
         locationId: payload.locationId
@@ -132,6 +133,7 @@ export default {
         password: payload.password,
         firstName: payload.firstName,
         lastName: payload.lastName,
+        phone: payload.phone,
         age: payload.age,
         role: payload.role,
         locationId: payload.locationId,
@@ -151,6 +153,7 @@ export default {
         firstName: payload.firstName,
         password: payload.password,
         lastName: payload.lastName,
+        phone: payload.phone,
         age: payload.age,
         role: payload.role,
         locationId: payload.locationId

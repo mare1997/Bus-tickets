@@ -27,7 +27,7 @@
         <tbody class="tbody">
           <tr v-for="schedule in schedules" :key="schedule + Math.random()" :schedule="schedule">
             <td>{{schedule.carrier.name}}</td>
-            <td>{{schedule.station[0].bus_station.name}}</td>
+            <td>{{schedule.station[schedule.station.length - 1].bus_station.name}}</td>
             <td>{{getDate(schedule.date)}}</td>
             <td>{{schedule.price}}</td>
           </tr>

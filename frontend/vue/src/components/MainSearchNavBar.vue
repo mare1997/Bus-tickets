@@ -1,9 +1,9 @@
 <template>
   <div class="bg-img">
     <b-nav tabs fill align="center" class="navbar-border">
-      <b-nav-item :active="activeRV" @click="changeNav('activeRV')">Red Voznje</b-nav-item>
-      <b-nav-item :active="activeP" @click="changeNav('activeP')">Prevoznici</b-nav-item>
-      <b-nav-item :active="activeAS" @click="changeNav('activeAS')">Autobuske stanice</b-nav-item>
+      <b-nav-item :active="activeRV" @click="changeNav('activeRV')">Schedule</b-nav-item>
+      <b-nav-item :active="activeP" @click="changeNav('activeP')">Carriers</b-nav-item>
+      <b-nav-item :active="activeAS" @click="changeNav('activeAS')">Bus station</b-nav-item>
     </b-nav>
     <ScheduleSearch v-if="activeRV" />
     <CarrierSearch v-if="activeP" />
@@ -72,8 +72,7 @@ export default {
 <style scoped>
 .bg-img {
   /* The image used */
-  background-image: url('~@/assets/city.jpg');
-
+  background-image: url('~@/assets/bbgg.jpg');
   min-height: 580px;
 
   /* Center and scale the image nicely */
@@ -88,12 +87,14 @@ export default {
   align-items: center;
 }
 .navbar-border {
-  background-color: lightblue;
+  background-color: black;
+  opacity: 0.4;
   width: 60%;
   margin: 0 20% 0 20%;
-  color: black;
-  border-radius: 10px;
-  border: 2px solid rgb(20, 19, 19);
+  color: white;
 }
-
+a {
+  color: yellow;
+  font-size: 24px;
+}
 </style>

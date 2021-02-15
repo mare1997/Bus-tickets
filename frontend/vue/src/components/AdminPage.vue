@@ -1,6 +1,6 @@
 <template>
   <div class="main" :key="key">
-    <div class="dropdowns">
+    <div class="dropdowns" v-if="listing !== 'profile'">
         <div class="dropdownCategory" @click="setCategory('stations')" v-show="currentUser.role !== 'CARRIER'">
             <p class="categoryName">
                 Stations
@@ -96,7 +96,6 @@
       <CarrierListing v-else-if="listing === 'carriers'" @edit-carrier="editCarrier" />
       <UserListing v-else-if="listing === 'users'" @edit-user="editUser" />
       <VehicleListing v-else-if="listing === 'vehicles'" @edit-vehicle="editVehicle" />
-      <DriveScheduleListing v-else-if="listing === 'voznje'" />
       <LocationListing v-else-if="listing === 'locations'" @edit-location="editLocation" />
       <ScheduleListing v-else-if="listing === 'schedules'" @edit-schedule="editSchedule" />
       <Location v-else-if="listing === 'locations_add'" @reload="reload" />
@@ -110,6 +109,7 @@
       <Carrier v-else-if="listing === 'my_carrier'" @reload="reload" :carrier="carrier" />
       <User v-else-if="listing === 'users_add'" @reload="reload" />
       <User v-else-if="listing === 'users_edit'" @reload="reload" :user="user" />
+      <User v-else-if="listing === 'profile'" :profile="listing" :user="currentUser" />
       <Schedule v-else-if="listing === 'schedules_add'" @reload="reload" />
       <Schedule v-else-if="listing === 'schedules_edit'" @reload="reload" :schedule="schedule" />
     </div>
@@ -278,27 +278,27 @@ export default {
 
 <style scoped>
 .main {
-    display: flex;
-    position: relative;
-    min-height: 100vh;
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+  background-color: beige;
 }
 .dropdowns {
-    width: 20%;
-    border-right: 2px solid black;
-    background-color: teal;
+  width: 25%;
+  border-right: 2px solid black;
+  background-color: teal;
 }
 .forms {
-    width: 80%;
-    background-color: beige;
+  width: 100%;
 }
 .dropdownCategory {
-    display: flex;
-    padding: 5px 5px 0 35px;
-    cursor: pointer;
-    border-bottom: 2px solid black;
-    background-color: teal;
-    color: beige;
-    align-items: center;
+  display: flex;
+  padding: 5px 5px 0 35px;
+  cursor: pointer;
+  border-bottom: 2px solid black;
+  background-color: teal;
+  color: beige;
+  align-items: center;
 }
 .arrow-down {
   width: 0; 
@@ -319,16 +319,16 @@ export default {
   right: 81%;
 }
 .dropdownCategoryItem {
-    padding: 5px 5px 5px 50px;
-    background-color: beige;
-    font-size: 16px;
-    font-weight: 550;
-    color: teal;
-    cursor: pointer;
+  padding: 5px 5px 5px 50px;
+  background-color: beige;
+  font-size: 16px;
+  font-weight: 550;
+  color: teal;
+  cursor: pointer;
 }
 .categoryName {
-    font-size: 18px;
-    margin-bottom: 0;
-    font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 0;
+  font-weight: 600;
 }
 </style>

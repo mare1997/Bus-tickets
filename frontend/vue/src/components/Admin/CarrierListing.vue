@@ -17,7 +17,7 @@
         <td>{{carrier.email}}</td>
         <td>{{carrier.site}}</td>
         <td><i class="fa fa-edit" @click="edit(carrier)"></i></td>
-        <td><b-button v-b-modal.modal-1 id="show-btn" @click="showModal(carrier.id) " ref="btnShow"><i class="fa fa-remove"></i></b-button></td>
+        <td><b-button v-b-modal.modal-1 id="show-btn" @click="showModal(carrier.id)" ref="btnShow"><i class="fa fa-remove"></i></b-button></td>
       </tr>
     </table>
     <b-modal id="modal-1" title="Brisanje" hide-footer>
@@ -30,13 +30,17 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { BModal, BButton } from 'bootstrap-vue'
 
 export default {
   name: 'CarrierListing',
   components: {
+    'b-modal': BModal,
+    'b-button': BButton
   },
   data () {
     return {
+      id: ''
     }
   },
   computed: {

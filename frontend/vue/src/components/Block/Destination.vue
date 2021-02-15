@@ -1,9 +1,9 @@
 <template>
   <div class="flip-card">
-    <div class="flip-card-inner">
+    <div class="flip-card-inner" @click="buyTicket">
       <div class="flip-card-front">
         <h4 class="h4">{{ getDepartureDestination }}</h4>
-        <img src="~@/assets/city.jpg" alt="Avatar" style="width:100%;height:180px;">
+        <img src="~@/assets/bg.jpg" alt="Avatar" style="width:100%;height:180px;">
         
       </div>
       <div class="flip-card-back">
@@ -45,6 +45,9 @@ export default {
       const formattedHour = ('0' + hour).slice(-2)
       const formattedMinute = ('0' + minute).slice(-2)
       return day + '/' + month + '/' + year + '  ' + formattedHour + ':' + formattedMinute
+    },
+    buyTicket () {
+      this.$router.push({ name: 'Checkout', query: { id: this.destination.id } }).catch(() => {})
     }
   }
 }

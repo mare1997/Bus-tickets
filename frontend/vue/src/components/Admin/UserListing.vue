@@ -2,17 +2,19 @@
   <div>
     <table>
       <tr>
-        <th>Korisnicko ime</th>
-        <th>Ime</th>
-        <th>Prezime</th>
-        <th>Godine</th>
-        <th>Uloga</th>
-        <th>Lokacija</th>
+        <th>Username</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Phone</th>
+        <th>Age</th>
+        <th>Role</th>
+        <th>Location</th>
       </tr>
       <tr v-for="user in users" :key="user.id">
         <td>{{user.userName}}</td>
         <td>{{user.firstName}}</td>
         <td>{{user.lastName}}</td>
+        <td>{{user.phone}}</td>
         <td>{{user.age}}</td>
         <td>{{user.role}}</td>
         <td>{{user.location ? user.location.name : ''}}</td>

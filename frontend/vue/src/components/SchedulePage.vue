@@ -3,8 +3,13 @@
     <MainSearchNavBar :activeNav="'activeRV'" />
     <div class="parent">
       <div class="h2"><h2>Schedule</h2></div>
+      <div class="sort-filter">
+        <FilterByCarrier class="filter" :options="getOptions" @change-value="filterSchedule" />
+        <Sort class="sort" :listItems="sortListItems" :activeItem="sortActive" @sort="sortSchedule" />
+      </div>
       <div v-if="schedules.length !== 0">
-        <Schedule v-for="schedule in schedules" :key="schedule + Math.random()" :schedule="schedule" />
+        <Schedule v-for="schedule in schedules.slice(0,count)" :key="schedule + Math.random()" :schedule="schedule" />
+        <div class="load-mode-btn" v-if="schedules.length > count"><b-button variant="outline-primary" @click="changeCount">Load more</b-button></div>
       </div>
       <div class="h2" v-else>
         <h4>There is no drive for these parameters :</h4>
@@ -20,20 +25,30 @@
 <script>
 import Schedule from '@/components/Block/Schedule.vue'
 import MainSearchNavBar from '@/components/MainSearchNavBar'
+import Sort from '@/components/Block/Sort.vue'
+import FilterByCarrier from '@/components/Block/FilterByCarrier.vue'
 
 export default {
   name: 'SchedulePage',
   components: {
     Schedule,
-    MainSearchNavBar
+    MainSearchNavBar,
+    Sort,
+    FilterByCarrier
   },
   data () {
+    const sortby = this.$route.query.sortby || ''
     return {
-      schedules: []
+      schedules: [],
+      allSchedules: [],
+      sortActive: sortby,
+      sortListItems: ['Date'],
+      count: 4
     }
   },
   mounted () {
     this.search(this.getQ)
+    this.sortSchedule(this.sortActive)
   },
   computed: {
     getQ () {
@@ -47,6 +62,21 @@ export default {
     date () {
       let date = new Date(this.$route.query.date)
       return date.toLocaleDateString('en-US')
+    },
+    getOptions () {
+      const carriers = this.allSchedules.map(s => {
+        return s.carrier.name
+      })
+      const unique = new Set(carriers)
+      let filters = []
+      for (const filter of unique) {
+        const newFilter = {
+          name: filter,
+          code: filter.toLowerCase()
+        }
+        filters.push(newFilter)
+      }
+      return filters
     }
   },
   watch: {
@@ -57,6 +87,38 @@ export default {
   methods: {
     async search (value) {
       this.schedules = await this.$store.dispatch('schedule/search', { date: value.date, start: value.start, finish: value.finish }, { root: true })
+      this.allSchedules = this.schedules
+    },
+    sortSchedule (value) {
+      this.setSort(value)
+      if (value === 'Date') {
+        this.schedules = this.schedules.sort((a, b) => (+a.date < +b.date) ? 1 : -1)
+      }
+    },
+    setSort (value) {
+      let locationQuery = { query: {} }
+      if (this.$route.query.date) {
+        locationQuery.query.date = this.$route.query.date
+      }
+      if (this.$route.query.start) {
+        locationQuery.query.start = this.$route.query.start
+      }
+      if (this.$route.query.finish) {
+        locationQuery.query.finish = this.$route.query.finish
+      }
+      this.sortActive = value
+      locationQuery.query.sortby = value
+      this.$router.replace(locationQuery).catch(e => {})
+    },
+    async filterSchedule (value) {
+      await this.search(this.getQ)
+      if (value.length > 0) {
+        const carriers = value.map(v => { return v.name })
+        this.schedules = this.schedules.filter(s => carriers.includes(s.carrier.name))
+      }
+    },
+    changeCount () {
+      this.count = this.count + 4
     }
   }
 }
@@ -71,5 +133,15 @@ export default {
 .h2 {
   margin-top: 2%;
   text-align: center;
+}
+.sort-filter {
+  margin: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.load-mode-btn {
+  display: flex;
+  justify-content: center;
 }
 </style>

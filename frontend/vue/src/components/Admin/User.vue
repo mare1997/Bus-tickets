@@ -3,6 +3,7 @@
     <div id="contact">
       <ValidationObserver ref="form" v-slot="{ }">
         <h3 v-if="!user">Add new user</h3>
+        <h3 v-else-if="profile === 'profile'">Edit my profile</h3>
         <h3 v-else>Edit user</h3>
         <ValidationProvider name="Email" rules="required|email" v-slot="{ errors }">
           <fieldset>
@@ -55,6 +56,18 @@
             <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
           </fieldset>
         </ValidationProvider>
+        <ValidationProvider name="Phone" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <input
+              v-model="value.phone"
+              placeholder="Phone *"
+              type="text"
+              tabindex="4"
+              required
+            />
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
         <ValidationProvider name="Age" rules="required|min:0, Age must be a positive number." v-slot="{ errors }">
           <fieldset>
             <input
@@ -67,44 +80,51 @@
             <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
           </fieldset>
         </ValidationProvider>
-        <ValidationProvider name="Role" rules="required|role:NONE, * You must selecet a role" v-slot="{ errors }">
-          <fieldset>
-            <select
-              v-model="value.role"
-              placeholder="Role *"
-              tabindex="6"
-              required
-            >
-              <option value="NONE" disabled selected>Role *</option>
-              <option
-                v-for="role in roles"
-                :key="role"
-                :value="role"
-                >{{ role }}</option
+
+        <div v-if="profile !== 'profile'">
+          <ValidationProvider name="Role" rules="required|role:NONE, * You must selecet a role" v-slot="{ errors }">
+            <fieldset>
+              <select
+                v-model="value.role"
+                placeholder="Role *"
+                tabindex="6"
+                required
               >
-            </select>
-            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
-          </fieldset>
-        </ValidationProvider>
-        <ValidationProvider v-show="value.role === 'CARRIER'" name="Carrier" rules="required|min:0, You must select a carrier." v-slot="{ errors }">
-          <fieldset>
-            <select
-              v-model="value.carrierId"
-              placeholder="Carrier"
-              tabindex="7"
-              required
-            >
-              <option value="-1" disabled selected>Carrier *</option>
-              <option
-                v-for="carrier in carriers"
-                :key="carrier.id"
-                :value="carrier.id"
-                >{{ carrier.name }}</option
+                <option value="NONE" disabled selected>Role *</option>
+                <option
+                  v-for="role in roles"
+                  :key="role"
+                  :value="role"
+                  >{{ role }}</option
+                >
+              </select>
+              <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+            </fieldset>
+          </ValidationProvider>
+        </div>
+        
+        <div v-if="value.role === 'CARRIER'">
+          <ValidationProvider name="Carrier" rules="required|min:0, You must select a carrier." v-slot="{ errors }">
+            <fieldset>
+              <select
+                v-model="value.carrierId"
+                placeholder="Carrier"
+                tabindex="7"
+                required
               >
-            </select>
-            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
-          </fieldset>
-        </ValidationProvider>
+                <option value="-1" disabled selected>Carrier *</option>
+                <option
+                  v-for="carrier in carriers"
+                  :key="carrier.id"
+                  :value="carrier.id"
+                  >{{ carrier.name }}</option
+                >
+              </select>
+              <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+            </fieldset>
+          </ValidationProvider>
+        </div>
+        
         <ValidationProvider name="Location" rules="required|min:0, You must select a location." v-slot="{ errors }">
           <fieldset>
             <select
@@ -146,6 +166,10 @@ export default {
     user: {
       type: Object,
       default: null
+    },
+    profile: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -156,6 +180,7 @@ export default {
         password: '',
         firstName: this.user ? this.user.firstName : '',
         lastName: this.user ? this.user.lastName : '',
+        phone: this.user ? this.user.phone : '',
         age: this.user ? this.user.age : '',
         role: this.user ? this.user.role : 'NONE',
         locationId: this.user && this.user.location ? this.user.location.id : '-1',
@@ -175,6 +200,7 @@ export default {
   },
   methods: {
     submit () {
+      debugger
       this.$refs.form.validate().then(success => {
         if (!success) {
           return
@@ -199,34 +225,6 @@ export default {
 </script>
 
 <style type="css">
-@import url(
-  https://fonts.googleapis.com/css?family=Roboto:400,
-  300,
-  600,
-  400italic
-);
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: antialiased;
-  -o-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-body {
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
-  font-weight: 100;
-  font-size: 12px;
-  line-height: 30px;
-  color: #777;
-  background: #4caf50;
-}
-
 .container {
   max-width: 400px;
   width: 100%;
@@ -249,7 +247,7 @@ body {
 #contact {
   background: #f9f9f9;
   padding: 25px;
-  margin: 150px 0;
+  margin: 50px 0;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 

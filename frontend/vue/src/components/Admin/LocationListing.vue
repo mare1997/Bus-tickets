@@ -9,7 +9,7 @@
         <td>{{location.name}}</td>
         <td>{{location.zip_code}}</td>
         <td><i class="fa fa-edit" @click="edit(location)"></i></td>
-        <td><b-button id="show-btn" @click="showModal(location.id)" ref="btnShow"><i class="fa fa-remove"></i></b-button></td>
+        <td><b-button v-b-modal.modal-1 id="show-btn" @click="showModal(location.id)" ref="btnShow"><i class="fa fa-remove"></i></b-button></td>
       </tr>
     </table>
     <b-modal ref="modal-1" title="Brisanje" hide-footer>

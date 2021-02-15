@@ -11,7 +11,7 @@
       <div class="half">
         <div class="line"></div>
         <!-- <p class="duration">Trajanje voznje: 2 sata</p> -->
-        <img class="driveCompanyLogo" v-if="schedule.carrier.image" :src="'~@/assets/' + schedule.carrier.image" />
+        <img class="driveCompanyLogo" v-if="schedule.carrier.image && schedule.carrier.image !== '/'" :src="'~@/assets/' + schedule.carrier.image" />
         <p class="price" v-else>{{schedule.carrier.name}}</p>
       </div>
       <div class="quarter">

@@ -20,24 +20,11 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item><p v-if="isLoggedIn">Welcome, <b>{{ user.firstName}}</b></p></b-nav-item>
           <b-nav-item v-if="isLoggedIn && (isAdmin || isCarrier)"><router-link :to="{ name: 'AdminPage' }">Admin panel</router-link></b-nav-item>
-          <b-nav-item><router-link :to="{ name: 'CarriersPage' }">Prevoznici</router-link></b-nav-item>
-          <b-nav-item><router-link :to="{ name: 'BusStationsPage' }">Autobuske Statnice</router-link></b-nav-item>
-          <b-nav-item-dropdown right v-if="isLoggedIn">
-            <!-- Using 'button-content' slot -->
-            <template v-slot:button-content>
-              <em>Moj nalog</em>
-            </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
-          </b-nav-item-dropdown>
-          <b-nav-item-dropdown right v-else>
-            <!-- Using 'button-content' slot -->
-            <template v-slot:button-content>
-              <em>Moj nalog</em>
-            </template>
-            <b-dropdown-item><router-link :to="{ path: 'login' }">Sign In</router-link></b-dropdown-item>
-            <b-dropdown-item><router-link :to="{ path: 'register' }">Register</router-link></b-dropdown-item>
-          </b-nav-item-dropdown>
+          <b-nav-item><router-link :to="{ name: 'CarriersPage' }">Carriers</router-link></b-nav-item>
+          <b-nav-item><router-link :to="{ name: 'BusStationsPage' }">Bus stations</router-link></b-nav-item>
+          <b-nav-item v-if="isLoggedIn"><router-link :to="{ name: 'MyProfile', query: { listing: 'profile' } }">Profile (Update)</router-link></b-nav-item>
+          <b-nav-item v-if="isLoggedIn" @click="logout">Sign Out</b-nav-item>
+          <b-nav-item v-else><router-link :to="{ path: 'login' }">Sign In</router-link></b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -84,25 +71,24 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Averia+Serif+Libre|Bubblegum+Sans|Caveat+Brush|Chewy|Lobster+Two');
-
 .navbar-border {
   border-bottom: 2px solid rgb(51, 51, 51);
   background-color: rgb(240, 240, 240);
 }
-
-
 .logo {
-    height: auto;
-    width: 52px;
-    padding-top: 5px;
-    margin-right: 15px;
+  height: auto;
+  width: 52px;
+  padding-top: 5px;
+  margin-right: 15px;
 }
 .bus-tickets-text{
-    letter-spacing: 1px;
-    color: black !important;
-    font-family: 'Lobster Two', cursive;
+  font-family: 'Pacifico';
+  letter-spacing: 1px;
+  color: black !important;
 }
-
+a {
+  color: gray;
+  text-decoration: none;
+}
 
 </style>

@@ -8,25 +8,54 @@
               <div class="col-33">
                 <h3>Korpa</h3>
                 <div class="cart">
-                  <div >
-                    <p><b>{{ schedule ? schedule.station[0].bus_station.name : '' }}</b></p>
+                  <div>
+                    <p>
+                      <b>{{
+                        schedule ? schedule.station[0].bus_station.name : ''
+                      }}</b>
+                    </p>
                   </div>
                   <span><b>&#8594;</b></span>
                   <div>
-                    <p><b>{{ schedule ? schedule.station[schedule.station.length - 1].bus_station.name : ''}}</b></p>
+                    <p>
+                      <b>{{
+                        schedule
+                          ? schedule.station[schedule.station.length - 1]
+                              .bus_station.name
+                          : ''
+                      }}</b>
+                    </p>
                   </div>
                 </div>
-                <p>Date: {{ schedule ? getDate(schedule.date) : ''}}</p>
-                <p>Arrival: {{ schedule ? getTime(schedule.station[0].time) : ''}}</p>
-                <p>Departure: {{ schedule ? getTime(schedule.station[schedule.station.length - 1].time) : ''}}</p>
-                <p>Carrier: {{ schedule ? schedule.carrier.name : ''}}</p>
+                <p>Date: {{ schedule ? getDate(schedule.date) : '' }}</p>
+                <p>
+                  Arrival:
+                  {{ schedule ? getTime(schedule.station[0].time) : '' }}
+                </p>
+                <p>
+                  Departure:
+                  {{
+                    schedule
+                      ? getTime(
+                          schedule.station[schedule.station.length - 1].time
+                        )
+                      : ''
+                  }}
+                </p>
+                <p>Carrier: {{ schedule ? schedule.carrier.name : '' }}</p>
               </div>
 
               <div class="col-33">
-                <ValidationObserver novalidate ref="form" v-slot="{ }">
+                <ValidationObserver novalidate ref="form" v-slot="{}">
                   <h3>Adresa</h3>
-                  <label for="fname"><i class="fa fa-user"></i> First Name</label>
-                  <ValidationProvider name="Firstname" rules="required" v-slot="{ errors }">
+                  <label for="fname"
+                    ><i class="fa fa-user"></i> First Name</label
+                  >
+                  <ValidationProvider
+                    name="Firstname"
+                    rules="required"
+                    v-slot="{ errors }"
+                  >
                     <fieldset>
                       <input
                         v-model="order.firstName"
@@ -36,11 +65,19 @@
                         id="fname"
                         required
                       />
-                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                      <span :style="{ color: '#dc3545', float: 'left' }">{{
+                        errors[0]
+                      }}</span>
                     </fieldset>
                   </ValidationProvider>
-                  <label for="lname"><i class="fa fa-user"></i> Last Name</label>
-                  <ValidationProvider name="Lastname" rules="required" v-slot="{ errors }">
+                  <label for="lname"
+                    ><i class="fa fa-user"></i> Last Name</label
+                  >
+                  <ValidationProvider
+                    name="Lastname"
+                    rules="required"
+                    v-slot="{ errors }"
+                  >
                     <fieldset>
                       <input
                         v-model="order.lastName"
@@ -50,11 +87,19 @@
                         id="lname"
                         required
                       />
-                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                      <span :style="{ color: '#dc3545', float: 'left' }">{{
+                        errors[0]
+                      }}</span>
                     </fieldset>
                   </ValidationProvider>
-                  <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                  <ValidationProvider name="Email" rules="required|email" v-slot="{ errors }">
+                  <label for="email"
+                    ><i class="fa fa-envelope"></i> Email</label
+                  >
+                  <ValidationProvider
+                    name="Email"
+                    rules="required|email"
+                    v-slot="{ errors }"
+                  >
                     <fieldset>
                       <input
                         v-model="order.email"
@@ -64,11 +109,17 @@
                         id="email"
                         required
                       />
-                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                      <span :style="{ color: '#dc3545', float: 'left' }">{{
+                        errors[0]
+                      }}</span>
                     </fieldset>
                   </ValidationProvider>
                   <label for="tel"><i class="fa fa-phone"></i> Telefon</label>
-                  <ValidationProvider name="Phone" rules="required" v-slot="{ errors }">
+                  <ValidationProvider
+                    name="Phone"
+                    rules="required"
+                    v-slot="{ errors }"
+                  >
                     <fieldset>
                       <input
                         v-model="order.phone"
@@ -78,7 +129,9 @@
                         id="tel"
                         required
                       />
-                      <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+                      <span :style="{ color: '#dc3545', float: 'left' }">{{
+                        errors[0]
+                      }}</span>
                     </fieldset>
                   </ValidationProvider>
                 </ValidationObserver>
@@ -94,8 +147,12 @@
                   <i class="fa fa-cc-discover" style="color:orange;"></i>
                 </div>
                 <b-form-group label="Nacini placanja" @click="submit()">
-                  <b-form-radio v-model="selected" name="paypal" value="Paypal">Paypal</b-form-radio>
-                  <b-form-radio v-model="selected" name="card" value="PK">Placnje karticom</b-form-radio>
+                  <b-form-radio v-model="selected" name="paypal" value="Paypal"
+                    >Paypal</b-form-radio
+                  >
+                  <b-form-radio v-model="selected" name="card" value="PK"
+                    >Placnje karticom</b-form-radio
+                  >
                 </b-form-group>
                 <div>
                   <div v-if="selected === 'PK' && isValidate">
@@ -106,10 +163,10 @@
                       @token="tokenCreated"
                     />
                   </div>
-                  
+
                   <div v-else-if="selected === 'Paypal' && isValidate">
                     <PayPal
-                      :amount="(schedule.price / 97.40).toFixed(2)"
+                      :amount="(schedule.price / 97.4).toFixed(2)"
                       currency="USD"
                       :client="credentials"
                       :experience="experienceOptions"
@@ -120,11 +177,14 @@
                     </PayPal>
                   </div>
                   <div v-else>
-                    <p>All fileds must be filled! If you still do not see payments after filling out the form. Change payment and return to the one you want.</p>
+                    <p>
+                      All fileds must be filled! If you still do not see
+                      payments after filling out the form. Change payment and
+                      return to the one you want.
+                    </p>
                   </div>
                 </div>
               </div>
-              
             </div>
           </form>
         </div>
@@ -133,7 +193,7 @@
   </div>
 </template>
 <script>
-import {BFormGroup, BFormRadio} from 'bootstrap-vue'
+import { BFormGroup, BFormRadio } from 'bootstrap-vue'
 import { mapGetters } from 'vuex'
 import PayPal from 'vue-paypal-checkout'
 import { StripeElementCard } from '@vue-stripe/vue-stripe'
@@ -156,14 +216,15 @@ export default {
         firstName: this.user ? this.user.firstName : '',
         lastName: this.user ? this.user.lastName : '',
         email: this.user ? this.user.userName : '',
-        phone: '',
+        phone: this.user ? this.user.phone : '',
         qty: 1,
         travelingId: null,
         userId: this.user ? this.user.id : null,
         additionalData: {}
       },
       credentials: {
-        sandbox: 'AcjDjYdG9NrIBo_mOQCSq5LnYf1mJin1vy0xP3RK7uQBjz5toNp9hXp0VJWjfPb-S-gpiT4BJG2jzNLX',
+        sandbox:
+          'AcjDjYdG9NrIBo_mOQCSq5LnYf1mJin1vy0xP3RK7uQBjz5toNp9hXp0VJWjfPb-S-gpiT4BJG2jzNLX',
         production: '<production client id>'
       },
       experienceOptions: {
@@ -177,7 +238,8 @@ export default {
         shape: 'pill',
         color: 'gold'
       },
-      pulishableKey: 'pk_test_51HToNlBJ6JLvaHzMugrOicSO0yXvhMuR6Tbwa9FbHSOSlVfHilAYrTT8NiysdvwtjW6rE3urglzg4QKlau1iL9D500xOZZGZo5',
+      pulishableKey:
+        'pk_test_51HToNlBJ6JLvaHzMugrOicSO0yXvhMuR6Tbwa9FbHSOSlVfHilAYrTT8NiysdvwtjW6rE3urglzg4QKlau1iL9D500xOZZGZo5',
       token: '',
       stripeOptions: {
         base: {
@@ -216,14 +278,29 @@ export default {
     this.order.firstName = this.user ? this.user.firstName : ''
     this.order.lastName = this.user ? this.user.lastName : ''
     this.order.email = this.user ? this.user.userName : ''
+    this.order.phone = this.user ? this.user.phone : ''
     this.order.userId = this.user ? this.user.id : null
+    if (
+      this.order &&
+      this.order.firstName &&
+      this.order.lastName &&
+      this.order.email &&
+      this.order.phone &&
+      this.order.userId
+    ) {
+      this.isValidate = true
+    }
     this.$nextTick(() => {
       this.$refs.elementRef.$refs.submitButtonRef.innerHTML = 'Pay'
     })
   },
   methods: {
     async search (value) {
-      this.schedule = await this.$store.dispatch('schedule/schedule', { id: this.getScheduleID }, { root: true })
+      this.schedule = await this.$store.dispatch(
+        'schedule/schedule',
+        { id: this.getScheduleID },
+        { root: true }
+      )
       this.order.travelingId = this.schedule.id
     },
     getDate (date) {
@@ -235,7 +312,17 @@ export default {
       const minute = time ? time.getMinutes() : ''
       const formattedHour = ('0' + hour).slice(-2)
       const formattedMinute = ('0' + minute).slice(-2)
-      return day + '/' + month + '/' + year + '  ' + formattedHour + ':' + formattedMinute
+      return (
+        day +
+        '/' +
+        month +
+        '/' +
+        year +
+        '  ' +
+        formattedHour +
+        ':' +
+        formattedMinute
+      )
     },
     getTime (timee) {
       const time = new Date(timee)
@@ -253,9 +340,13 @@ export default {
         amount: response.transactions[0].amount.total,
         currency: response.transactions[0].amount.currency
       }
-      this.response = await this.$store.dispatch('order/create', this.order, { root: true })
+      this.response = await this.$store.dispatch('order/create', this.order, {
+        root: true
+      })
       if (this.response.status === 201) {
-        alert('Your order has been successfully placed. Tickets will be sent to you by e-mail.')
+        alert(
+          'Your order has been successfully placed. Tickets will be sent to you by e-mail.'
+        )
         this.$router.push('/')
       }
     },
@@ -266,10 +357,14 @@ export default {
         amount: (this.schedule.price * 100).toString(),
         currency: 'RSD'
       }
-      this.response = await this.$store.dispatch('order/create', this.order, { root: true })
+      this.response = await this.$store.dispatch('order/create', this.order, {
+        root: true
+      })
       console.error(this.response)
       if (this.response.status === 201) {
-        alert('Your order has been successfully placed. Tickets will be sent to you by e-mail.')
+        alert(
+          'Your order has been successfully placed. Tickets will be sent to you by e-mail.'
+        )
         this.$router.push('/')
       }
     },
@@ -283,40 +378,19 @@ export default {
     selected: function (val) {
       this.submit()
     }
-    // 'order.phone': function (val) {
-    //   this.submit()
-    // },
-    // 'order.email': function (val) {
-    //   this.submit()
-    // },
-    // 'order.firstName': function (val) {
-    //   this.submit()
-    // },
-    // 'order.lastName': function (val) {
-    //   this.submit()
-    // }
   }
 }
 </script>
 
-<style>
-@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+<style scoped>
+@import url(https://fonts.googleapis.com/css?family=Lato:300, 400);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
 .parent {
   margin: 25px;
 }
-body {
-  font-family: Arial;
-  font-size: 17px;
+h2 {
+  text-align: left;
 }
-h2{
-text-align:left;
-}
-
-* {
-  box-sizing: border-box;
-}
-
 .row {
   display: -ms-flexbox; /* IE10 */
   display: flex;
@@ -358,7 +432,7 @@ text-align:left;
   border-radius: 3px;
 }
 
-input[type=text] {
+input[type='text'] {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
@@ -378,7 +452,7 @@ label {
 }
 
 .btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 12px;
   margin: 10px 0;
@@ -394,7 +468,7 @@ label {
 }
 
 a {
-  color: #2196F3;
+  color: #2196f3;
 }
 
 hr {
@@ -410,10 +484,10 @@ span.price {
 }
 .hide {
   visibility: visible !important;
-  content: "Pay " !important;
+  content: 'Pay ' !important;
   width: 100%;
   height: auto;
-  margin-top: 20px; 
+  margin-top: 20px;
 }
 /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
 @media (max-width: 800px) {

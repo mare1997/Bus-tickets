@@ -37,9 +37,10 @@ export default {
 
 <style scoped>
 .destinations {
-  margin: 50px 100px 50px  100px;
+  margin: 5% 20%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
 }
 .h2 {
   text-align: center;

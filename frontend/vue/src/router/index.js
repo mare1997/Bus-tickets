@@ -29,7 +29,7 @@ export default new Router({
       })
     },
     {
-      path: '/prevoznik/:id',
+      path: '/carrier/:id',
       name: 'CarrierPage',
       component: CarrierPage,
       props: (route) => ({
@@ -42,7 +42,7 @@ export default new Router({
       component: BusStationsPage
     },
     {
-      path: '/stanica/:id',
+      path: '/bus-station/:id',
       name: 'BusStation',
       component: BusStation,
       props: (route) => ({
@@ -58,7 +58,7 @@ export default new Router({
       })
     },
     {
-      path: '/red-voznje',
+      path: '/schedules',
       name: 'SchedulePage',
       component: SchedulePage
     },
@@ -76,6 +76,12 @@ export default new Router({
       path: '/admin-page',
       name: 'AdminPage',
       component: AdminPage
+    },
+    {
+      path: '/my-profile',
+      name: 'MyProfile',
+      component: AdminPage,
+      props: route => ({ listing: route.query.listing })
     }
   ]
 })

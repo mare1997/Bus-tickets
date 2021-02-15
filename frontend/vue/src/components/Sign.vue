@@ -30,6 +30,16 @@
               }}</span>
             </ValidationProvider>
             <ValidationProvider
+              name="Phone"
+              rules="required"
+              v-slot="{ errors }"
+            >
+              <input type="text" v-model="lastname" placeholder="Phone *" />
+              <span :style="{ color: '#dc3545', float: 'left' }">{{
+                errors[0]
+              }}</span>
+            </ValidationProvider>
+            <ValidationProvider
               name="Age"
               rules="required|min:0, Age must be a positive number."
               v-slot="{ errors }"
@@ -152,6 +162,7 @@ export default {
     return {
       firstname: '',
       lastname: '',
+      phone: '',
       age: '',
       email: '',
       password: '',
@@ -200,6 +211,7 @@ export default {
           password: this.password,
           firstname: this.firstname,
           lastname: this.lastname,
+          phone: this.phone,
           age: this.age,
           locationId: this.locationId,
           isRegisterPage: true
