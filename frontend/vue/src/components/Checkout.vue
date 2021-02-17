@@ -43,6 +43,7 @@
                   }}
                 </p>
                 <p>Carrier: {{ schedule ? schedule.carrier.name : '' }}</p>
+                <qty-button @change="setQty" />
               </div>
 
               <div class="col-33">
@@ -197,6 +198,7 @@ import { BFormGroup, BFormRadio } from 'bootstrap-vue'
 import { mapGetters } from 'vuex'
 import PayPal from 'vue-paypal-checkout'
 import { StripeElementCard } from '@vue-stripe/vue-stripe'
+import QtyButton from '@/components/Block/QtyButton.vue'
 
 export default {
   name: 'Checkout',
@@ -204,7 +206,8 @@ export default {
     'b-form-group': BFormGroup,
     'b-form-radio': BFormRadio,
     PayPal,
-    StripeElementCard
+    StripeElementCard,
+    QtyButton
   },
   data () {
     return {
@@ -262,6 +265,8 @@ export default {
     if (this.selected === 'PK') {
       this.$nextTick(() => {
         this.$refs.elementRef.$refs.submitButtonRef.innerHTML = 'Pay'
+        this.$refs.elementRef.$refs.submitButtonRef.classList.remove('hide')
+        this.$refs.elementRef.$refs.submitButtonRef.classList.add('mt-4')
       })
     }
   },
@@ -292,9 +297,14 @@ export default {
     }
     this.$nextTick(() => {
       this.$refs.elementRef.$refs.submitButtonRef.innerHTML = 'Pay'
+      this.$refs.elementRef.$refs.submitButtonRef.classList.remove('hide')
+      this.$refs.elementRef.$refs.submitButtonRef.classList.add('mt-4')
     })
   },
   methods: {
+    setQty (value) {
+      this.order.qty = value
+    },
     async search (value) {
       this.schedule = await this.$store.dispatch(
         'schedule/schedule',
@@ -333,22 +343,23 @@ export default {
       return formattedHour + ':' + formattedMinute
     },
     async createOrder (response) {
-      console.error(response)
       this.order.additionalData = {
         paymentMethod: 'paypal',
         token: response.id,
         amount: response.transactions[0].amount.total,
         currency: response.transactions[0].amount.currency
       }
+
       this.response = await this.$store.dispatch('order/create', this.order, {
         root: true
       })
-      if (this.response.status === 201) {
+
+      if (this.response && this.response.status === 201) {
         alert(
           'Your order has been successfully placed. Tickets will be sent to you by e-mail.'
         )
-        this.$router.push('/')
       }
+      this.$router.push('/')
     },
     async tokenCreated (token) {
       this.order.additionalData = {
@@ -357,16 +368,17 @@ export default {
         amount: (this.schedule.price * 100).toString(),
         currency: 'RSD'
       }
+
       this.response = await this.$store.dispatch('order/create', this.order, {
         root: true
       })
-      console.error(this.response)
-      if (this.response.status === 201) {
+
+      if (this.response && this.response.status === 201) {
         alert(
           'Your order has been successfully placed. Tickets will be sent to you by e-mail.'
         )
-        this.$router.push('/')
       }
+      this.$router.push('/')
     },
     submit () {
       this.$refs.form.validate().then(success => {
@@ -482,7 +494,7 @@ span.price {
 .cart {
   display: flex;
 }
-.hide {
+.pay-btn {
   visibility: visible !important;
   content: 'Pay ' !important;
   width: 100%;

@@ -32,8 +32,16 @@ export default {
           commit('setOrder', response.data)
           return response
         })
-        .catch((error) => {
-          alert(error)
+        .catch(error => {
+          if (error.response && error.response.status === 404) {
+            alert(
+              error.response.data
+            )
+          } else {
+            alert(
+              'Something went wrong, we will contact you.'
+            )
+          }
         })
     }
   }
