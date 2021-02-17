@@ -22,6 +22,7 @@
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.4.0",
     "mysql": "^2.17.1",
+    "pdf-creator-node": "^1.4.2",
     "pdfmake": "^0.1.70",
     "pug": "^3.0.0",
     "reflect-metadata": "^0.1.10",

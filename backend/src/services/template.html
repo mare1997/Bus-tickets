@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <mate charest="utf-8" />
+        <title>BusTickets.com</title>
+    </head>
+    <body>
+      <table style="width:100%">
+        <tr>
+          <td>{{data.start}} -> {{data.finish}}</td>
+        </tr>
+        <tr>
+          <td>Ticket id: {{data.ticketId}}</td>
+        </tr>
+        <tr>
+          <td>Bus station: {{data.busStation}}</td>
+        </tr>
+        <tr>
+          <td>Carrier: {{data.carrier}}</td>
+        </tr>
+        <tr>
+          <td>Vehicle registraion number: {{data.vehicleRegNum}}</td>
+        </tr>
+        <tr>
+          <td>Date: {{data.date}}</td>
+        </tr>
+        <tr>
+          <td>Price: {{data.amount}} {{data.currency}}</td>
+        </tr>
+        <tr>
+          <td>Seat: {{data.seat}}</td>
+        </tr>
+        <tr>
+          <td>Happy travel, {{data.firstName}} {{data.lastName}}</td>
+        </tr>
+      </table>
+    </body>
+</html>

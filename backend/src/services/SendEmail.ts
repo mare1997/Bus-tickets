@@ -1,29 +1,42 @@
-const Email = require('email-templates');
+"use strict";
+const nodemailer = require("nodemailer");
 
-const sendEmail = (pdfPath, order) => {
-	const email = new Email({
-		message: {
-			from: 'radojkovic.marko97@gmail.com',
-			attachments: [
-				{
-					path: pdfPath,
-				}
-			]
-		}
-	});
-	
-	email
-		.send({
-			template: 'email-template',
-			message: {
-				to: order.email
-			},
-			locals: {
-				firstName: order.firstName,
-				lastName: order.lastName
-			}
-		})
-		.then(console.log)
-		.catch(console.error);
+const addAtachmets = order => {
+  let attachments = []
+  for(const ticket of order.tickets) {
+    attachments.push({
+      filename: `ticket${order.id}-${ticket.id}.pdf`,
+			path: `/home/marko/Diplomski/Bus-tickets/backend/src/pdfs/ticket${order.id}-${ticket.id}.pdf`
+    })
+  }
+  return attachments
 }
-export { sendEmail }
+
+async function sendMail(order) {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 2525,
+    secure: false,
+    auth: {
+      user: "691526f01609ed",
+      pass: "824ab3133d6cd7"
+    }
+  });
+  const message = 
+    {
+      from: '"BusTickets.com 👻" <radojkovic.marko97@gmail.com>', // sender address
+      to: `${order.firstName} ${order.lastName}, ${order.email}`, // list of receivers
+      subject: `Hi ${order.firstName}, thanks for shopping at BusTickets.com`, // Subject line
+      html: 
+        `<p> Hi mr/ms/mrs ${order.firstName} ${order.lastName},</p>
+        <p>Your order has been successfully placed.</p>
+        <p> Your ticket can be found in the attachment of this email in pdf format.</p>`, // html body
+      attachments: addAtachmets(order)
+    }
+  try {
+    const info = await transporter.sendMail(message);
+  } catch (error) {
+    console.log('Bug', error);
+  }
+}
+export { sendMail }
