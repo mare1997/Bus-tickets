@@ -6,6 +6,7 @@
    "username": "root",
    "password": "password",
    "database": "busticketsdb",
+   "charset": "utf8mb4",
    "synchronize": true,
    "logging": false,
    "entities": [

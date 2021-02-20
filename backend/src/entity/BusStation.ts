@@ -23,10 +23,10 @@ export class BusStation{
     worktime: string;
 
     @Column()
-    latitude: number;
+    latitude: string;
 
     @Column()
-    longitude: number;
+    longitude: string;
 
     @Column({type: "boolean", default: false})
     deleted: boolean;

@@ -38,8 +38,8 @@ export const schemas = {
     street: Joi.string().required(),
     phone: Joi.string().required(),
     email: Joi.string().required(),
-    latitude: Joi.number().integer().required(),
-    longitude: Joi.number().integer().required(),
+    latitude: Joi.string().required(),
+    longitude: Joi.string().required(),
     locationId: Joi.number().integer().required()
   }),
   busStationPUT: Joi.object({
@@ -49,8 +49,8 @@ export const schemas = {
     street: Joi.string().required(),
     phone: Joi.string().required(),
     email: Joi.string().required(),
-    latitude: Joi.number().integer().required(),
-    longitude: Joi.number().integer().required(),
+    latitude: Joi.string().required(),
+    longitude: Joi.string().required(),
     locationId: Joi.number().integer().required()
   }),
   locationGetById: Joi.object({ 
