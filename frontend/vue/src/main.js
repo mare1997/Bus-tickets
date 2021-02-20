@@ -17,12 +17,17 @@ import {
   ValidationProvider,
   ValidationObserver
 } from 'vee-validate'
+import VueCarousel from 'vue-carousel'
+
 Vue.component('ValidationProvider', ValidationProvider)
 Vue.component('ValidationObserver', ValidationObserver)
+
 Vue.use(VueLayers)
 Vue.component('vue-stars', VueStars)
 Vue.use(Vuex)
+Vue.use(VueCarousel)
 Vue.use(BootstrapVue)
+
 Vue.config.productionTip = false
 export const bus = new Vue()
 /* eslint-disable no-new */

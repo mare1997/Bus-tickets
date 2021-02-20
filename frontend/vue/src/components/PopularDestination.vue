@@ -1,18 +1,37 @@
 <template>
   <div>
     <div class="m-4 h2"><h2>Popular destination</h2></div>
-    <div class="destinations">
-      <Destination v-for="destination in destinations" :destination="destination" :key="destination * Math.random()" />
-    </div>
+    <carousel
+      class="m-4"
+      :draggable="false"
+      :autoplay="true"
+      :perPageCustom="[
+        [768, 3],
+        [1024, 4]
+      ]"
+      :navigationEnabled="true"
+      :mouse-drag="false"
+    >
+      <slide
+        v-for="destination in destinations"
+        :key="destination * Math.random()"
+      >
+        <Destination :destination="destination" />
+      </slide>
+    </carousel>
   </div>
 </template>
 
 <script>
 import Destination from '../components/Block/Destination.vue'
+import { Carousel, Slide } from 'vue-carousel'
+
 export default {
   name: 'PopularDestination',
   components: {
-    Destination
+    Destination,
+    Carousel,
+    Slide
   },
   data () {
     return {
@@ -29,7 +48,11 @@ export default {
   },
   methods: {
     async getPopularDestinations () {
-      this.destinations = await this.$store.dispatch('schedule/schedulesPopular', {}, { root: true })
+      this.destinations = await this.$store.dispatch(
+        'schedule/schedulesPopular',
+        {},
+        { root: true }
+      )
     }
   }
 }

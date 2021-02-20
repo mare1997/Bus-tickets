@@ -72,8 +72,8 @@ export default {
     })
     if (this.$route.params.station) {
       this.station = this.$route.params.station
-      this.center[0] = this.station.latitude
-      this.center[1] = this.station.longitude
+      this.center[0] = +this.station.longitude
+      this.center[1] = +this.station.latitude
     } else {
       await this.getStationData()
     }
@@ -82,8 +82,8 @@ export default {
   methods: {
     async getStationData () {
       this.station = await this.$store.dispatch('busstation/station', { id: this.$route.params.id }, { root: true })
-      this.center[0] = this.station.latitude
-      this.center[1] = this.station.longitude
+      this.center[0] = +this.station.longitude
+      this.center[1] = +this.station.latitude
     },
     async search () {
       this.schedules = await this.$store.dispatch('schedule/schedulesByBusId', { id: this.station.id }, { root: true })

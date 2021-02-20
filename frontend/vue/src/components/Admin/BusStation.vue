@@ -70,7 +70,7 @@
             <input
               v-model="value.latitude"
               placeholder="Latitude *"
-              type="number"
+              type="text"
               tabindex="6"
               required
             />
@@ -82,7 +82,7 @@
             <input
               v-model="value.longitude"
               placeholder="Longitude *"
-              type="number"
+              type="text"
               tabindex="7"
               required
             />

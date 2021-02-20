@@ -12,7 +12,7 @@
       </b-input-group>
     </ValidationObserver>
     <datalist id="list-station">
-      <option v-for="station in cities" :key="station.length * Math.random()">{{ station.name }}</option>
+      <option v-for="station in cities" :key="station.id">{{ station.name }}</option>
     </datalist>
   </div> 
 </template>
