@@ -266,7 +266,8 @@ export default {
       this.$nextTick(() => {
         this.$refs.elementRef.$refs.submitButtonRef.innerHTML = 'Pay'
         this.$refs.elementRef.$refs.submitButtonRef.classList.remove('hide')
-        this.$refs.elementRef.$refs.submitButtonRef.classList.add('mt-4')
+        this.$refs.elementRef.$refs.submitButtonRef.classList.add('mt-2')
+        this.$refs.elementRef.$refs.submitButtonRef.style.width = '100%'
       })
     }
   },
@@ -298,7 +299,8 @@ export default {
     this.$nextTick(() => {
       this.$refs.elementRef.$refs.submitButtonRef.innerHTML = 'Pay'
       this.$refs.elementRef.$refs.submitButtonRef.classList.remove('hide')
-      this.$refs.elementRef.$refs.submitButtonRef.classList.add('mt-4')
+      this.$refs.elementRef.$refs.submitButtonRef.classList.add('mt-2')
+      this.$refs.elementRef.$refs.submitButtonRef.style.width = '100%'
     })
   },
   methods: {
