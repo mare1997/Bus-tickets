@@ -52,7 +52,7 @@ class TravelingController implements IControllerBase {
         const dateFromBody = new Date()
         for (let travel of travelingFromDB) {
           const dateFromTravel = new Date(travel.date)
-          if (!travel.deleted && +dateFromTravel >= +dateFromBody && travel.isPopularDestination) {
+          if (!travel.deleted && +dateFromTravel >= +dateFromBody && travel.isPopularDestination && travel.ticket.length > 0) {
             for (let l = 0; travel.station.length > l; l++) {
               const station = await stationRepository.findOne(travel.station[l].id, { relations: ["busStation"] });
               const busStation = await busStationRepository.findOne(station.busStation.id, { relations: ["location"] });
@@ -192,12 +192,13 @@ class TravelingController implements IControllerBase {
 
       const filterOptions = req.body;
       const dateFromBody = new Date(filterOptions.date)
+      const today = new Date()
       let filteredTravels = [];
       let searchedTravels = [];
 
       travels.forEach(travel => {
         const dateFromTravel = new Date(travel.date)
-        if (!travel.deleted && +dateFromTravel >= +dateFromBody) {
+        if (!travel.deleted && +dateFromTravel >= +dateFromBody && +dateFromTravel >= +today && travel.ticket.length > 0) {
           filteredTravels.push(travel);
         }
       })
