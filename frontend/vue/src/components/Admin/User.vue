@@ -224,7 +224,7 @@ export default {
 }
 </script>
 
-<style type="css">
+<style type="css" scoped>
 .container {
   max-width: 400px;
   width: 100%;

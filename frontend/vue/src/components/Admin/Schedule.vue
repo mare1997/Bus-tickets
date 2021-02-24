@@ -200,7 +200,7 @@ export default {
 }
 </script>
 
-<style type="css">
+<style type="css" scoped>
 @import url(https://fonts.googleapis.com/css?family=Lato:300,400);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
 .container {

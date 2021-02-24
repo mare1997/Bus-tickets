@@ -153,6 +153,19 @@ export default {
       isCarrier: 'user/isCarrier'
     })
   },
+  watch: {
+    carrier: function (val) {
+      this.value.id = val ? val.id : ''
+      this.value.name = val ? val.name : ''
+      this.value.street = val ? val.street : ''
+      this.value.phone = val ? val.phone : ''
+      this.value.email = val ? val.email : ''
+      this.value.site = val ? val.site : ''
+      this.value.pib = val ? val.pib : ''
+      this.value.image = val ? val.image : ''
+      this.value.locationId = val && val.location ? val.location.id : '-1'
+    }
+  },
   methods: {
     submit () {
       this.$refs.form.validate().then(success => {
@@ -186,7 +199,7 @@ export default {
 }
 </script>
 
-<style type="css">
+<style type="css" scoped>
 .container {
   max-width: 400px;
   width: 100%;
