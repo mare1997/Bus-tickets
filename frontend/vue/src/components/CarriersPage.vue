@@ -1,16 +1,26 @@
 <template>
-   <div>
-      <MainSearchNavBar :activeNav="'activeP'" />
-      <div class="m-4 h2"><h2>Carriers</h2></div>
-      <Sort class="sort" :listItems="sortListItems" :activeItem="sortActive" @sort="sortCarriers" />
-      <div class="carrier" v-if="carriers.length !== 0">
-        <Carrier v-for="carrier in carriers" :key="carrier.id * Math.random()" :carrier="carrier" />
-      </div>
-      <div class="h2" v-else>
-        <h4>Ne postoji prevoznik za ponudjenu vrednost: {{this.$route.query.q}}</h4>
-      </div>
-      
-    </div> 
+  <div>
+    <MainSearchNavBar :activeNav="'activeP'" />
+    <div class="m-4 h2"><h2>Carriers</h2></div>
+    <Sort
+      class="sort"
+      :listItems="sortListItems"
+      :activeItem="sortActive"
+      @sort="sortCarriers"
+    />
+    <div class="carrier" v-if="carriers.length !== 0">
+      <Carrier
+        v-for="carrier in carriers"
+        :key="carrier.id * Math.random()"
+        :carrier="carrier"
+      />
+    </div>
+    <div class="h2" v-else>
+      <h4>
+        Ne postoji prevoznik za ponudjenu vrednost: {{ this.$route.query.q }}
+      </h4>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -31,14 +41,14 @@ export default {
     return {
       carriers: [],
       sortActive: sortby,
-      sortListItems: ['Name']
+      sortListItems: ['Name', 'Review average', 'Review vehicle', 'Review accuracy', 'Review hygiene', 'Review staff']
     }
   },
-  mounted () {
+  async mounted () {
     if (this.getQ) {
-      this.search(this.getQ)
+      await this.search(this.getQ)
     } else {
-      this.carriers = this.getCarriers.length !== 0 ? this.getCarriers : this.getC()
+      await this.getC()
     }
     this.sortCarriers(this.sortActive)
   },
@@ -57,15 +67,38 @@ export default {
   },
   methods: {
     async search (value) {
-      this.carriers = await this.$store.dispatch('carrier/search', { value }, { root: true })
+      this.carriers = await this.$store.dispatch(
+        'carrier/search',
+        { value },
+        { root: true }
+      )
     },
     async getC (value) {
-      this.carriers = await this.$store.dispatch('carrier/carriers', { value }, { root: true })
+      this.carriers = await this.$store.dispatch(
+        'carrier/carriers',
+        { value },
+        { root: true }
+      )
     },
     sortCarriers (value) {
       this.setSort(value)
       if (value === 'Name') {
-        this.carriers = this.carriers.sort((a, b) => (a.name > b.name) ? 1 : -1)
+        this.carriers = this.carriers.sort((a, b) => (a.name > b.name ? 1 : -1))
+      }
+      if (value === 'Review average') {
+        this.carriers = this.carriers.sort((a, b) => (a.average < b.average ? 1 : -1))
+      }
+      if (value === 'Review vehicle') {
+        this.carriers = this.carriers.sort((a, b) => (a.rollingStock < b.rollingStock ? 1 : -1))
+      }
+      if (value === 'Review accuracy') {
+        this.carriers = this.carriers.sort((a, b) => (a.accuracy < b.accuracy ? 1 : -1))
+      }
+      if (value === 'Review staff') {
+        this.carriers = this.carriers.sort((a, b) => (a.staff < b.staff ? 1 : -1))
+      }
+      if (value === 'Review hygiene') {
+        this.carriers = this.carriers.sort((a, b) => (a.hygiene < b.hygiene ? 1 : -1))
       }
     },
     setSort (value) {
@@ -93,5 +126,4 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-end;
 }
- 
 </style>

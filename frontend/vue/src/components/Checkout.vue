@@ -29,11 +29,11 @@
                 </div>
                 <p>Date: {{ schedule ? getDate(schedule.date) : '' }}</p>
                 <p>
-                  Arrival:
+                  Departure:
                   {{ schedule ? getTime(schedule.station[0].time) : '' }}
                 </p>
                 <p>
-                  Departure:
+                  Arrival:
                   {{
                     schedule
                       ? getTime(
@@ -43,7 +43,8 @@
                   }}
                 </p>
                 <p>Carrier: {{ schedule ? schedule.carrier.name : '' }}</p>
-                <qty-button @change="setQty" />
+                <qty-button :qty="order.qty" @change="setQty" />
+                <seats :travelingId="getScheduleID" @set-tickets="setTickets" />
               </div>
 
               <div class="col-33">
@@ -199,6 +200,7 @@ import { mapGetters } from 'vuex'
 import PayPal from 'vue-paypal-checkout'
 import { StripeElementCard } from '@vue-stripe/vue-stripe'
 import QtyButton from '@/components/Block/QtyButton.vue'
+import Seats from './Block/Seats.vue'
 
 export default {
   name: 'Checkout',
@@ -207,7 +209,8 @@ export default {
     'b-form-radio': BFormRadio,
     PayPal,
     StripeElementCard,
-    QtyButton
+    QtyButton,
+    Seats
   },
   data () {
     return {
@@ -223,7 +226,8 @@ export default {
         qty: 1,
         travelingId: null,
         userId: this.user ? this.user.id : null,
-        additionalData: {}
+        additionalData: {},
+        tickets: []
       },
       credentials: {
         sandbox:
@@ -386,6 +390,10 @@ export default {
       this.$refs.form.validate().then(success => {
         this.isValidate = success
       })
+    },
+    setTickets (tickets) {
+      this.order.tickets = tickets
+      this.order.qty = this.order.tickets.length > 0 ? this.order.tickets.length : 1
     }
   },
   watch: {

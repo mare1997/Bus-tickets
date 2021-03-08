@@ -12,7 +12,7 @@
         </ValidationProvider>
         <ValidationProvider name="Date and time" rules="required" v-slot="{ errors }" style="margin-right: 15px">
           <div :style="{display: 'inline-grid'}">
-            <date-picker v-model="datetime" type="datetime" placeholder="Date and time *" format="DD-MM-YYYY hh:mm"></date-picker>
+            <date-picker v-model="datetime" type="datetime" placeholder="Date and time *" format="DD-MM-YYYY HH:mm"></date-picker>
             <span :style="{color: '#dc3545'}">{{ errors[0] }}</span>
           </div>
         </ValidationProvider>

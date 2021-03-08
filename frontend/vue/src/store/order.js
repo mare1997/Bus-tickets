@@ -26,7 +26,8 @@ export default {
         travelingId: payload.travelingId,
         userId: payload.userId,
         qty: payload.qty,
-        additionalData: payload.additionalData
+        additionalData: payload.additionalData,
+        tickets: payload.tickets
       })
         .then((response) => {
           commit('setOrder', response.data)

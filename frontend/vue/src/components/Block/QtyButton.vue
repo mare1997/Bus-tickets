@@ -8,13 +8,6 @@
         <input data-min="1" data-max="0" type="text" name="quantity" v-model="number" @input="input">
         <button @click="increment" type="button" class="increment-quantity" aria-label="Add one" data-direction="1"><span>&#43;</span></button>
         </div>
-        
-        <!-- <div class="quantity-selectors-container">
-          <div class="quantity-selectors">
-            <button @click="increment" type="button" class="increment-quantity" aria-label="Add one" data-direction="1"><span>&#43;</span></button>
-            <button @click="decrement" type="button" class="decrement-quantity" aria-label="Subtract one" data-direction="-1" :disabled="disabled"><span>&#8722;</span></button>
-          </div>
-        </div> -->
       </div>
     </section>
   </div>
@@ -23,10 +16,24 @@
 <script>
 export default {
   name: 'QtyButton',
+  props: {
+    qty: {
+      type: [String, Number],
+      default: 1
+    }
+  },
   data () {
     return {
       number: 1,
       disabled: true
+    }
+  },
+  mounted () {
+    this.number = +this.qty
+  },
+  watch: {
+    qty: function (val) {
+      this.number = +val
     }
   },
   methods: {

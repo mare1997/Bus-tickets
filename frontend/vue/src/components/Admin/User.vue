@@ -200,7 +200,6 @@ export default {
   },
   methods: {
     submit () {
-      debugger
       this.$refs.form.validate().then(success => {
         if (!success) {
           return

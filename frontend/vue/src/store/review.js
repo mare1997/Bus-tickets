@@ -22,10 +22,10 @@ export default {
         userId: payload.userId
       })
         .then((response) => {
-          debugger
           return response.data
         })
         .catch((error) => {
+          alert('You must be logged in.')
           console.error(error)
         })
     }

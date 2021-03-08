@@ -13,8 +13,8 @@
       </div>
       <div class="h2" v-else>
         <h4>There is no drive for these parameters :</h4>
-        <h4>Arrival: {{this.$route.query.start}}</h4>
-        <h4>Departure: {{this.$route.query.finish}}</h4>
+        <h4>Departure: {{this.$route.query.start}}</h4>
+        <h4>Arrival: {{this.$route.query.finish}}</h4>
         <h4>Time: {{this.date}}</h4>
       </div>
     </div>

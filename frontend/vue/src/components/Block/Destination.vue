@@ -3,7 +3,7 @@
     <div class="flip-card">
       <div class="flip-card-inner">
         <div class="flip-card-front">
-          <h4 class="h4">{{ getDepartureDestination }}</h4>
+          <h4 class="h4">{{ getArrivalDestination }}</h4>
           <img
             src="~@/assets/bg.jpg"
             alt="Avatar"
@@ -12,7 +12,7 @@
         </div>
         <div class="flip-card-back">
           <p>Carrier: {{ destination.carrier.name }}</p>
-          <p>Arrival: {{ getArrivalDestination }}</p>
+          <p>Departure: {{ getDepartureDestination }}</p>
           <p>Date: {{ getDate(destination.date) }}</p>
           <p>Number of avaiable tickets: {{ destination.ticket.length }}</p>
           <p>Price: {{ destination.price }}</p>
@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     getDepartureDestination () {
-      return this.destination.station[this.destination.station.length - 1]
+      return this.destination.station[0]
         .bus_station.location.name
     },
     getArrivalDestination () {

@@ -16,11 +16,31 @@
             <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
           </fieldset>
         </ValidationProvider>
-        <ValidationProvider name="Vehicle" rules="required|min:0, You must select a location." v-slot="{ errors }">
+
+        <ValidationProvider v-if="currentUser.role === 'ADMIN'" name="Carrier" rules="required|min:0, You must select a carrier." v-slot="{ errors }">
+          <fieldset>
+            <select
+              v-model="carrierId"
+              tabindex="2"
+              required
+            >
+              <option value="-1" disabled selected>Carrier *</option>
+              <option
+                v-for="carrier in carriers"
+                :key="carrier.id"
+                :value="carrier.id"
+                >{{ carrier.name }}
+              </option>
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+
+        <ValidationProvider v-if="carrierId > 0" name="Vehicle" rules="required|min:0, You must select a vehicle." v-slot="{ errors }">
           <fieldset>
             <select
               v-model="value.vehicleId"
-              tabindex="2"
+              tabindex="3"
               required
             >
               <option value="-1" disabled selected>Vehicle *</option>
@@ -34,18 +54,37 @@
             <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
           </fieldset>
         </ValidationProvider>
-        <ValidationProvider name="Date and time" rules="required" v-slot="{ errors }">
-          <fieldset>
-            <date-picker v-model="value.date" type="datetime" placeholder="Date and time *" format="DD-MM-YYYY hh:mm" style="width: 100%"></date-picker>
-            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
-          </fieldset>
-        </ValidationProvider>
-        
+
         <fieldset>
           <input type="checkbox" id="pd" name="popularDestination" v-model="value.isPopularDestination">
           <label for="pd"> Popular destination</label><br>
         </fieldset>
-        
+
+        <ValidationProvider name="Date and time" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <date-picker v-model="value.date" type="datetime" placeholder="Date and time *" format="DD-MM-YYYY HH:mm" style="width: 100%"></date-picker>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+
+        <ValidationProvider name="Departure station" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <h6 class="h6-station">Departure station</h6>
+            <select
+              v-model="departureStation"
+              tabindex="4"
+              required
+            >
+              <option
+                v-for="station in busStations"
+                :key="station.id"
+                :value="station"
+                >{{ station.name }}
+              </option>
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
 
         <fieldset>
           <h6 class="h6-station">Stations</h6>
@@ -67,7 +106,7 @@
                   </select>
                 </div>
                 <div class="time">
-                  <date-picker v-model="time" type="time" placeholder="Time *" format="hh:mm" style="width: 100%"></date-picker>
+                  <date-picker v-model="time" type="time" placeholder="Time *" format="HH:mm" style="width: 100%"></date-picker>
                 </div>
               </div>
             </div>
@@ -79,11 +118,45 @@
             <i class="fa fa-plus" aria-hidden="true"></i>
           </button>
         </fieldset>
+
+        <ValidationProvider name="Arrival state" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <h6 class="h6-station">Arrival station</h6>
+            <select
+              v-model="arrivalStation"
+              tabindex="3"
+              required
+            >
+              <option
+                v-for="station in busStations"
+                :key="station.id"
+                :value="station"
+                >{{ station.name }}
+              </option>
+            </select>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
         
-        <fieldset v-if="value.stations">
-          <div v-for="(station, i) of value.stations" :key="station.id">
-            <span>{{i+1}}. {{station.busStation.name}}  {{getTime(station)}}h</span>
+        <ValidationProvider name="Arrival date" rules="required" v-slot="{ errors }">
+          <fieldset>
+            <date-picker v-model="arrivalDate" type="datetime" placeholder="Arrival date and time *" format="DD-MM-YYYY HH:mm" style="width: 100%"></date-picker>
+            <span :style="{color: '#dc3545', float: 'left'}">{{ errors[0] }}</span>
+          </fieldset>
+        </ValidationProvider>
+        
+        <fieldset v-if="departureStation && departureStation !== '-1' && value.date">
+          <span>Depature:  {{departureStation.name}}  {{getTime({ time: value.date })}}h</span>
+        </fieldset>
+
+        <fieldset v-if="stations">
+          <div v-for="(station) of stations" :key="station.id">
+            <span>{{station.busStation.name}}  {{getTime(station)}}h</span>
           </div>
+        </fieldset>
+
+        <fieldset v-if="arrivalDate && arrivalStation && arrivalStation !== '-1'">
+          <span>Arrival: {{arrivalStation.name}}  {{getTime({ time: arrivalDate })}}h</span>
         </fieldset>
       </ValidationObserver>
       <fieldset>
@@ -127,23 +200,25 @@ export default {
       },
       time: '',
       busStation: '-1',
-      stationName: ''
+      stationName: '',
+      carrierId: null,
+      departureStation: null,
+      arrivalStation: null,
+      arrivalDate: null,
+      stations: []
     }
   },
   computed: {
     ...mapGetters({
       allVehicles: 'vehicle/getVehicles',
       busStations: 'busstation/getBusStations',
-      currentUser: 'user/getUser'
+      currentUser: 'user/getUser',
+      carriers: 'carrier/getCarriers'
     }),
     vehicles () {
-      const carrierId = this.currentUser && this.currentUser.carrier ? this.currentUser.carrier.id : -1
-      if (this.currentUser.role !== 'CARRIER') {
-        return this.allVehicles
-      }
       const vehicles = []
       this.allVehicles.map(vehicle => {
-        if (vehicle && vehicle.carrier && vehicle.carrier.id === carrierId) {
+        if (vehicle && vehicle.carrier && vehicle.carrier.id === this.carrierId) {
           vehicles.push(vehicle)
         }
       })
@@ -153,6 +228,8 @@ export default {
   async mounted () {
     await this.$store.dispatch('busstation/stations')
     await this.$store.dispatch('vehicle/vehicles')
+    await this.$store.dispatch('carrier/carriers')
+    this.carrierId = this.currentUser && this.currentUser.carrier ? this.currentUser.carrier.id : -1
   },
   methods: {
     submit () {
@@ -160,6 +237,16 @@ export default {
         if (!success) {
           return
         }
+        // const deparuteDate = new Date(this.date)
+        // const arrivalDate = new Date(this.arrivalDate)
+        // debugger
+        // const is = +arrivalDate < +deparuteDate
+        // if (is) {
+        //   alert('Arrive date must be bigger than departure date!')
+        //   return
+        // }
+        // debugger
+        this.prepareStation()
         if (this.schedule) {
           this.$store.dispatch('schedule/update', this.value)
           this.$emit('reload', {
@@ -180,13 +267,30 @@ export default {
         alert('You must select bus station and time before you add station!')
         return
       }
-      this.value.stations.push({
+      this.stations.push({
         time: this.time,
         busStationId: this.busStation.id,
         busStation: this.busStation
       })
       this.busStation = '-1'
       this.time = ''
+    },
+    prepareStation () {
+      const depature = {
+        time: this.value.date,
+        busStationId: this.departureStation.id,
+        busStation: this.departureStation
+      }
+      const arrival = {
+        time: this.arrivalDate,
+        busStationId: this.arrivalStation.id,
+        busStation: this.arrivalStation
+      }
+      this.value.stations.push(depature)
+      for (const station of this.stations) {
+        this.value.stations.push(station)
+      }
+      this.value.stations.push(arrival)
     },
     getTime (station) {
       const time = new Date(station.time)

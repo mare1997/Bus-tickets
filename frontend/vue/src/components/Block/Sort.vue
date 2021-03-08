@@ -4,10 +4,12 @@
       id="dropdown-1"
       text="Sort by"
       class="m-md-2"
-      v-for="item of listItems"
-      :key="item * Math.random()"
     >
-      <b-dropdown-item :active="activeItem === item" @click="sort(item)">{{
+      <b-dropdown-item
+        v-for="item of listItems"
+        :key="item * Math.random()" 
+        :active="activeItem === item" 
+        @click="sort(item)">{{
         item
       }}</b-dropdown-item>
     </b-dropdown>

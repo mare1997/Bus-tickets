@@ -25,8 +25,8 @@
       <div class="stationHeader">
         <div class="stationIconHeader"></div>
         <p class="stationItem">Stations</p>
-        <p class="stationItem">Arrival</p>
         <p class="stationItem">Departure</p>
+        <p class="stationItem">Arrival</p>
       </div>
       <div class="station" v-for="(station, index) in schedule.station" :key="station.id + Math.random()">
         <div class="stationIcon">

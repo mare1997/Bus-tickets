@@ -31,11 +31,6 @@ export default {
       required: true
     }
   },
-  methods: {
-    set () {
-      debugger
-    }
-  },
   watch: {
     value: function (value) {
       this.$emit('change-value', value)

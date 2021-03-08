@@ -9,6 +9,7 @@ import vehicle from './vehicle.js'
 import comment from './comment.js'
 import review from './review.js'
 import order from './order.js'
+import ticket from './ticket.js'
 
 Vue.use(Vuex)
 
@@ -76,6 +77,7 @@ export const store = new Vuex.Store({
     vehicle,
     comment,
     review,
-    order
+    order,
+    ticket
   }
 })
