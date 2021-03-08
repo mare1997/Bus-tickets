@@ -192,6 +192,7 @@ export const schemas = {
       token: Joi.string().required(),
       amount: Joi.string().required(),
       currency: Joi.string().required()
-    })
+    }),
+    tickets: Joi.array() || []
   }),
 }; 

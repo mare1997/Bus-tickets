@@ -7,6 +7,8 @@ import { validateJOI } from '../middleware/validateJOI'
 import { schemas } from '../schemas'
 import { checkJwt } from "../middleware/checkJwt";
 import { checkRole } from "../middleware/checkRole";
+import { Review } from '../entity/Review';
+import { sum } from '../services/Sum'
 class CarrierController implements IControllerBase {
 
   public path = '/carrier'
@@ -20,13 +22,28 @@ class CarrierController implements IControllerBase {
       try {
         const carrierRepository = getRepository(Carrier);
         const carriersFromDB = await carrierRepository.find({ relations: ["location"] });
-        var carriers = [];
-        carriersFromDB.forEach(element => {
-          if (!element.deleted) {
-            carriers.push(element);
-          }
-        });
-        res.status(200)
+        const reviewRepository = getRepository(Review);
+        const reviewFromDB = await reviewRepository.find({ relations: ["carrier", "user"]});
+        const carriers = carriersFromDB.filter(carrier => !carrier.deleted)
+        for (const carrier of carriers) {
+          const reviews = reviewFromDB.filter(review => review.carrier.id === carrier.id)
+          const vehicle = reviews.map(review => review.rollingStock)
+          const staff = reviews.map(review => review.staff)
+          const accuracy = reviews.map(review => review.accuracy)
+          const hygiene = reviews.map(review => review.hygiene)
+          //@ts-ignore
+          carrier.rollingStock = vehicle.length > 0 ? sum(vehicle) / vehicle.length : 0
+          //@ts-ignore
+          carrier.staff = staff.length > 0 ? sum(staff) / staff.length : 0
+          //@ts-ignore
+          carrier.accuracy = accuracy.length > 0 ? sum(accuracy) / accuracy.length : 0
+          //@ts-ignore
+          carrier.hygiene = hygiene.length > 0 ? sum(hygiene) / hygiene.length : 0
+          
+          const average = vehicle.concat(staff, accuracy, hygiene)
+          //@ts-ignore
+          carrier.average = average.length > 0 ? sum(average) / average.length : 0
+        }
         res.send(carriers);
       } catch (e) {
         res.status(400)

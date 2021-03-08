@@ -22,7 +22,7 @@ class TicketController implements IControllerBase {
 			try {
 				const ticketRepository = getRepository(Ticket);
 				var ticketId = req.params.ticketId;
-				const ticket = await ticketRepository.findOne(ticketId, { relations: ["seats", "traveling", "Order"] });
+				const ticket = await ticketRepository.findOne(ticketId, { relations: ["seats", "traveling", "order"] });
 				if (!ticket.deleted) {
 					res.status(200)
 					res.send(ticket);
@@ -40,15 +40,9 @@ class TicketController implements IControllerBase {
 			try {
 				const ticketRepository = getRepository(Ticket);
 				const travelingId = req.params.travelingId;
-				const tickets = await ticketRepository.find({ relations: ["seats", "traveling", "Order"] });
-				let ticketsOfTavel = [];
-				tickets.forEach(element => {
-					if (element.traveling.id == +travelingId) {
-						if (!element.deleted) {
-							ticketsOfTavel.push(element);
-						}
-					}
-				});
+				const tickets = await ticketRepository.find({ relations: ["seats", "traveling", "order"] });
+				const ticketsOfTavel = tickets.filter(ticket => ticket.traveling.id === +travelingId && !ticket.deleted)
+				
 				res.status(200)
 				res.send(ticketsOfTavel);
 

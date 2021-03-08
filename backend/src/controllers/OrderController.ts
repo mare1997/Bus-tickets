@@ -44,13 +44,23 @@ class OrderController implements IControllerBase {
 				}
 				
         let createdOrder = await orderRepository.save(order);
-				createdOrder.tickets = []
-        for (let index = 0; index < order.qty; index++) {
-					const ticket = freeTicketsOfTavel[index]; 
-					ticket.order = order
-					const savedTicket = await ticketRepository.save(ticket)
-					createdOrder.tickets.push(savedTicket)
+				
+				if (order.tickets) {
+					for (let ticket of order.tickets) {
+						let ticketFromAT = freeTicketsOfTavel.find(t => t.id === ticket.id)
+						ticketFromAT.order = createdOrder
+						await ticketRepository.save(ticketFromAT)
+					}
+				} else {
+					createdOrder.tickets = []
+					for (let index = 0; index < order.qty; index++) {
+						const ticket = freeTicketsOfTavel[index]; 
+						ticket.order = order
+						const savedTicket = await ticketRepository.save(ticket)
+						createdOrder.tickets.push(savedTicket)
+					}
 				}
+				
         
         if (order.additionalData.paymentMethod === 'stripe') {
           const data = {

@@ -19,18 +19,13 @@ class ReviewController implements IControllerBase {
     this.router.get(this.path + '/carrier/:carrierId', validateJOI(schemas.reviewGetByCarrierId, 'paramas'), async (req, res) => {
       try {
         const reviewRepository = getRepository(Review);
-        const commentFromDB = await reviewRepository.find({ relations: ["carrier", "user"]});
+        const reviewFromDB = await reviewRepository.find({ relations: ["carrier", "user"]});
         const carrierId = req.params.carrierId;
-        var reviews = [];
-        commentFromDB.forEach(review => {
-          if (review.carrier.id === parseInt(carrierId)) {
-            reviews.push(review);
-          }
-        });
-
+        const reviews = reviewFromDB.filter(review => review.carrier.id === +carrierId)
+        
         res.send(reviews);
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       }
     });
@@ -55,7 +50,7 @@ class ReviewController implements IControllerBase {
         res.send(review);
 
       } catch (e) {
-
+        res.status(400)
         res.send("Error " + e);
       };
     }); 
